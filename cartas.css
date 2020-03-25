@@ -1,0 +1,104 @@
+:root {
+    /* Variables para los colores y las dimensiones de la carta */
+    --verde: #3E9E32;
+    --amarilla: #DED71F;
+    --azul: #3F4CFF;
+    --roja: #C11F1F;
+    --width: 200px;
+    --height: 320px;
+}
+
+body {
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.contenedor-cartas {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.carta {
+    width: var(--width);   
+    height: var(--height);
+    box-shadow: 3px 3px 6px 0 #c2bcc2;
+    margin-left: 1em;
+    border-radius: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Dibuja el valor de data-value en la esquina superior izquierda */
+.carta:before {
+    content: attr(data-value);
+    position: absolute;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    top: 5px;
+    left: 20px;
+}
+
+/* Dibuja el valor de data-value en la esquina inferior derecha y lo rota 180 grados */
+.carta:after {
+    content: attr(data-value);
+    position: absolute;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    bottom: 5px;
+    right: 20px;
+    transform: rotate(180deg);
+}
+
+/* Dibuja una elipse blanca dentro de la carta */
+.ellipse {
+    background-color: white;
+    margin: auto;
+    width: calc( var(--width) * 0.79);
+    height: calc( var(--width) * 1.29);
+    position: relative;
+    border-radius: 50%;
+    transform: skewX(-25deg);
+}
+
+/* Dibuja el valor de data-value centrado en la ellipse */
+.ellipse:after {
+    position: absolute;
+    left: 30%;
+    top: 25%;
+    font-size: calc( calc( var(--height) / 3) * 1.2);
+    font-weight: 800px;
+    transform: skewX(25deg);
+    content: attr(data-value);
+    color: inherit;
+}
+
+/* Colores para cada carta, usando las variables y valores por defecto */
+.carta.verde {
+    background-color: var(--verde, green);
+    color: var(--verde, green);
+}
+
+.carta.amarilla {
+    background-color: var(--amarilla, yellow);
+    color: var(--amarilla, yellow);
+}
+
+.carta.azul {
+    background-color: var(--azul, blue);
+    color: var(--azul, blue);
+}
+
+.carta.roja {
+    background-color: var(--roja, red);
+    color: var(--roja, red);
+}
