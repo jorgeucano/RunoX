@@ -15,8 +15,9 @@ window.onload = function() {
                     <div class='ellipse' data-value='${i}'>
                     </div>
                 </div>`
-            html += `</div>`;
+            
         }
+        html += `</div>`;
     }
 
     // Termine de generar el html, voy a tratar de pegarlo en el nodo #cartas
