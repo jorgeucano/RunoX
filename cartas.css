@@ -6,6 +6,7 @@
     --roja: #C11F1F;
     --width: 200px;
     --height: 320px;
+    --borde-numero: #dad6d6;
 }
 
 body {
@@ -40,23 +41,43 @@ body {
 .carta:before {
     content: attr(data-value);
     position: absolute;
-    font-size: 32px;
+    font-size: 40px;
     color: white;
-    font-weight: bold;
-    top: 5px;
+    font-weight: 800;
+    top: 8px;
     left: 20px;
 }
+
 
 /* Dibuja el valor de data-value en la esquina inferior derecha y lo rota 180 grados */
 .carta:after {
     content: attr(data-value);
     position: absolute;
-    font-size: 32px;
+    font-size: 40px;
     color: white;
-    font-weight: bold;
-    bottom: 5px;
+    font-weight: 800;
+    bottom: 8px;
     right: 20px;
     transform: rotate(180deg);
+    /* -webkit-text-stroke: 0.5px var(--borde-numero); */
+}
+
+.carta:not(.amarilla):before {
+    -webkit-text-stroke: 0.5px var(--borde-numero);
+    -webkit-text-fill-color: white;
+}
+.carta:not(.amarilla):after {
+    -webkit-text-stroke: 0.5px var(--borde-numero);
+    -webkit-text-fill-color: white;
+}
+.carta.italic {
+    font-style: italic;
+}
+.carta.masgrande {
+    font-size: 48px !important;
+}
+.carta.maschica {
+    font-size: 32px !important;
 }
 
 /* Dibuja una elipse blanca dentro de la carta */
@@ -70,16 +91,29 @@ body {
     transform: skewX(-25deg);
 }
 
+
 /* Dibuja el valor de data-value centrado en la ellipse */
 .ellipse:after {
     position: absolute;
-    left: 30%;
-    top: 25%;
-    font-size: calc( calc( var(--height) / 3) * 1.2);
-    font-weight: 800px;
+    left: 22%;
+    top: 22%;
+    font-weight: 500;
     transform: skewX(25deg);
     content: attr(data-value);
     color: inherit;
+}
+
+.ellipse.normal:after {
+    font-size: calc( calc( var(--height) / 3) * 1.2);
+}
+.ellipse.maschica:after {
+    left: 10% !important;
+    font-size: calc( calc( var(--height) / 3.8) * 1.2);
+}
+.ellipse.masgrande:after {
+    left: 15% !important;
+    top: 10% !important;
+    font-size: calc( calc( var(--height) / 2.8) * 1.2);
 }
 
 /* Colores para cada carta, usando las variables y valores por defecto */
