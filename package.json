@@ -1,0 +1,35 @@
+{
+  "name": "runox",
+  "version": "1.0.0",
+  "description": "rxjs UNO game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ./webpack.config.js",
+    "serve": "cross-env NODE_ENV=development webpack-dev-server --open --hot --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jorgeucano/RunoX.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jorgeucano/RunoX/issues"
+  },
+  "homepage": "https://github.com/jorgeucano/RunoX#readme",
+  "devDependencies": {
+    "@types/webpack-env": "^1.15.1",
+    "cross-env": "^7.0.2",
+    "html-loader": "^1.0.0",
+    "html-webpack-plugin": "^4.0.2",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "ts-loader": "^6.2.2"
+  }
+}
