@@ -11,14 +11,43 @@ colores.forEach((color) => {
   });
 });
 
-// Ahora cuando iteras deck, se genera un deck aleatorio nuevo
-// Forma 1 de Iteracion:
-console.log([...deck]);
+const _players = document.getElementById('players');
 
-// Forma 2 de Iteracion:
-for (let card of deck) {
-  console.log(card);
+const player1 = {
+  name: 'Jorge',
+  id: 'jorge1234',
+  hand: [],
+  pic: 'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
+};
+
+const player2 = {
+  name: 'Calel',
+  id: 'calel1234',
+  hand: [],
+  pic: 'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
 }
 
-// Pero los cards del deck siempre estan intactos (ordenados, como se pushearon):
-console.log(deck.cards);
+const player3 = {
+  name: 'Facu',
+  id: 'Facu1234',
+  hand: [],
+  pic: 'https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg'
+}
+
+const player4 = {
+   name: 'Nicolas', id: 'nikomendo', hand: [], pic: 'https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg' 
+}
+const players = [player1, player2, player3, player4];
+
+players.forEach((player)=> {
+  const _hand = `<div class="carta uno--rojo"></div>`;
+  const div = document.createElement("div");
+  div.innerHTML = `
+  <div id="${player.id}">
+    ${_hand}
+  </div>
+  `; 
+  _players?.appendChild(div);
+})
+
+console.log(_players);
