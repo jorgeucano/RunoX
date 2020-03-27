@@ -2,7 +2,6 @@ import "./styles/styles.css";
 
 import RandomDeck from "./utils/randomDeck/randomDeck";
 
-// TODO: agregar +4 y comodin
 const cartas = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nieve", "mas-dos", "saltar", "reversa"];
 const cartasEspeciales = ["mas-cuatro", "comodin"]
 const colores = ["verde", "amarilla", "azul", "roja"];
