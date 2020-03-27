@@ -1,3 +1,5 @@
+import "./styles/styles.css";
+
 import RandomDeck from "./utils/randomDeck/randomDeck";
 
 const cartas = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+2", "+4", "flip", "skip"];
@@ -39,14 +41,11 @@ const player4 = {
 }
 const players = [player1, player2, player3, player4];
 
-players.forEach((player)=> {
+players.forEach((player) => {
   const _hand = `<div class="carta uno--rojo"></div>`;
   const div = document.createElement("div");
-  div.innerHTML = `
-  <div id="${player.id}">
-    ${_hand}
-  </div>
-  `; 
+  div.setAttribute("id", player.id);
+  div.innerHTML = _hand;
   _players?.appendChild(div);
 })
 

@@ -13,19 +13,16 @@ const config = {
         exclude: /node_modules/
       },
       {
-        test: /\.html$/,
-        loader: "html-loader"
-      },
-      {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
-        loader: 'url-loader',
-        options: {
-          limit: 8192,
-        },
+        loader: 'file-loader',
+      },
+      {
+        test: /\.html$/,
+        loader: "html-loader"
       },
     ]
   },
