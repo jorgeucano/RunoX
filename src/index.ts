@@ -2,7 +2,7 @@ import "./styles/styles.css";
 
 import RandomDeck from "./utils/randomDeck/randomDeck";
 
-const cartas = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nieve", "mas-dos", "saltar", "reversa"];
+const cartas = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "mas-dos", "saltar", "reversa"];
 const cartasEspeciales = ["mas-cuatro", "comodin"]
 const colores = ["verde", "amarilla", "azul", "roja"];
 
