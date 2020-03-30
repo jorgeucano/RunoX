@@ -22,6 +22,7 @@ const colores = ['verde', 'amarillo', 'azul', 'rojo'];
 
 let deck = new RandomDeck();
 deck.cards.push(...cartasEspeciales, ...cartasEspeciales);
+
 colores.forEach(color => {
   cartas.forEach(carta => {
     const currentCard = `${carta}--${color}`;
@@ -30,8 +31,9 @@ colores.forEach(color => {
 });
 
 const _players = document.getElementById('players');
+const _stack = document.getElementById('stack');
 const randomDeck = [...deck];
-const handsLength = randomDeck.length / 4; // 4 jugadores
+const handsLength = 6; // 4 jugadores
 
 const player1 = {
   name: 'Jorge',
@@ -71,6 +73,13 @@ players.forEach(player => {
   const div = document.createElement('div');
   div.setAttribute('id', player.id);
 
+  const playerContainer = document.createElement('div');
+  const playerName = document.createElement('span');
+  playerName.innerText = `Jugador ${player.id}`;
+  playerContainer.appendChild(playerName);
+
+  div.appendChild(playerContainer);
+
   player.hand.forEach(carta => {
     const _hand = document.createElement('div');
     _hand.setAttribute('class', `carta ${carta}`);
@@ -80,4 +89,14 @@ players.forEach(player => {
   _players?.appendChild(div);
 });
 
-console.log(_players);
+const stackTitleContainer = document.createElement('div');
+const stackTitle = document.createElement('span');
+stackTitle.innerText = 'Rest of the stack';
+stackTitleContainer.appendChild(stackTitle);
+_stack?.appendChild(stackTitleContainer);
+
+randomDeck.forEach(c => {
+  const card = document.createElement('div');
+  card.setAttribute('class', `carta ${c}`);
+  _stack?.appendChild(card);
+});
