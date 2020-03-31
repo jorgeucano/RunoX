@@ -22,6 +22,7 @@
     "@types/webpack-env": "^1.15.1",
     "cross-env": "^7.0.2",
     "css-loader": "^3.4.2",
+    "file-loader": "^6.0.0",
     "html-loader": "^1.0.0",
     "html-webpack-plugin": "^4.0.2",
     "source-map-loader": "^0.2.4",
