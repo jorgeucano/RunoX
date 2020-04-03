@@ -1,6 +1,8 @@
 import './styles/styles.css';
 
 import RandomDeck from './utils/randomDeck/randomDeck';
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const cartas = [
   'cero',
@@ -9,7 +11,7 @@ const cartas = [
   'tres',
   'cuatro',
   'cinco',
-  'seis',
+  'seis',gi 
   'siete',
   'ocho',
   'nueve',
@@ -33,12 +35,12 @@ colores.forEach(color => {
 const _players = document.getElementById('players');
 const _stack = document.getElementById('stack');
 const randomDeck = [...deck];
-const handsLength = 6; // 4 jugadores
+const handsLength = 7; // randomDeck.length / 4; // 4 jugadores
 
 const player1 = {
   name: 'Jorge',
   id: 'jorge1234',
-  hand: [...randomDeck.splice(0, handsLength)],
+  hand: [...randomDeck.splice(0 * handsLength, handsLength)],
   pic:
     'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
 };
@@ -46,7 +48,7 @@ const player1 = {
 const player2 = {
   name: 'Calel',
   id: 'calel1234',
-  hand: [...randomDeck.splice(0, handsLength)],
+  hand: [...randomDeck.splice(1 * handsLength, handsLength)],
   pic:
     'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
 };
@@ -54,7 +56,7 @@ const player2 = {
 const player3 = {
   name: 'Facu',
   id: 'Facu1234',
-  hand: [...randomDeck.splice(0, handsLength)],
+  hand: [...randomDeck.splice(2 * handsLength, handsLength)],
   pic:
     'https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg'
 };
@@ -62,7 +64,7 @@ const player3 = {
 const player4 = {
   name: 'Nicolas',
   id: 'nikomendo',
-  hand: [...randomDeck.splice(0, handsLength)],
+  hand: [...randomDeck.splice(3 * handsLength, handsLength)],
   pic:
     'https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg'
 };
@@ -72,31 +74,48 @@ const players = [player1, player2, player3, player4];
 players.forEach(player => {
   const div = document.createElement('div');
   div.setAttribute('id', player.id);
-
-  const playerContainer = document.createElement('div');
-  const playerName = document.createElement('span');
-  playerName.innerText = `Jugador ${player.id}`;
-  playerContainer.appendChild(playerName);
-
-  div.appendChild(playerContainer);
-
   player.hand.forEach(carta => {
     const _hand = document.createElement('div');
     _hand.setAttribute('class', `carta ${carta}`);
     div.appendChild(_hand);
   });
-
   _players?.appendChild(div);
+  setPlayerClicks(player.id);
 });
 
-const stackTitleContainer = document.createElement('div');
-const stackTitle = document.createElement('span');
-stackTitle.innerText = 'Rest of the stack';
-stackTitleContainer.appendChild(stackTitle);
-_stack?.appendChild(stackTitleContainer);
+function setPlayerClicks(id: string) {
+  const _player = document.getElementById(id);
+  console.log(document.getElementById(id));
+  // @ts-ignore
+  fromEvent(_player, 'click')
+    .pipe(
+      map(v => {
+        // @ts-ignore
+        return v.target.className;
+      })
+    )
+    .subscribe((x: any) => {
+      console.log(x);
+    });
+}
 
-randomDeck.forEach(c => {
-  const card = document.createElement('div');
-  card.setAttribute('class', `carta ${c}`);
-  _stack?.appendChild(card);
+let nextCardFlag = handsLength * players.length;
+let currentPlayer = 0;
+const buttonNext = document.getElementById('button-next');
+// @ts-ignore
+const _next = fromEvent(buttonNext, 'click').subscribe((x: any) => {
+  console.log(randomDeck[nextCardFlag]);
+  const div = document.getElementById(players[currentPlayer].id);
+  const _hand = document.createElement('div');
+  _hand.setAttribute('class', `carta ${randomDeck[nextCardFlag]}`);
+  div?.appendChild(_hand);
+  nextPlayer();
+  nextCardFlag++;
 });
+
+function nextPlayer() {
+  currentPlayer++;
+  if (currentPlayer === players.length) {
+    currentPlayer = 0;
+  }
+}
