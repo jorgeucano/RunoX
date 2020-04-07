@@ -11,13 +11,13 @@ const cartas = [
   'tres',
   'cuatro',
   'cinco',
-  'seis',gi 
+  'seis',
   'siete',
   'ocho',
   'nueve',
   'mas-dos',
   'saltar',
-  'reversa'
+  'reversa',
 ];
 const cartasEspeciales = ['mas-cuatro', 'comodin'];
 const colores = ['verde', 'amarillo', 'azul', 'rojo'];
@@ -25,8 +25,8 @@ const colores = ['verde', 'amarillo', 'azul', 'rojo'];
 let deck = new RandomDeck();
 deck.cards.push(...cartasEspeciales, ...cartasEspeciales);
 
-colores.forEach(color => {
-  cartas.forEach(carta => {
+colores.forEach((color) => {
+  cartas.forEach((carta) => {
     const currentCard = `${carta}--${color}`;
     deck.cards.push(currentCard, currentCard);
   });
@@ -42,7 +42,7 @@ const player1 = {
   id: 'jorge1234',
   hand: [...randomDeck.splice(0 * handsLength, handsLength)],
   pic:
-    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
+    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg',
 };
 
 const player2 = {
@@ -50,7 +50,7 @@ const player2 = {
   id: 'calel1234',
   hand: [...randomDeck.splice(1 * handsLength, handsLength)],
   pic:
-    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg'
+    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg',
 };
 
 const player3 = {
@@ -58,7 +58,7 @@ const player3 = {
   id: 'Facu1234',
   hand: [...randomDeck.splice(2 * handsLength, handsLength)],
   pic:
-    'https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg'
+    'https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg',
 };
 
 const player4 = {
@@ -66,15 +66,15 @@ const player4 = {
   id: 'nikomendo',
   hand: [...randomDeck.splice(3 * handsLength, handsLength)],
   pic:
-    'https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg'
+    'https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg',
 };
 
 const players = [player1, player2, player3, player4];
 
-players.forEach(player => {
+players.forEach((player) => {
   const div = document.createElement('div');
   div.setAttribute('id', player.id);
-  player.hand.forEach(carta => {
+  player.hand.forEach((carta) => {
     const _hand = document.createElement('div');
     _hand.setAttribute('class', `carta ${carta}`);
     div.appendChild(_hand);
@@ -89,10 +89,10 @@ function setPlayerClicks(id: string) {
   // @ts-ignore
   fromEvent(_player, 'click')
     .pipe(
-      map(v => {
+      map((v) => {
         // @ts-ignore
         return v.target.className;
-      })
+      }),
     )
     .subscribe((x: any) => {
       console.log(x);
