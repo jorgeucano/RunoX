@@ -1,10 +1,10 @@
 
 .carta {
-    background-image: url('../assets/images/cartas-uno.png');
-    display: inline-block;
-    height: 134px;
-    width: 86px;
-    margin: 5px;
+  background-image: url('../assets/images/cartas-uno.png');
+  display: inline-block;
+  height: 134px;
+  width: 86px;
+  margin: 5px;
 }
 /* Rojo */
 .uno--rojo { background-position: 0 0 ;}
@@ -48,7 +48,7 @@
 .nueve--verde { background-position: -684px -267px ;}
 .cero--verde { background-position: -769px -267px ;}
 .saltar--verde {background-position: -513px -534px ;}
-.reversa--verde { background-position: -513px -534px ;}
+.reversa--verde { background-position: -598px -534px;}
 .mas-dos--verde { background-position: -684px -534px ;}
 
 /* Azul */
