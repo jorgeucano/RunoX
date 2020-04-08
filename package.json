@@ -4,7 +4,7 @@
   "description": "rxjs UNO game",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent --verbose",
     "test:watch": "jest --watch",
     "build": "webpack --config ./webpack.config.js",
     "serve": "cross-env NODE_ENV=development webpack-dev-server --open --hot --config webpack.config.js"
