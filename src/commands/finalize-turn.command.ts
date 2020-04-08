@@ -3,7 +3,7 @@ import { GameState } from "../models/game-state.model";
 
 export class FinalizeTurnCommand extends GameCommand {
   execute(state: GameState) {
-    if (!state.players.players.length) {
+    if (!state.playersGroup.players.length) {
       console.error("No se puede finalizar el turno si no hay jugadores");
     }
 
@@ -11,20 +11,20 @@ export class FinalizeTurnCommand extends GameCommand {
 
     if (!state.turn.player) {
       // es el primer turno, entonces elegimos el primer jugador
-      nextPlayer = state.players.players[0];
+      nextPlayer = state.playersGroup.players[0];
     } else {
-      let currentPlayerIndex = state.players.players.findIndex(
+      let currentPlayerIndex = state.playersGroup.players.findIndex(
         (player) => player.id === state.turn.player?.id
       );
 
       currentPlayerIndex++;
 
-      if (currentPlayerIndex !== state.players.players.length) {
+      if (currentPlayerIndex !== state.playersGroup.players.length) {
         // no ha terminado la vuelta, entonces elegimos el proximo en la lista
-        nextPlayer = state.players.players[currentPlayerIndex];
+        nextPlayer = state.playersGroup.players[currentPlayerIndex];
       } else {
         // ya ha jugado el ultimo, entonces comienza nuevamente desde el primero
-        nextPlayer = state.players.players[0];
+        nextPlayer = state.playersGroup.players[0];
       }
     }
 

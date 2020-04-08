@@ -2,9 +2,10 @@ import { Deck } from "../src/models/deck.model";
 import { Card } from "../src/models/card.model";
 import { Hand } from "../src/models/hand.model";
 import { Player } from "../src/models/player.model";
-import { Players } from "../src/models/players.model";
+import { PlayersGroup } from "../src/models/players-group.model";
 import { Turn } from "../src/models/turn.model";
 import { GameState } from "../src/models/game-state.model";
+import { Stack } from "../src/models/stack.model";
 
 describe("Card", () => {
   it("should set id attribute when we create a card", () => {
@@ -33,6 +34,60 @@ describe("Deck", () => {
     deck.addCards([card]);
 
     expect(deck.cards.length).toBe(1);
+  });
+
+  it("should shuffle cards when shuffle method is called", () => {
+    const deck = new Deck();
+
+    deck.addCards([
+      new Card("card1"),
+      new Card("card2"),
+      new Card("card3"),
+      new Card("card4"),
+      new Card("card5"),
+      new Card("card6"),
+      new Card("card7"),
+      new Card("card8"),
+      new Card("card9"),
+      new Card("card10"),
+      new Card("card11"),
+      new Card("card12"),
+      new Card("card13"),
+      new Card("card14"),
+      new Card("card15"),
+    ]);
+
+    const originalOrder = deck.cards.map((card) => card.id);
+
+    deck.shuffle();
+
+    const newOrder = deck.cards.map((card) => card.id);
+
+    expect(originalOrder).not.toEqual(newOrder);
+  });
+
+  it("should take a card from the deck when addCards takeCard is invoked", () => {
+    const deck = new Deck();
+
+    const card1 = new Card("card1");
+    const card2 = new Card("card2");
+
+    deck.addCards([card1, card2]);
+
+    const tackedCard = deck.takeCard();
+
+    expect(tackedCard).toBeDefined();
+    expect(tackedCard?.id).toEqual(card2.id);
+  });
+
+  it("should log error when we try to take a card from an empty deck", () => {
+    const deck = new Deck();
+    const spy = spyOn(deck, "takeCard").and.callThrough();
+
+    const tackedCard = deck.takeCard();
+
+    expect(spy).toHaveBeenCalled();
+    expect(tackedCard).not.toBeDefined();
   });
 });
 
@@ -98,33 +153,56 @@ describe("Player", () => {
   });
 });
 
-describe("Players", () => {
+describe("PlayersGroup", () => {
   it("should initialize players array when we create a players model", () => {
-    const players = new Players();
+    const playersGroup = new PlayersGroup();
 
-    expect(players.players).toBeDefined();
-    expect(players.players.length).toBe(0);
+    expect(playersGroup.players).toBeDefined();
+    expect(playersGroup.players.length).toBe(0);
   });
 
   it("should add a player when addPlayer method is called", () => {
-    const players = new Players();
+    const playersGroup = new PlayersGroup();
 
     const player = new Player("p1", "player 1", "avatar");
 
-    players.addPlayer(player);
+    playersGroup.addPlayer(player);
 
-    expect(players.players.length).toBe(1);
+    expect(playersGroup.players.length).toBe(1);
   });
 
   it("should add multiple players when addPlayers method is called", () => {
-    const players = new Players();
+    const playersGroup = new PlayersGroup();
 
-    players.addPlayers([
+    playersGroup.addPlayers([
       new Player("p1", "player 1", "avatar"),
       new Player("p2", "player 2", "avatar"),
     ]);
 
-    expect(players.players.length).toBe(2);
+    expect(playersGroup.players.length).toBe(2);
+  });
+
+  it("should log error when we try to get an invalid player", () => {
+    const playersGroup = new PlayersGroup();
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    playersGroup.addPlayer(new Player("p1", "player 1", "avatar"));
+
+    const player = playersGroup.getPlayerById("1234");
+
+    expect(spy).toHaveBeenCalled();
+    expect(player).not.toBeDefined();
+  });
+
+  it("should get player by id when getPlayerById method is called", () => {
+    const playersGroup = new PlayersGroup();
+
+    playersGroup.addPlayer(new Player("p1", "player 1", "avatar"));
+
+    const player = playersGroup.getPlayerById("p1");
+
+    expect(player).toBeDefined();
+    expect(player?.id).toEqual("p1");
   });
 });
 
@@ -152,7 +230,55 @@ describe("GameState", () => {
     const state = new GameState();
 
     expect(state.deck).toBeDefined();
-    expect(state.players).toBeDefined();
+    expect(state.playersGroup).toBeDefined();
     expect(state.turn).toBeDefined();
+  });
+});
+
+describe("Stack", () => {
+  it("should initialize cards when we create a Stack model", () => {
+    const stack = new Stack();
+
+    expect(stack.cards).toBeDefined();
+  });
+
+  it("should return null when the stack has not cards", () => {
+    const stack = new Stack();
+
+    expect(stack.cards.length).toBe(0);
+    expect(stack.cardOnTop).toBeNull();
+  });
+
+  it("should return the card on top of the stack when there are cards on the stack", () => {
+    const stack = new Stack();
+    const card = new Card("card");
+
+    stack.addCard(card);
+
+    expect(stack.cards.length).toBe(1);
+    expect(stack.cardOnTop).not.toBeNull();
+    expect(stack.cardOnTop?.id).toEqual(card.id);
+  });
+
+  it("should add a card when addCard method is called", () => {
+    const stack = new Stack();
+    const card = new Card("card");
+
+    stack.addCard(card);
+
+    expect(stack.cards.length).toBe(1);
+  });
+
+  it("should empty the stack when the empty method is called", () => {
+    const stack = new Stack();
+    const card = new Card("card");
+
+    stack.addCard(card);
+
+    expect(stack.cards.length).toBe(1);
+
+    stack.empty();
+
+    expect(stack.cards.length).toBe(0);
   });
 });
