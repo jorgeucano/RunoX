@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --silent --verbose",
+    "test:coverage": "jest --silent --verbose --coverage",
     "test:watch": "jest --watch",
     "build": "webpack --config ./webpack.config.js",
     "serve": "cross-env NODE_ENV=development webpack-dev-server --open --hot --config webpack.config.js"
