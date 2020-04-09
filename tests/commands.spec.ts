@@ -7,6 +7,7 @@ import { Card } from "../src/models/card.model";
 import { Player } from "../src/models/player.model";
 import { GameState } from "../src/models/game-state.model";
 import { RegenerateDeckCommand } from "../src/commands/regenerate-deck.command";
+import { AddPlayersCommand } from "../src/commands/add-players.command";
 
 describe("AddPlayerCommand", () => {
   it("should set player attribute when we create the command", () => {
@@ -27,6 +28,30 @@ describe("AddPlayerCommand", () => {
 
     expect(spy).toBeCalled();
     expect(state.playersGroup.players.length).toBe(1);
+  });
+});
+
+describe("AddPlayersCommand", () => {
+  it("should set players attribute when we create the command", () => {
+    const player1 = new Player("p1", "player 1", "avatar");
+    const player2 = new Player("p2", "player 2", "avatar");
+    const command = new AddPlayersCommand([player1, player2]);
+
+    expect(command.players).toBeDefined();
+    expect(command.players[0].id).toEqual("p1");
+  });
+
+  it("should add players to state when we execute the command", () => {
+    const player1 = new Player("p1", "player 1", "avatar");
+    const player2 = new Player("p2", "player 2", "avatar");
+    const command = new AddPlayersCommand([player1, player2]);
+    const state = new GameState();
+    const spy = spyOn(state.playersGroup, "addPlayers").and.callThrough();
+
+    command.execute(state);
+
+    expect(spy).toBeCalled();
+    expect(state.playersGroup.players.length).toBe(2);
   });
 });
 
@@ -122,7 +147,7 @@ describe("StartGameCommand", () => {
     expect(spy).toBeCalled();
   });
 
-  it("should deal the cards to the players and set current player when the command is executed", () => {
+  it("should deal the cards to the players, set current and add a card to the stack player when the command is executed", () => {
     const command = new StartGameCommand();
     const state = new GameState();
     const card = new Card("card");
@@ -135,6 +160,8 @@ describe("StartGameCommand", () => {
     state.playersGroup.addPlayers([player1, player2, player3, player4]);
 
     const turnSpy = spyOn(state.turn, "setPlayerTurn").and.callThrough();
+    const deckSpy = spyOn(state.deck, "takeCard").and.callThrough();
+    const stackSpy = spyOn(state.stack, "addCard").and.callThrough();
     const hand1Spy = spyOn(player1.hand, "addCards").and.callThrough();
     const hand2Spy = spyOn(player2.hand, "addCards").and.callThrough();
     const hand3Spy = spyOn(player3.hand, "addCards").and.callThrough();
@@ -143,11 +170,15 @@ describe("StartGameCommand", () => {
     command.execute(state);
 
     expect(turnSpy).toBeCalled();
+    expect(deckSpy).toBeCalled();
+    expect(stackSpy).toBeCalled();
     expect(hand1Spy).toBeCalled();
     expect(hand2Spy).toBeCalled();
     expect(hand3Spy).toBeCalled();
     expect(hand4Spy).toBeCalled();
     expect(state.turn.player).toEqual(player1);
+    expect(state.stack.cards.length).toBe(1);
+    expect(state.stack.cardOnTop).not.toBeNull();
   });
 });
 

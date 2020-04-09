@@ -31,7 +31,7 @@ export class BuildDeckCommand extends GameCommand {
 
     COLORS.forEach((color) => {
       CARDS.forEach((card) => {
-        const newCard = new Card(`${color}--${card}`, color, card);
+        const newCard = new Card(`${card}--${color}`, color, card);
 
         state.deck.addCards([newCard, newCard]);
       });
