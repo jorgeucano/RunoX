@@ -9,7 +9,7 @@ export class FinalizeTurnCommand extends GameCommand {
 
     let nextPlayer = null;
 
-    if (!state.turn.player) {
+    if (state.turn.player.isNull) {
       // es el primer turno, entonces elegimos el primer jugador
       nextPlayer = state.playersGroup.players[0];
     } else {
