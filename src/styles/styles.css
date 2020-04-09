@@ -179,3 +179,8 @@
 .desconocida {
   background-position: -769px -802px;
 }
+
+.carta-select {
+  border: 3px solid red;
+  border-radius: 20%;
+}
