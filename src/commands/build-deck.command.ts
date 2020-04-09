@@ -31,11 +31,13 @@ export class BuildDeckCommand extends GameCommand {
 
     COLORS.forEach((color) => {
       CARDS.forEach((card) => {
-        const newCard = new Card(`${color}--${card}`);
+        const newCard = new Card(`${color}--${card}`, color, card);
 
         state.deck.addCards([newCard, newCard]);
       });
     });
+
+    state.deck.shuffle();
 
     console.log(`Se ha creado el deck: ${JSON.stringify(state.deck.cards)}`);
   }
