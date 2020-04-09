@@ -210,7 +210,7 @@ describe("Turn", () => {
   it("should initialize player attribute as null when we create a turn model", () => {
     const turn = new Turn();
 
-    expect(turn.player.isNull).toBeTruthy();
+    expect(turn.player).toBeNull();
   });
 
   it("should set player turn setPlayerTurn method is called", () => {

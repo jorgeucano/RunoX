@@ -1,13 +1,13 @@
-import { Player, NullPlayer } from "./player.model";
+import { Player } from "./player.model";
 
 export class Turn {
-  readonly player: Player;
+  player: Player | null;
 
   constructor() {
-    this.player = new NullPlayer();
+    this.player = null;
   }
 
   setPlayerTurn(player: Player) {
-    Object.assign(this.player, player);
+    this.player = player;
   }
 }
