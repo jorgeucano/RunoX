@@ -97,12 +97,16 @@ function setPlayerClicks(id: string) {
     )
     .subscribe((card: any) => {
       /*
-       vamos a sacar de la mano del player actual la carta
-       y ponerla en el stack
+       primero queremos iterar la mano para remover la clase carta-select
+       luego vamos a agregar la clase a la carta que tiene nuevo click
       */
-      console.log(card);
-      const _index = players[currentPlayer].hand.indexOf(card);
+     try {
+      _player?.querySelectorAll('.carta-select').forEach((el) => { el.classList.remove('carta-select'); })
       _player?.querySelector(`.${card}`)?.classList.add('carta-select');
+     }
+     catch(e) {
+
+     }
 
     });
 }
