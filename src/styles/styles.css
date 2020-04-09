@@ -70,3 +70,11 @@
 .comodin { background-position: -171px -668px; }
 .mas-cuatro { background-position: -342px -668px; }
 .desconocida { background-position: -769px -802px; }
+
+
+
+
+.carta-select {
+  border: 3px solid red;
+  border-radius: 20%;
+}
