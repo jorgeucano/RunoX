@@ -26,24 +26,20 @@
 }
 
 .player:nth-child(odd){
-    background: red;
     justify-self: flex-start;
 }
 
 .player:nth-child(even){
-    background: yellow;
     align-self: flex-end;
 }
 
 .player:nth-child(3n+1){
-    background: grey;
     align-self: center;
     transform: rotate(-90deg);
     right: -150px;
 }
 
 .player:nth-child(4n+1){
-    background: blue;
     justify-self: flex-start;
     transform: rotate(90deg);
     left:-150px;

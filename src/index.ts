@@ -34,7 +34,8 @@ colores.forEach(color => {
 
 const _players = document.getElementById('players');
 const _stack = document.getElementById('stack');
-const randomDeck = [...deck];
+let stack: Array<any> = [];
+let randomDeck = [...deck];
 const handsLength = 7; // randomDeck.length / 4; // 4 jugadores
 
 const player1 = {
@@ -92,32 +93,70 @@ function setPlayerClicks(id: string) {
     .pipe(
       map(v => {
         // @ts-ignore
-        return v.target.className;
+        return (v.target.className).replace('carta ', '');
       })
     )
-    .subscribe((x: any) => {
-      console.log(x);
+    .subscribe((card: any) => {
+      /*
+       primero queremos iterar la mano para remover la clase carta-select
+       luego vamos a agregar la clase a la carta que tiene nuevo click
+      */
+      try {
+        _player?.querySelectorAll('.carta-select').forEach((el) => { el.classList.remove('carta-select'); })
+        _player?.querySelector(`.${card}`)?.classList.add('carta-select');
+      }
+      catch (e) {
+
+      }
+
     });
 }
 
 let nextCardFlag = handsLength * players.length;
 let currentPlayer = 0;
+
+/**
+ * Aca se encuentra el pedido de una carta y solo esta habilitiado
+ * una vez que el jugador entre en turno... Si el jugador 
+ * entre una carta al stack, esta funciona deberia filtrarlo ya que no
+ * es mas el jugador activo.
+ * El jugadoir activo va a venir del observable de firebase
+ */
 const buttonNext = document.getElementById('button-next');
 // @ts-ignore
-const _next = fromEvent(buttonNext, 'click').subscribe((x: any) => {
-  if (randomDeck[nextCardFlag]) {
-    const div = document.getElementById(players[currentPlayer].id);
-    const _hand = document.createElement('div');
-    _hand.setAttribute('class', `carta ${randomDeck[nextCardFlag]}`);
-    div?.appendChild(_hand);
-    nextPlayer();
-    nextCardFlag++;
-  }
-});
+const _next = fromEvent(buttonNext, 'click')
+  .pipe(
+    // filter(b => b.player === currentPlayer)
+  )
+  .subscribe((x: any) => {
+    if (randomDeck[nextCardFlag]) {
+      const div = document.getElementById(players[currentPlayer].id);
+      const _hand = document.createElement('div');
+      _hand.setAttribute('class', `carta ${randomDeck[nextCardFlag]}`);
+      div?.appendChild(_hand);
+      nextPlayer();
+      nextCard();
+    }
+  });
 
-function nextPlayer() {
+/*
+ esta funciona va a mutar cuando firebase este ready, ya que necesitamos 
+ chequear quien es el jugador activo, (currentPlayer) vs el jugador que esta
+ haciendo click en el button
+*/
+const nextPlayer = () => {
   currentPlayer++;
   if (currentPlayer === players.length) {
     currentPlayer = 0;
+  }
+}
+
+const nextCard = () => {
+  if (nextCardFlag < randomDeck.length) {
+    nextCardFlag++;
+  } else {
+    // enviar el stack al randomDeck de nuevo
+    randomDeck = [...stack];
+    nextCardFlag = 0;
   }
 }

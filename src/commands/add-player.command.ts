@@ -12,7 +12,7 @@ export class AddPlayerCommand extends GameCommand {
   }
 
   execute(state: GameState) {
-    state.players.addPlayer(
+    state.playersGroup.addPlayer(
       new Player(this.player.id, this.player.name, this.player.pic)
     );
 
