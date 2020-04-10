@@ -9,6 +9,8 @@ import { GameState } from "../src/models/game-state.model";
 import { RegenerateDeckCommand } from "../src/commands/regenerate-deck.command";
 import { AddPlayersCommand } from "../src/commands/add-players.command";
 import { DiscardHandCardCommand } from "../src/commands/discard-hand-card.command";
+import { Value } from "../src/models/values.model";
+import { Color } from "../src/models/color.model";
 
 describe("AddPlayerCommand", () => {
   it("should set player attribute when we create the command", () => {
@@ -151,7 +153,7 @@ describe("StartGameCommand", () => {
   it("should deal the cards to the players, set current and add a card to the stack player when the command is executed", () => {
     const command = new StartGameCommand();
     const state = new GameState();
-    const card = new Card("card");
+    const card = new Card(Value.PLUS_FOUR);
     const player1 = new Player("p1", "player 1", "avatar");
     const player2 = new Player("p2", "player 2", "avatar");
     const player3 = new Player("p3", "player 3", "avatar");
@@ -198,7 +200,7 @@ describe("TakeDeckCardCommand", () => {
   it("should log error when there is a problem while taking a card from the deck", () => {
     const command = new TakeDeckCardCommand();
     const state = new GameState();
-    const card = new Card("card");
+    const card = new Card(Value.PLUS_FOUR);
 
     state.deck.addCards([card]);
 
@@ -214,7 +216,7 @@ describe("TakeDeckCardCommand", () => {
   it("should add the card taken from the deck", () => {
     const command = new TakeDeckCardCommand();
     const state = new GameState();
-    const card = new Card("card");
+    const card = new Card(Value.PLUS_FOUR);
     const player = new Player("p1", "player 1", "avatar");
 
     state.deck.addCards([card]);
@@ -235,7 +237,7 @@ describe("RegenerateDeckCommand", () => {
   it("should log error if there are cards on the deck when we execute the command", () => {
     const command = new RegenerateDeckCommand();
     const state = new GameState();
-    const card = new Card("card");
+    const card = new Card(Value.PLUS_FOUR);
     const spy = spyOn(global.console, "error").and.callThrough();
 
     state.deck.addCards([card]);
@@ -262,8 +264,8 @@ describe("RegenerateDeckCommand", () => {
   it("should regenerate the deck when we execute the command", () => {
     const command = new RegenerateDeckCommand();
     const state = new GameState();
-    const card1 = new Card("card1");
-    const card2 = new Card("card2");
+    const card1 = new Card(Value.PLUS_FOUR);
+    const card2 = new Card(Value.WILDCARD);
 
     state.stack.addCard(card1);
     state.stack.addCard(card2);
@@ -301,7 +303,7 @@ describe("DiscardHandCardCommand", () => {
   it("should log error when we execute the command and the current player does not have the card", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
-    const card = new Card("card1");
+    const card = new Card(Value.PLUS_FOUR);
     const command = new DiscardHandCardCommand("card2");
     const spy = spyOn(global.console, "error").and.callThrough();
 
@@ -315,8 +317,8 @@ describe("DiscardHandCardCommand", () => {
   it("should log error when we execute the command and the card discarded is invalid", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
-    const stackCardRedTwo = new Card("cardRedTwo", "red", "two");
-    const handCardBlueFour = new Card("cardBlueFour", "blue", "four");
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    const handCardBlueFour = new Card(Value.FOUR, Color.BLUE);
     const command = new DiscardHandCardCommand("cardBlueFour");
     const spy = spyOn(global.console, "error").and.callThrough();
 
@@ -334,10 +336,10 @@ describe("DiscardHandCardCommand", () => {
     const player = new Player("p1", "player 1", "avatar");
     state.turn.setPlayerTurn(player);
 
-    const stackCardRedTwo = new Card("cardRedTwo", "red", "two");
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
     state.stack.addCard(stackCardRedTwo);
 
-    const handCardRedFour = new Card("cardRedFour", "red", "four");
+    const handCardRedFour = new Card(Value.FOUR, Color.RED);
     player.hand.addCard(handCardRedFour);
 
     const stackSpy = spyOn(state.stack, "addCard").and.callThrough();
