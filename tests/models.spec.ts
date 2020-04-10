@@ -16,6 +16,29 @@ describe("Card", () => {
     expect(card).toBeDefined();
     expect(card.sprite).toEqual(`${Value.ONE}--${Color.BLUE}`);
   });
+
+  it("should throw error if we try to create a wildcard with a color", () => {
+    expect(() => new Card(Value.WILDCARD, Color.BLUE)).toThrow(Error);
+  });
+
+  it("should return true when we invoke isSpecialCard and the card is special", () => {
+    const card = new Card(Value.WILDCARD);
+
+    expect(card.isSpecialCard()).toBeTruthy();
+  });
+  
+  it("should return true when we invoke hasEffects and the card is has an effect", () => {
+    const card = new Card(Value.WILDCARD);
+
+    expect(card.hasEffects()).toBeTruthy();
+  });
+
+  it("should return true when we check if a wildcard is playable", () => {
+    const card = new Card(Value.THREE, Color.GREEN);
+    const wildcard = new Card(Value.WILDCARD);
+
+    expect(wildcard.isPlayable(card)).toBeTruthy();
+  });
 });
 
 describe("Deck", () => {
