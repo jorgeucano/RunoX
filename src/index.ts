@@ -11,7 +11,7 @@ const cartas = [
   'tres',
   'cuatro',
   'cinco',
-  'seis',gi 
+  'seis',
   'siete',
   'ocho',
   'nueve',
@@ -74,6 +74,7 @@ const players = [player1, player2, player3, player4];
 players.forEach(player => {
   const div = document.createElement('div');
   div.setAttribute('id', player.id);
+  div.setAttribute('class', 'player ');
   player.hand.forEach(carta => {
     const _hand = document.createElement('div');
     _hand.setAttribute('class', `carta ${carta}`);
@@ -104,13 +105,14 @@ let currentPlayer = 0;
 const buttonNext = document.getElementById('button-next');
 // @ts-ignore
 const _next = fromEvent(buttonNext, 'click').subscribe((x: any) => {
-  console.log(randomDeck[nextCardFlag]);
-  const div = document.getElementById(players[currentPlayer].id);
-  const _hand = document.createElement('div');
-  _hand.setAttribute('class', `carta ${randomDeck[nextCardFlag]}`);
-  div?.appendChild(_hand);
-  nextPlayer();
-  nextCardFlag++;
+  if (randomDeck[nextCardFlag]) {
+    const div = document.getElementById(players[currentPlayer].id);
+    const _hand = document.createElement('div');
+    _hand.setAttribute('class', `carta ${randomDeck[nextCardFlag]}`);
+    div?.appendChild(_hand);
+    nextPlayer();
+    nextCardFlag++;
+  }
 });
 
 function nextPlayer() {

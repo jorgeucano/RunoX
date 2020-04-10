@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Pirata+One|Rubik:900');
+
+
+.game-board {
+    margin: auto;
+    width: 60%;
+    height: 80%;
+    background-color: #141E30;
+    background: linear-gradient(to right, #24243e, #141E30, #0f0c29);
+}
+
+
+#players{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.player{
+    width:50%;
+    overflow: hidden;
+    display: flex;
+    position: absolute;
+}
+
+.player:nth-child(odd){
+    background: red;
+    justify-self: flex-start;
+}
+
+.player:nth-child(even){
+    background: yellow;
+    align-self: flex-end;
+}
+
+.player:nth-child(3n+1){
+    background: grey;
+    align-self: center;
+    transform: rotate(-90deg);
+    right: -150px;
+}
+
+.player:nth-child(4n+1){
+    background: blue;
+    justify-self: flex-start;
+    transform: rotate(90deg);
+    left:-150px;
+}
+
