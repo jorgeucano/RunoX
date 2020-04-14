@@ -9,6 +9,7 @@ import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
 import { AddPlayersCommand } from "./commands/add-players.command";
+import { DiscardHandCardCommand } from "./commands/discard-hand-card.command";
 
 const gameState = new GameState();
 
@@ -19,6 +20,9 @@ buildDeckCommand.execute(gameState);
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
+
+// TODO: analizar donde debe ser agregado en el state
+let selectedCardId = "";
 
 const addPlayersCommand = new AddPlayersCommand([
   new Player(
@@ -67,8 +71,6 @@ const _next = fromEvent(buttonNext, "click").subscribe((x: any) => {
 
   clearCardSelection();
 
-  toggleTakeButton();
-
   drawTurn();
 });
 
@@ -82,9 +84,28 @@ const _take = fromEvent(buttonTake, "click").subscribe((x: any) => {
 
   takeDeckCardCommand.execute(gameState);
 
-  toggleTakeButton();
-
   drawPlayersCards();
+});
+
+/**
+ * Descarta la carta seleccionada por el currentPlayer
+ */
+const buttonDiscard = document.getElementById("button-discard");
+// @ts-ignore
+const _discard = fromEvent(buttonDiscard, "click").subscribe((x: any) => {
+  try {
+    const discardHandCardCommand = new DiscardHandCardCommand(selectedCardId);
+
+    discardHandCardCommand.execute(gameState);
+
+    selectedCardId = "";
+
+    drawPlayersCards();
+
+    drawStack();
+
+    buttonNext?.click();
+  } catch (e) {}
 });
 
 /** Dibuja a los jugadores con su respectiva mano
@@ -105,7 +126,9 @@ function drawPlayersCards() {
     player.hand.cards.forEach((card) => {
       const _hand = document.createElement("div");
 
-      _hand.setAttribute("class", `carta ${card.id}`);
+      _hand.setAttribute("id", `${card.id}`);
+
+      _hand.setAttribute("class", `carta ${card.sprite}`);
 
       playerDiv.appendChild(_hand);
     });
@@ -135,7 +158,10 @@ function drawStack() {
 
   const stackCardDiv = document.createElement("div");
 
-  stackCardDiv.setAttribute("class", `carta ${gameState.stack.cardOnTop.id}`);
+  stackCardDiv.setAttribute(
+    "class",
+    `carta ${gameState.stack.cardOnTop.sprite}`
+  );
 
   stackTitleDiv.appendChild(stackCardDiv);
 
@@ -144,16 +170,19 @@ function drawStack() {
 
 function setPlayerClicks(id: string) {
   const _player = document.getElementById(id);
+
   // @ts-ignore
   fromEvent(_player, "click")
     .pipe(
+      // @ts-ignore
+      filter((event) => event.target.classList.contains("carta")),
       filter(() => id === gameState.turn.player?.id),
-      map((v) => {
+      map((event) => {
         // @ts-ignore
-        return v.target.className.replace("carta ", "");
+        return event.target.id;
       })
     )
-    .subscribe((card: any) => {
+    .subscribe((cardId: string) => {
       /*
        primero queremos iterar la mano para remover la clase carta-select
        luego vamos a agregar la clase a la carta que tiene nuevo click
@@ -162,7 +191,10 @@ function setPlayerClicks(id: string) {
         _player?.querySelectorAll(".carta-select").forEach((el) => {
           el.classList.remove("carta-select");
         });
-        _player?.querySelector(`.${card}`)?.classList.add("carta-select");
+
+        document.getElementById(cardId)?.classList.add("carta-select");
+
+        selectedCardId = cardId;
       } catch (e) {}
     });
 }

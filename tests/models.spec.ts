@@ -8,13 +8,13 @@ import { GameState } from "../src/models/game-state.model";
 import { Stack } from "../src/models/stack.model";
 
 describe("Card", () => {
-  it("should set id attribute when we create a card", () => {
+  it("should set sprite attribute when we create a card", () => {
     const cardId = "card";
 
     const card = new Card(cardId);
 
     expect(card).toBeDefined();
-    expect(card.id).toEqual(cardId);
+    expect(card.sprite).toEqual(cardId);
   });
 });
 
@@ -127,7 +127,7 @@ describe("Hand", () => {
 
     hand.addCards(cards);
 
-    hand.removeCard("card3");
+    hand.removeCard(new Card("card3"));
 
     expect(spy).toBeCalled();
     expect(hand.cards.length).toBe(2);
@@ -135,11 +135,13 @@ describe("Hand", () => {
 
   it("should remove a card from the hand when we invoke removeCard with a valid cardId", () => {
     const hand = new Hand();
-    const cards = [new Card("card1"), new Card("card2")];
+    const card1 = new Card("card1");
+    const card2 = new Card("card1");
+    const cards = [card1, card2];
 
     hand.addCards(cards);
 
-    hand.removeCard("card1");
+    hand.removeCard(card1);
 
     expect(hand.cards.length).toBe(1);
   });

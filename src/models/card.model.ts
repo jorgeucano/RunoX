@@ -1,10 +1,14 @@
+import { generateUniqueId } from "../utils/id-generator.helper";
+
 export class Card {
   readonly id: string;
+  readonly sprite: string;
   readonly color?: string;
   readonly value?: string;
 
-  constructor(id: string, color?: string, value?: string) {
-    this.id = id;
+  constructor(sprite: string, color?: string, value?: string) {
+    this.id = generateUniqueId();
+    this.sprite = sprite;
     this.color = color;
     this.value = value;
   }

@@ -8,6 +8,7 @@ import { Player } from "../src/models/player.model";
 import { GameState } from "../src/models/game-state.model";
 import { RegenerateDeckCommand } from "../src/commands/regenerate-deck.command";
 import { AddPlayersCommand } from "../src/commands/add-players.command";
+import { DiscardHandCardCommand } from "../src/commands/discard-hand-card.command";
 
 describe("AddPlayerCommand", () => {
   it("should set player attribute when we create the command", () => {
@@ -284,5 +285,71 @@ describe("RegenerateDeckCommand", () => {
     expect(state.deck.cards.length).toBeGreaterThan(0);
     expect(state.stack.cards.length).toBeGreaterThan(0);
     expect(state.stack.cardOnTop?.id).toEqual(card2.id);
+  });
+});
+
+describe("DiscardHandCardCommand", () => {
+  it("should log error when we execute the command and there is not a current player", () => {
+    const state = new GameState();
+    const command = new DiscardHandCardCommand("card1");
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    expect(() => command.execute(state)).toThrow(Error);
+    expect(spy).toBeCalled();
+  });
+
+  it("should log error when we execute the command and the current player does not have the card", () => {
+    const state = new GameState();
+    const player = new Player("p1", "player 1", "avatar");
+    const card = new Card("card1");
+    const command = new DiscardHandCardCommand("card2");
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    player.hand.addCard(card);
+    state.turn.setPlayerTurn(player);
+
+    expect(() => command.execute(state)).toThrow(Error);
+    expect(spy).toBeCalled();
+  });
+
+  it("should log error when we execute the command and the card discarded is invalid", () => {
+    const state = new GameState();
+    const player = new Player("p1", "player 1", "avatar");
+    const stackCardRedTwo = new Card("cardRedTwo", "red", "two");
+    const handCardBlueFour = new Card("cardBlueFour", "blue", "four");
+    const command = new DiscardHandCardCommand("cardBlueFour");
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    state.stack.addCard(stackCardRedTwo);
+    player.hand.addCard(handCardBlueFour);
+    state.turn.setPlayerTurn(player);
+
+    expect(() => command.execute(state)).toThrow(Error);
+    expect(spy).toBeCalled();
+  });
+
+  it("should discard current player card when we execute the command", () => {
+    const state = new GameState();
+
+    const player = new Player("p1", "player 1", "avatar");
+    state.turn.setPlayerTurn(player);
+
+    const stackCardRedTwo = new Card("cardRedTwo", "red", "two");
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardRedFour = new Card("cardRedFour", "red", "four");
+    player.hand.addCard(handCardRedFour);
+
+    const stackSpy = spyOn(state.stack, "addCard").and.callThrough();
+    // @ts-ignore
+    const spy = spyOn(state.turn.player.hand, "removeCard").and.callThrough();
+
+    const command = new DiscardHandCardCommand(handCardRedFour.id);
+    command.execute(state);
+
+    expect(spy).toBeCalled();
+    expect(stackSpy).toBeCalled();
+    expect(state.turn.player?.hand.cards.length).toBe(0);
+    expect(state.stack.cards.length).toBe(2);
   });
 });
