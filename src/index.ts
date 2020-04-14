@@ -308,6 +308,15 @@ function drawTurn() {
 
   const turnDiv = document.createElement("div");
 
+  _players?.querySelectorAll(".player-select").forEach((el) => {
+    el.classList.remove("player-select");
+    el.classList.remove("player-select-button");
+  });
+  
+  document.getElementById(gameState.turn.player.id)?.classList.add("player-select");
+  document.getElementById(gameState.turn.player.id)?.classList.add("player-select-button");
+  
+
   turnDiv.append(`Es el turno de: ${gameState.turn.player.name}`);
 
   _turn?.appendChild(turnDiv);
