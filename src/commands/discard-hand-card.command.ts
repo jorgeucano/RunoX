@@ -27,11 +27,7 @@ export class DiscardHandCardCommand extends GameCommand {
       throw new Error("No se ha encontrado la carta de la mano del jugador");
     }
 
-    // TODO: permitir cartas especial en cualquier momento
-    if (
-      handCard.color !== state.stack.cardOnTop?.color &&
-      handCard.value !== state.stack.cardOnTop?.value
-    ) {
+    if (state.stack.cardOnTop && !handCard.isPlayable(state.stack.cardOnTop)) {
       console.error(
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );

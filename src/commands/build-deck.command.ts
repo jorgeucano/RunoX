@@ -1,38 +1,24 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { Card } from "../models/card.model";
+import { COLORS } from "../models/color.model";
+import { Value, VALUES } from "../models/values.model";
 
 export class BuildDeckCommand extends GameCommand {
   execute(state: GameState) {
-    // TODO: usar el randmon deck
-
-    const CARDS = [
-      "cero",
-      "uno",
-      "dos",
-      "tres",
-      "cuatro",
-      "cinco",
-      "seis",
-      "siete",
-      "ocho",
-      "nueve",
-      "mas-dos",
-      "saltar",
-      "reversa",
-    ];
-    const SPECIAL_CARDS = ["mas-cuatro", "comodin"];
-    const COLORS = ["verde", "amarillo", "azul", "rojo"];
+    const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
 
     state.deck.addCards([
-      ...SPECIAL_CARDS.map((specialCard) => new Card(specialCard)),
-      ...SPECIAL_CARDS.map((specialCard) => new Card(specialCard)),
+      ...specialCards.map((specialCard) => new Card(specialCard)),
+      ...specialCards.map((specialCard) => new Card(specialCard)),
     ]);
 
     COLORS.forEach((color) => {
-      CARDS.forEach((card) => {
-        const newCard1 = new Card(`${card}--${color}`, color, card);
-        const newCard2 = new Card(`${card}--${color}`, color, card);
+      VALUES.filter(
+        (card) => card !== Value.WILDCARD && card !== Value.PLUS_FOUR
+      ).forEach((card) => {
+        const newCard1 = new Card(card, color);
+        const newCard2 = new Card(card, color);
 
         state.deck.addCards([newCard1, newCard2]);
       });
