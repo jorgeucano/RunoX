@@ -14,18 +14,4 @@ export class Player {
 
     this.hand = new Hand();
   }
-
-  get isNull() {
-    return false;
-  }
-}
-
-export class NullPlayer extends Player {
-  constructor() {
-    super("", "", "");
-  }
-
-  get isNull() {
-    return true;
-  }
 }

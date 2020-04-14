@@ -1,36 +1,80 @@
-import './styles/styles.css';
+import "./styles/styles.css";
 
-import RandomDeck from './utils/randomDeck/randomDeck';
-import { fromEvent } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { fromEvent } from "rxjs";
+import { map, filter } from "rxjs/operators";
+import { GameState } from "./models/game-state.model";
+import { BuildDeckCommand } from "./commands/build-deck.command";
+import { Player } from "./models/player.model";
+import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
+import { StartGameCommand } from "./commands/start-game.command";
+import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
+import { AddPlayersCommand } from "./commands/add-players.command";
+import { DiscardHandCardCommand } from "./commands/discard-hand-card.command";
 
-const cartas = [
-  'cero',
-  'uno',
-  'dos',
-  'tres',
-  'cuatro',
-  'cinco',
-  'seis',
-  'siete',
-  'ocho',
-  'nueve',
-  'mas-dos',
-  'saltar',
-  'reversa'
-];
-const cartasEspeciales = ['mas-cuatro', 'comodin'];
-const colores = ['verde', 'amarillo', 'azul', 'rojo'];
+const gameState = new GameState();
 
-let deck = new RandomDeck();
-deck.cards.push(...cartasEspeciales, ...cartasEspeciales);
+const buildDeckCommand = new BuildDeckCommand();
 
-colores.forEach(color => {
-  cartas.forEach(carta => {
-    const currentCard = `${carta}--${color}`;
-    deck.cards.push(currentCard, currentCard);
-  });
+buildDeckCommand.execute(gameState);
+
+const _players = document.getElementById("players");
+const _stack = document.getElementById("stack");
+const _turn = document.getElementById("turn");
+
+// TODO: analizar donde debe ser agregado en el state
+let selectedCardId = "";
+
+const addPlayersCommand = new AddPlayersCommand([
+  new Player(
+    "jorge1234",
+    "Jorge",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+  ),
+  new Player(
+    "calel1234",
+    "Calel",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+  ),
+  new Player(
+    "Facu1234",
+    "Facu",
+    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
+  ),
+  new Player(
+    "nikomendo",
+    "Nicolas",
+    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
+  ),
+]);
+
+addPlayersCommand.execute(gameState);
+
+const startGameCommand = new StartGameCommand();
+
+startGameCommand.execute(gameState);
+
+drawPlayersCards();
+
+drawStack();
+
+drawTurn();
+
+/**
+ * Finaliza el turno del currentPlayer
+ */
+const buttonNext = document.getElementById("button-next");
+// @ts-ignore
+const _next = fromEvent(buttonNext, "click").subscribe((x: any) => {
+  const finalizeTurnCommand = new FinalizeTurnCommand();
+
+  finalizeTurnCommand.execute(gameState);
+
+  clearCardSelection();
+
+  drawTurn();
 });
+
+/* 
 
 const _players = document.getElementById('players');
 const _stack = document.getElementById('stack');
@@ -83,35 +127,145 @@ players.forEach(player => {
   });
   _players?.appendChild(div);
   setPlayerClicks(player.id);
+
+*/  
+  
+/**
+ * Toma una carta y la asigna al currentPlayer
+ */
+const buttonTake = document.getElementById("button-take");
+// @ts-ignore
+const _take = fromEvent(buttonTake, "click").subscribe((x: any) => {
+  const takeDeckCardCommand = new TakeDeckCardCommand();
+
+  takeDeckCardCommand.execute(gameState);
+
+  drawPlayersCards();
 });
+
+/**
+ * Descarta la carta seleccionada por el currentPlayer
+ */
+const buttonDiscard = document.getElementById("button-discard");
+// @ts-ignore
+const _discard = fromEvent(buttonDiscard, "click").subscribe((x: any) => {
+  try {
+    const discardHandCardCommand = new DiscardHandCardCommand(selectedCardId);
+
+    discardHandCardCommand.execute(gameState);
+
+    selectedCardId = "";
+
+    drawPlayersCards();
+
+    drawStack();
+
+    buttonNext?.click();
+  } catch (e) {}
+
+});
+
+/** Dibuja a los jugadores con su respectiva mano
+ * TODO: separar
+ */
+function drawPlayersCards() {
+  while (_players?.lastElementChild) {
+    _players?.removeChild(_players?.lastElementChild);
+  }
+
+  gameState.playersGroup.players.forEach((player) => {
+    const playerDiv = document.createElement("div");
+
+    playerDiv.append(`Mano de ${player.name}:`);
+
+    playerDiv.setAttribute("id", player.id);
+
+    player.hand.cards.forEach((card) => {
+      const _hand = document.createElement("div");
+
+      _hand.setAttribute("id", `${card.id}`);
+
+      _hand.setAttribute("class", `carta ${card.sprite}`);
+
+      playerDiv.appendChild(_hand);
+    });
+
+    _players?.appendChild(playerDiv);
+
+    setPlayerClicks(player.id);
+  });
+}
+
+/** Dibuja el stack
+ * TODO: serparar
+ * TODO: observar los cambios de gameState.stack.cardOnTop
+ */
+function drawStack() {
+  if (!gameState.stack.cardOnTop) {
+    return;
+  }
+
+  while (_stack?.lastElementChild) {
+    _stack?.removeChild(_stack?.lastElementChild);
+  }
+
+  const stackTitleDiv = document.createElement("div");
+
+  stackTitleDiv.append(`La carta en la cima del stack es:`);
+
+  const stackCardDiv = document.createElement("div");
+
+  stackCardDiv.setAttribute(
+    "class",
+    `carta ${gameState.stack.cardOnTop.sprite}`
+  );
+
+  stackTitleDiv.appendChild(stackCardDiv);
+
+  _stack?.appendChild(stackTitleDiv);
+}
 
 function setPlayerClicks(id: string) {
   const _player = document.getElementById(id);
-  console.log(document.getElementById(id));
+
   // @ts-ignore
-  fromEvent(_player, 'click')
+  fromEvent(_player, "click")
     .pipe(
-      map(v => {
+      // @ts-ignore
+      filter((event) => event.target.classList.contains("carta")),
+      filter(() => id === gameState.turn.player?.id),
+      map((event) => {
         // @ts-ignore
-        return (v.target.className).replace('carta ', '');
+        return event.target.id;
       })
     )
-    .subscribe((card: any) => {
+    .subscribe((cardId: string) => {
       /*
        primero queremos iterar la mano para remover la clase carta-select
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
       try {
+/*
         _player?.querySelectorAll('.carta-select').forEach((el) => { el.classList.remove('carta-select'); })
         _player?.querySelector(`.${card}`)?.classList.add('carta-select');
       }
       catch (e) {
 
       }
+*/
+        _player?.querySelectorAll(".carta-select").forEach((el) => {
+          el.classList.remove("carta-select");
+        });
 
+        document.getElementById(cardId)?.classList.add("carta-select");
+
+
+        selectedCardId = cardId;
+      } catch (e) {}
     });
 }
 
+/*
 let nextCardFlag = handsLength * players.length;
 let currentPlayer = 0;
 
@@ -121,7 +275,7 @@ let currentPlayer = 0;
  * entre una carta al stack, esta funciona deberia filtrarlo ya que no
  * es mas el jugador activo.
  * El jugadoir activo va a venir del observable de firebase
- */
+ *
 const buttonNext = document.getElementById('button-next');
 // @ts-ignore
 const _next = fromEvent(buttonNext, 'click')
@@ -138,25 +292,37 @@ const _next = fromEvent(buttonNext, 'click')
       nextCard();
     }
   });
-
-/*
- esta funciona va a mutar cuando firebase este ready, ya que necesitamos 
- chequear quien es el jugador activo, (currentPlayer) vs el jugador que esta
- haciendo click en el button
 */
-const nextPlayer = () => {
-  currentPlayer++;
-  if (currentPlayer === players.length) {
-    currentPlayer = 0;
+
+
+
+/** Dibuja el nombre del current player */
+function drawTurn() {
+  if (!gameState.turn.player) {
+    return;
   }
+
+  while (_turn?.lastElementChild) {
+    _turn?.removeChild(_turn?.lastElementChild);
+  }
+
+  const turnDiv = document.createElement("div");
+
+  turnDiv.append(`Es el turno de: ${gameState.turn.player.name}`);
+
+  _turn?.appendChild(turnDiv);
 }
 
-const nextCard = () => {
-  if (nextCardFlag < randomDeck.length) {
-    nextCardFlag++;
-  } else {
-    // enviar el stack al randomDeck de nuevo
-    randomDeck = [...stack];
-    nextCardFlag = 0;
-  }
+/** Limpia la seleccion de cartas en la partida */
+function clearCardSelection() {
+  _players?.querySelectorAll(".carta-select").forEach((el) => {
+    el.classList.remove("carta-select");
+  });
+}
+
+/** Activa o desactiva el boton de tomar cartas */
+function toggleTakeButton() {
+  const takeButton = document.getElementById("button-take") as HTMLInputElement;
+
+  takeButton.disabled = !takeButton.disabled;
 }
