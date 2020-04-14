@@ -1,4 +1,6 @@
-import { GameCommand } from "./game.command";import { GameState } from "../models/game-state.model";
+import { GameCommand } from "./game.command";
+import { GameState } from "../models/game-state.model";
+import { Card } from "../models/card.model";
 
 export class StartGameCommand extends GameCommand {
   execute(state: GameState) {
@@ -14,6 +16,10 @@ export class StartGameCommand extends GameCommand {
         state.deck.cards.splice(index * handsLength, handsLength)
       );
     });
+
+    const firstStackCard = state.deck.takeCard() as Card;
+
+    state.stack.addCard(firstStackCard);
 
     state.turn.setPlayerTurn(state.playersGroup.players[0]);
   }
