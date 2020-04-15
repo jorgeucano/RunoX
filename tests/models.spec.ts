@@ -95,7 +95,7 @@ describe("Deck", () => {
     const tackedCard = deck.takeCard();
 
     expect(tackedCard).toBeDefined();
-    expect(tackedCard?.id).toEqual(card2.id);
+    expect(tackedCard?.id).toEqual(card1.id);
   });
 
   it("should log error when we try to take a card from an empty deck", () => {

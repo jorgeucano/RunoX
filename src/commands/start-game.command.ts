@@ -17,7 +17,15 @@ export class StartGameCommand extends GameCommand {
       );
     });
 
-    const firstStackCard = state.deck.takeCard() as Card;
+    let firstStackCard = state.deck.takeCard() as Card;
+
+    while(firstStackCard.isSpecialCard()) {
+      state.deck.addCards([firstStackCard]);
+
+      state.deck.shuffle();
+
+      firstStackCard = state.deck.takeCard() as Card;
+    }
 
     state.stack.addCard(firstStackCard);
 
