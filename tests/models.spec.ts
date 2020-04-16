@@ -8,6 +8,7 @@ import { GameState } from "../src/models/game-state.model";
 import { Stack } from "../src/models/stack.model";
 import { Value } from "../src/models/values.model";
 import { Color } from "../src/models/color.model";
+import { GameDirection } from "../src/models/game-direction.model";
 
 describe("Card", () => {
   it("should set sprite attribute when we create a card", () => {
@@ -26,7 +27,7 @@ describe("Card", () => {
 
     expect(card.isSpecialCard()).toBeTruthy();
   });
-  
+
   it("should return true when we invoke hasEffects and the card is has an effect", () => {
     const card = new Card(Value.WILDCARD);
 
@@ -252,6 +253,14 @@ describe("GameState", () => {
     expect(state.deck).toBeDefined();
     expect(state.playersGroup).toBeDefined();
     expect(state.turn).toBeDefined();
+  });
+
+  it("should change direction COUNTER_CLOCKWISE when we invoke the changeDirection method", () => {
+    const state = new GameState();
+
+    state.changeDirection();
+
+    expect(state.gameDirection).toEqual(GameDirection.COUNTER_CLOCKWISE);
   });
 });
 

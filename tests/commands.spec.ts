@@ -354,4 +354,28 @@ describe("DiscardHandCardCommand", () => {
     expect(state.turn.player?.hand.cards.length).toBe(0);
     expect(state.stack.cards.length).toBe(2);
   });
+
+  it("should change player next turn when we play a reverse card", () => {
+    const state = new GameState();
+    const player1 = new Player("p1", "player 1", "avatar");
+    const player2 = new Player("p2", "player 2", "avatar");
+    const player3 = new Player("p3", "player 3", "avatar");
+
+    state.playersGroup.addPlayers([player1, player2, player3]);
+    state.turn.setPlayerTurn(player3);
+
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardReverseRed = new Card(Value.REVERSE, Color.RED);
+    player3.hand.addCard(handCardReverseRed);
+
+    const command = new DiscardHandCardCommand(handCardReverseRed.id);
+
+    command.execute(state);
+
+    // si se hubiese jugado una carta 'normal' el siguiente jugador deberia
+    // ser el player 1 pero como se jugo un reverse el siguiente es player 2
+    expect(state.nextPlayerToPlay?.id).toEqual(player2.id);
+  });
 });
