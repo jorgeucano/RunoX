@@ -36,6 +36,6 @@ export class Deck {
       return;
     }
 
-    return this.cards.pop();
+    return this.cards.shift();
   }
 }

@@ -153,7 +153,7 @@ describe("StartGameCommand", () => {
   it("should deal the cards to the players, set current and add a card to the stack player when the command is executed", () => {
     const command = new StartGameCommand();
     const state = new GameState();
-    const card = new Card(Value.PLUS_FOUR);
+    const card = new Card(Value.ONE, Color.BLUE);
     const player1 = new Player("p1", "player 1", "avatar");
     const player2 = new Player("p2", "player 2", "avatar");
     const player3 = new Player("p3", "player 3", "avatar");
@@ -163,7 +163,7 @@ describe("StartGameCommand", () => {
     state.playersGroup.addPlayers([player1, player2, player3, player4]);
 
     const turnSpy = spyOn(state.turn, "setPlayerTurn").and.callThrough();
-    const deckSpy = spyOn(state.deck, "takeCard").and.callThrough();
+    const deckSpy = spyOn(state.deck, "takeCard").and.returnValue(card);
     const stackSpy = spyOn(state.stack, "addCard").and.callThrough();
     const hand1Spy = spyOn(player1.hand, "addCards").and.callThrough();
     const hand2Spy = spyOn(player2.hand, "addCards").and.callThrough();
