@@ -1,6 +1,6 @@
 import "./styles/styles.css";
 
-import { fromEvent } from "rxjs";
+import { fromEvent, merge } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { GameState } from "./models/game-state.model";
 import { BuildDeckCommand } from "./commands/build-deck.command";
@@ -59,12 +59,16 @@ drawStack();
 
 drawTurn();
 
+// @ts-ignore
+const getElement = (id: string): HTMLElement => document.getElementById(id);
+// @ts-ignore
+const fromClick = (id: string) => fromEvent(getElement(id), "click");
+const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
+
 /**
  * Finaliza el turno del currentPlayer
  */
-const buttonNext = document.getElementById("button-next");
-// @ts-ignore
-const _next = fromEvent(buttonNext, "click").subscribe((x: any) => {
+const _next = () => {
   const finalizeTurnCommand = new FinalizeTurnCommand();
 
   finalizeTurnCommand.execute(gameState);
@@ -72,27 +76,23 @@ const _next = fromEvent(buttonNext, "click").subscribe((x: any) => {
   clearCardSelection();
 
   drawTurn();
-});
-  
+};
+
 /**
  * Toma una carta y la asigna al currentPlayer
  */
-const buttonTake = document.getElementById("button-take");
-// @ts-ignore
-const _take = fromEvent(buttonTake, "click").subscribe((x: any) => {
+const _take = () => {
   const takeDeckCardCommand = new TakeDeckCardCommand();
 
   takeDeckCardCommand.execute(gameState);
 
   drawPlayersCards();
-});
+};
 
 /**
  * Descarta la carta seleccionada por el currentPlayer
  */
-const buttonDiscard = document.getElementById("button-discard");
-// @ts-ignore
-const _discard = fromEvent(buttonDiscard, "click").subscribe((x: any) => {
+const _discard = () => {
   try {
     const discardHandCardCommand = new DiscardHandCardCommand(selectedCardId);
 
@@ -104,10 +104,17 @@ const _discard = fromEvent(buttonDiscard, "click").subscribe((x: any) => {
 
     drawStack();
 
-    buttonNext?.click();
+    getElement("button-next")?.click();
   } catch (e) {}
+};
 
-});
+const buttons$ = merge(
+  fromClickMap("button-next", _next),
+  fromClickMap("button-take", _take),
+  fromClickMap("button-discard", _discard)
+);
+
+buttons$.subscribe();
 
 /** Dibuja a los jugadores con su respectiva mano
  * TODO: separar
@@ -195,7 +202,6 @@ function setPlayerClicks(id: string) {
 
         document.getElementById(cardId)?.classList.add("carta-select");
 
-
         selectedCardId = cardId;
       } catch (e) {}
     });
@@ -217,10 +223,13 @@ function drawTurn() {
     el.classList.remove("player-select");
     el.classList.remove("player-select-button");
   });
-  
-  document.getElementById(gameState.turn.player.id)?.classList.add("player-select");
-  document.getElementById(gameState.turn.player.id)?.classList.add("player-select-button");
-  
+
+  document
+    .getElementById(gameState.turn.player.id)
+    ?.classList.add("player-select");
+  document
+    .getElementById(gameState.turn.player.id)
+    ?.classList.add("player-select-button");
 
   turnDiv.append(`Es el turno de: ${gameState.turn.player.name}`);
 
