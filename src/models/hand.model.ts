@@ -7,6 +7,14 @@ export class Hand {
     this.cards = [];
   }
 
+  get score() {
+    return this.cards.reduce((amount, card) => {
+      amount += card.score;
+
+      return amount;
+    }, 0);
+  }
+
   addCard(card: Card) {
     this.cards.push(card);
   }
