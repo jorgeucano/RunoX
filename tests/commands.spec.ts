@@ -69,6 +69,41 @@ describe("BuildDeckCommand", () => {
     expect(spy).toBeCalled();
     expect(state.deck.cards.length).toBeGreaterThan(0);
   });
+
+  it("should generate a deck with a specific amount of cards", () => {
+    const command = new BuildDeckCommand();
+    const state = new GameState();
+
+    command.execute(state);
+
+    const greenCards = state.deck.cards.filter(
+      (card) => card.color === Color.GREEN
+    );
+    const blueCards = state.deck.cards.filter(
+      (card) => card.color === Color.BLUE
+    );
+    const redCards = state.deck.cards.filter(
+      (card) => card.color === Color.RED
+    );
+    const yellowCards = state.deck.cards.filter(
+      (card) => card.color === Color.YELLOW
+    );
+
+    const wildcards = state.deck.cards.filter(
+      (card) => card.value === Value.WILDCARD
+    );
+
+    const plusFour = state.deck.cards.filter(
+      (card) => card.value === Value.PLUS_FOUR
+    );
+
+    expect(greenCards.length).toBe(26);
+    expect(blueCards.length).toBe(26);
+    expect(redCards.length).toBe(26);
+    expect(yellowCards.length).toBe(26);
+    expect(wildcards.length).toBe(2);
+    expect(plusFour.length).toBe(2);
+  });
 });
 
 describe("FinalizeTurnCommand", () => {
@@ -153,7 +188,7 @@ describe("StartGameCommand", () => {
   it("should deal the cards to the players, set current and add a card to the stack player when the command is executed", () => {
     const command = new StartGameCommand();
     const state = new GameState();
-    const card = new Card(Value.PLUS_FOUR);
+    const card = new Card(Value.ONE, Color.BLUE);
     const player1 = new Player("p1", "player 1", "avatar");
     const player2 = new Player("p2", "player 2", "avatar");
     const player3 = new Player("p3", "player 3", "avatar");
@@ -163,7 +198,7 @@ describe("StartGameCommand", () => {
     state.playersGroup.addPlayers([player1, player2, player3, player4]);
 
     const turnSpy = spyOn(state.turn, "setPlayerTurn").and.callThrough();
-    const deckSpy = spyOn(state.deck, "takeCard").and.callThrough();
+    const deckSpy = spyOn(state.deck, "takeCard").and.returnValue(card);
     const stackSpy = spyOn(state.stack, "addCard").and.callThrough();
     const hand1Spy = spyOn(player1.hand, "addCards").and.callThrough();
     const hand2Spy = spyOn(player2.hand, "addCards").and.callThrough();
@@ -353,5 +388,29 @@ describe("DiscardHandCardCommand", () => {
     expect(stackSpy).toBeCalled();
     expect(state.turn.player?.hand.cards.length).toBe(0);
     expect(state.stack.cards.length).toBe(2);
+  });
+
+  it("should change player next turn when we play a reverse card", () => {
+    const state = new GameState();
+    const player1 = new Player("p1", "player 1", "avatar");
+    const player2 = new Player("p2", "player 2", "avatar");
+    const player3 = new Player("p3", "player 3", "avatar");
+
+    state.playersGroup.addPlayers([player1, player2, player3]);
+    state.turn.setPlayerTurn(player3);
+
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardReverseRed = new Card(Value.REVERSE, Color.RED);
+    player3.hand.addCard(handCardReverseRed);
+
+    const command = new DiscardHandCardCommand(handCardReverseRed.id);
+
+    command.execute(state);
+
+    // si se hubiese jugado una carta 'normal' el siguiente jugador deberia
+    // ser el player 1 pero como se jugo un reverse el siguiente es player 2
+    expect(state.nextPlayerToPlay?.id).toEqual(player2.id);
   });
 });

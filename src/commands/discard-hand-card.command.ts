@@ -1,5 +1,6 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
+import { Value } from "../models/values.model";
 
 export class DiscardHandCardCommand extends GameCommand {
   readonly cardId: string;
@@ -40,6 +41,10 @@ export class DiscardHandCardCommand extends GameCommand {
     state.turn.player.hand.removeCard(handCard);
 
     state.stack.addCard(handCard);
+
+    if (handCard.value === Value.REVERSE) {
+      state.changeDirection();
+    }
 
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`

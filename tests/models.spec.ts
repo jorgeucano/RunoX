@@ -8,6 +8,7 @@ import { GameState } from "../src/models/game-state.model";
 import { Stack } from "../src/models/stack.model";
 import { Value } from "../src/models/values.model";
 import { Color } from "../src/models/color.model";
+import { GameDirection } from "../src/models/game-direction.model";
 
 describe("Card", () => {
   it("should set sprite attribute when we create a card", () => {
@@ -26,7 +27,7 @@ describe("Card", () => {
 
     expect(card.isSpecialCard()).toBeTruthy();
   });
-  
+
   it("should return true when we invoke hasEffects and the card is has an effect", () => {
     const card = new Card(Value.WILDCARD);
 
@@ -38,6 +39,40 @@ describe("Card", () => {
     const wildcard = new Card(Value.WILDCARD);
 
     expect(wildcard.isPlayable(card)).toBeTruthy();
+  });
+
+  it("should return specific score when we check the score of a card", () => {
+    const zero = new Card(Value.ZERO, Color.GREEN);
+    const one = new Card(Value.ONE, Color.GREEN);
+    const two = new Card(Value.TWO, Color.GREEN);
+    const three = new Card(Value.THREE, Color.GREEN);
+    const four = new Card(Value.FOUR, Color.GREEN);
+    const five = new Card(Value.FIVE, Color.GREEN);
+    const six = new Card(Value.SIX, Color.GREEN);
+    const seven = new Card(Value.SEVEN, Color.GREEN);
+    const eight = new Card(Value.EIGHT, Color.GREEN);
+    const nine = new Card(Value.NINE, Color.GREEN);
+    const plusTwo = new Card(Value.PLUS_TWO, Color.GREEN);
+    const reverse = new Card(Value.REVERSE, Color.GREEN);
+    const skip = new Card(Value.SKIP, Color.GREEN);
+    const wildcard = new Card(Value.WILDCARD);
+    const plusFour = new Card(Value.PLUS_FOUR);
+
+    expect(zero.score).toBe(0);
+    expect(one.score).toBe(1);
+    expect(two.score).toBe(2);
+    expect(three.score).toBe(3);
+    expect(four.score).toBe(4);
+    expect(five.score).toBe(5);
+    expect(six.score).toBe(6);
+    expect(seven.score).toBe(7);
+    expect(eight.score).toBe(8);
+    expect(nine.score).toBe(9);
+    expect(plusTwo.score).toBe(20);
+    expect(reverse.score).toBe(20);
+    expect(skip.score).toBe(20);
+    expect(wildcard.score).toBe(50);
+    expect(plusFour.score).toBe(50);
   });
 });
 
@@ -95,7 +130,7 @@ describe("Deck", () => {
     const tackedCard = deck.takeCard();
 
     expect(tackedCard).toBeDefined();
-    expect(tackedCard?.id).toEqual(card2.id);
+    expect(tackedCard?.id).toEqual(card1.id);
   });
 
   it("should log error when we try to take a card from an empty deck", () => {
@@ -162,6 +197,17 @@ describe("Hand", () => {
     hand.removeCard(card1);
 
     expect(hand.cards.length).toBe(1);
+  });
+
+  it("should calculate the hand score correctly", () => {
+    const hand = new Hand();
+    const plusFour = new Card(Value.PLUS_FOUR);
+    const wildcard = new Card(Value.WILDCARD);
+    const cards = [plusFour, wildcard];
+
+    hand.addCards(cards);
+
+    expect(hand.score).toBe(100);
   });
 });
 
@@ -252,6 +298,14 @@ describe("GameState", () => {
     expect(state.deck).toBeDefined();
     expect(state.playersGroup).toBeDefined();
     expect(state.turn).toBeDefined();
+  });
+
+  it("should change direction COUNTER_CLOCKWISE when we invoke the changeDirection method", () => {
+    const state = new GameState();
+
+    state.changeDirection();
+
+    expect(state.gameDirection).toEqual(GameDirection.COUNTER_CLOCKWISE);
   });
 });
 

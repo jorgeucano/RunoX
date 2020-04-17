@@ -19,6 +19,40 @@ export class Card {
     this.color = color;
   }
 
+  get score() {
+    switch (this.value) {
+      case Value.PLUS_TWO:
+      case Value.SKIP:
+      case Value.REVERSE:
+        return 20;
+      case Value.WILDCARD:
+      case Value.PLUS_FOUR:
+        return 50;
+      case Value.ONE:
+        return 1;
+      case Value.TWO:
+        return 2;
+      case Value.THREE:
+        return 3;
+      case Value.FOUR:
+        return 4;
+      case Value.FIVE:
+        return 5;
+      case Value.SIX:
+        return 6;
+      case Value.SEVEN:
+        return 7;
+      case Value.EIGHT:
+        return 8;
+      case Value.NINE:
+        return 9;
+      case Value.ZERO:
+        return 0;
+      default:
+        return 0;
+    }
+  }
+
   isSpecialCard() {
     return isSpecial(this.value);
   }
