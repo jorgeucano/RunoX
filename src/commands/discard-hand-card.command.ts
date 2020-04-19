@@ -39,20 +39,23 @@ export class DiscardHandCardCommand extends GameCommand {
       );
     }
 
+    
+    state.turn.player.hand.removeCard(handCard);
+    
+    state.stack.addCard(handCard);
+    
     if (handCard.value === Value.WILDCARD) {
       let newColor;
+      // TODO: Cambiar el metodo de entrada del color
+      // TODO: hacer la validación de color en changePlayableColor
       while (!isValidColor(newColor as Color)) {
         newColor = prompt(
           "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
         );
       }
-      state.changePlayableColor(handCard, newColor as Color);
+      state.changePlayableColor(newColor as Color);
     }
-
-    state.turn.player.hand.removeCard(handCard);
-
-    state.stack.addCard(handCard);
-
+    
     if (handCard.value === Value.REVERSE) {
       state.changeDirection();
     }

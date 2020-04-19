@@ -57,8 +57,8 @@ export class GameState {
     this.playersGroup.players.reverse();
   }
 
-  changePlayableColor(stackCard: Card, color: Color) {
-    stackCard.setColor(color);
+  changePlayableColor(color: Color) {
+    this.stack.cardOnTop?.setColor(color);
     console.warn(`El nuevo color es ${color}`);
   }
 }
