@@ -1,6 +1,6 @@
-import { generateUniqueId } from '../utils/id-generator.helper';
-import { Color } from './color.model';
-import { Value, isSpecial } from './values.model';
+import { generateUniqueId } from "../utils/id-generator.helper";
+import { Color } from "./color.model";
+import { Value, isSpecial } from "./values.model";
 
 export class Card {
   readonly id: string;
@@ -77,7 +77,7 @@ export class Card {
 
     if (!this.color || !otherCard.color) {
       throw new Error(
-        'Ambas cartas deben tener definido un color para poder compararlas',
+        "Ambas cartas deben tener definido un color para poder compararlas",
       );
     }
 

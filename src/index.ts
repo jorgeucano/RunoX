@@ -1,15 +1,15 @@
-import './styles/styles.css';
+import "./styles/styles.css";
 
-import { fromEvent, merge } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-import { GameState } from './models/game-state.model';
-import { BuildDeckCommand } from './commands/build-deck.command';
-import { Player } from './models/player.model';
-import { FinalizeTurnCommand } from './commands/finalize-turn.command';
-import { StartGameCommand } from './commands/start-game.command';
-import { TakeDeckCardCommand } from './commands/take-deck-card.command';
-import { AddPlayersCommand } from './commands/add-players.command';
-import { DiscardHandCardCommand } from './commands/discard-hand-card.command';
+import { fromEvent, merge } from "rxjs";
+import { map, filter } from "rxjs/operators";
+import { GameState } from "./models/game-state.model";
+import { BuildDeckCommand } from "./commands/build-deck.command";
+import { Player } from "./models/player.model";
+import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
+import { StartGameCommand } from "./commands/start-game.command";
+import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
+import { AddPlayersCommand } from "./commands/add-players.command";
+import { DiscardHandCardCommand } from "./commands/discard-hand-card.command";
 
 const gameState = new GameState();
 
@@ -17,33 +17,33 @@ const buildDeckCommand = new BuildDeckCommand();
 
 buildDeckCommand.execute(gameState);
 
-const _players = document.getElementById('players');
-const _stack = document.getElementById('stack');
-const _turn = document.getElementById('turn');
+const _players = document.getElementById("players");
+const _stack = document.getElementById("stack");
+const _turn = document.getElementById("turn");
 
 // TODO: analizar donde debe ser agregado en el state
-let selectedCardId = '';
+let selectedCardId = "";
 
 const addPlayersCommand = new AddPlayersCommand([
   new Player(
-    'jorge1234',
-    'Jorge',
-    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg',
+    "jorge1234",
+    "Jorge",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg",
   ),
   new Player(
-    'calel1234',
-    'Calel',
-    'https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg',
+    "calel1234",
+    "Calel",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg",
   ),
   new Player(
-    'Facu1234',
-    'Facu',
-    'https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg',
+    "Facu1234",
+    "Facu",
+    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg",
   ),
   new Player(
-    'nikomendo',
-    'Nicolas',
-    'https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg',
+    "nikomendo",
+    "Nicolas",
+    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg",
   ),
 ]);
 
@@ -62,7 +62,7 @@ drawTurn();
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
 // @ts-ignore
-const fromClick = (id: string) => fromEvent(getElement(id), 'click');
+const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 /**
@@ -98,20 +98,20 @@ const _discard = () => {
 
     discardHandCardCommand.execute(gameState);
 
-    selectedCardId = '';
+    selectedCardId = "";
 
     drawPlayersCards();
 
     drawStack();
 
-    getElement('button-next')?.click();
+    getElement("button-next")?.click();
   } catch (e) {}
 };
 
 const buttons$ = merge(
-  fromClickMap('button-next', _next),
-  fromClickMap('button-take', _take),
-  fromClickMap('button-discard', _discard),
+  fromClickMap("button-next", _next),
+  fromClickMap("button-take", _take),
+  fromClickMap("button-discard", _discard),
 );
 
 buttons$.subscribe();
@@ -125,18 +125,18 @@ function drawPlayersCards() {
   }
 
   gameState.playersGroup.players.forEach((player) => {
-    const playerDiv = document.createElement('div');
+    const playerDiv = document.createElement("div");
 
     playerDiv.append(`Mano de ${player.name}:`);
 
-    playerDiv.setAttribute('id', player.id);
+    playerDiv.setAttribute("id", player.id);
 
     player.hand.cards.forEach((card) => {
-      const _hand = document.createElement('div');
+      const _hand = document.createElement("div");
 
-      _hand.setAttribute('id', `${card.id}`);
+      _hand.setAttribute("id", `${card.id}`);
 
-      _hand.setAttribute('class', `carta ${card.sprite}`);
+      _hand.setAttribute("class", `carta ${card.sprite}`);
 
       playerDiv.appendChild(_hand);
     });
@@ -160,14 +160,14 @@ function drawStack() {
     _stack?.removeChild(_stack?.lastElementChild);
   }
 
-  const stackTitleDiv = document.createElement('div');
+  const stackTitleDiv = document.createElement("div");
 
   stackTitleDiv.append(`La carta en la cima del stack es:`);
 
-  const stackCardDiv = document.createElement('div');
+  const stackCardDiv = document.createElement("div");
 
   stackCardDiv.setAttribute(
-    'class',
+    "class",
     `carta ${gameState.stack.cardOnTop.sprite}`,
   );
 
@@ -180,10 +180,10 @@ function setPlayerClicks(id: string) {
   const _player = document.getElementById(id);
 
   // @ts-ignore
-  fromEvent(_player, 'click')
+  fromEvent(_player, "click")
     .pipe(
       // @ts-ignore
-      filter((event) => event.target.classList.contains('carta')),
+      filter((event) => event.target.classList.contains("carta")),
       filter(() => id === gameState.turn.player?.id),
       map((event) => {
         // @ts-ignore
@@ -196,11 +196,11 @@ function setPlayerClicks(id: string) {
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
       try {
-        _player?.querySelectorAll('.carta-select').forEach((el) => {
-          el.classList.remove('carta-select');
+        _player?.querySelectorAll(".carta-select").forEach((el) => {
+          el.classList.remove("carta-select");
         });
 
-        document.getElementById(cardId)?.classList.add('carta-select');
+        document.getElementById(cardId)?.classList.add("carta-select");
 
         selectedCardId = cardId;
       } catch (e) {}
@@ -217,19 +217,19 @@ function drawTurn() {
     _turn?.removeChild(_turn?.lastElementChild);
   }
 
-  const turnDiv = document.createElement('div');
+  const turnDiv = document.createElement("div");
 
-  _players?.querySelectorAll('.player-select').forEach((el) => {
-    el.classList.remove('player-select');
-    el.classList.remove('player-select-button');
+  _players?.querySelectorAll(".player-select").forEach((el) => {
+    el.classList.remove("player-select");
+    el.classList.remove("player-select-button");
   });
 
   document
     .getElementById(gameState.turn.player.id)
-    ?.classList.add('player-select');
+    ?.classList.add("player-select");
   document
     .getElementById(gameState.turn.player.id)
-    ?.classList.add('player-select-button');
+    ?.classList.add("player-select-button");
 
   turnDiv.append(`Es el turno de: ${gameState.turn.player.name}`);
 
@@ -238,14 +238,14 @@ function drawTurn() {
 
 /** Limpia la seleccion de cartas en la partida */
 function clearCardSelection() {
-  _players?.querySelectorAll('.carta-select').forEach((el) => {
-    el.classList.remove('carta-select');
+  _players?.querySelectorAll(".carta-select").forEach((el) => {
+    el.classList.remove("carta-select");
   });
 }
 
 /** Activa o desactiva el boton de tomar cartas */
 function toggleTakeButton() {
-  const takeButton = document.getElementById('button-take') as HTMLInputElement;
+  const takeButton = document.getElementById("button-take") as HTMLInputElement;
 
   takeButton.disabled = !takeButton.disabled;
 }

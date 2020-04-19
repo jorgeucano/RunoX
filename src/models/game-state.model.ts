@@ -1,10 +1,10 @@
-import { Deck } from './deck.model';
-import { PlayersGroup } from './players-group.model';
-import { Turn } from './turn.model';
-import { Stack } from './stack.model';
-import { GameDirection } from './game-direction.model';
-import { Color } from './color.model';
-import { Card } from './card.model';
+import { Deck } from "./deck.model";
+import { PlayersGroup } from "./players-group.model";
+import { Turn } from "./turn.model";
+import { Stack } from "./stack.model";
+import { GameDirection } from "./game-direction.model";
+import { Color } from "./color.model";
+import { Card } from "./card.model";
 
 /** Clase que representa el estado del juego */
 export class GameState {
