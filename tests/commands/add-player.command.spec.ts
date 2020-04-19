@@ -3,14 +3,6 @@ import { AddPlayerCommand } from "../../src/commands/add-player.command";
 import { GameState } from "../../src/models/game-state.model";
 
 describe("AddPlayerCommand", () => {
-  it("should set player attribute when we create the command", () => {
-    const player = new Player("p1", "player 1", "avatar");
-    const command = new AddPlayerCommand(player);
-
-    expect(command.player).toBeDefined();
-    expect(command.player.id).toEqual("p1");
-  });
-
   it("should add player to state when we execute the command", () => {
     const player = new Player("p1", "player 1", "avatar");
     const command = new AddPlayerCommand(player);

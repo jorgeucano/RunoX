@@ -3,7 +3,7 @@ import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
 
 export class DiscardHandCardCommand extends GameCommand {
-  readonly cardId: string;
+  private readonly cardId: string;
 
   constructor(cardId: string) {
     super();
