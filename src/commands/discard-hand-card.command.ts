@@ -39,8 +39,6 @@ export class DiscardHandCardCommand extends GameCommand {
       );
     }
 
-    // si la carta a tirar es especial, entonces pedir cambiar a x color
-    // y poner como carta dummy en el stack
     if (handCard.value === Value.WILDCARD) {
       let newColor;
       while (!isValidColor(newColor as Color)) {
