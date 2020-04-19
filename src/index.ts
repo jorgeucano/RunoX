@@ -28,22 +28,22 @@ const addPlayersCommand = new AddPlayersCommand([
   new Player(
     "jorge1234",
     "Jorge",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
   ),
   new Player(
     "calel1234",
     "Calel",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg",
+    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
   ),
   new Player(
     "Facu1234",
     "Facu",
-    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg",
+    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
   ),
   new Player(
     "nikomendo",
     "Nicolas",
-    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg",
+    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
   ),
 ]);
 
@@ -111,7 +111,7 @@ const _discard = () => {
 const buttons$ = merge(
   fromClickMap("button-next", _next),
   fromClickMap("button-take", _take),
-  fromClickMap("button-discard", _discard),
+  fromClickMap("button-discard", _discard)
 );
 
 buttons$.subscribe();
@@ -168,7 +168,7 @@ function drawStack() {
 
   stackCardDiv.setAttribute(
     "class",
-    `carta ${gameState.stack.cardOnTop.sprite}`,
+    `carta ${gameState.stack.cardOnTop.sprite}`
   );
 
   stackTitleDiv.appendChild(stackCardDiv);
@@ -188,7 +188,7 @@ function setPlayerClicks(id: string) {
       map((event) => {
         // @ts-ignore
         return event.target.id;
-      }),
+      })
     )
     .subscribe((cardId: string) => {
       /*

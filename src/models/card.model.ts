@@ -77,7 +77,7 @@ export class Card {
 
     if (!this.color || !otherCard.color) {
       throw new Error(
-        "Ambas cartas deben tener definido un color para poder compararlas",
+        "Ambas cartas deben tener definido un color para poder compararlas"
       );
     }
 

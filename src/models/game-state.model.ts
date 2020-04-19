@@ -32,7 +32,7 @@ export class GameState {
     }
 
     let currentPlayerIndex = this.playersGroup.players.findIndex(
-      (player) => player.id === this.turn.player?.id,
+      (player) => player.id === this.turn.player?.id
     );
 
     const nextPlayerIndex = currentPlayerIndex + 1;
