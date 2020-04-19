@@ -1,8 +1,10 @@
-import { Deck } from "./deck.model";
-import { PlayersGroup } from "./players-group.model";
-import { Turn } from "./turn.model";
-import { Stack } from "./stack.model";
-import { GameDirection } from "./game-direction.model";
+import { Deck } from './deck.model';
+import { PlayersGroup } from './players-group.model';
+import { Turn } from './turn.model';
+import { Stack } from './stack.model';
+import { GameDirection } from './game-direction.model';
+import { Color } from './color.model';
+import { Card } from './card.model';
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -30,7 +32,7 @@ export class GameState {
     }
 
     let currentPlayerIndex = this.playersGroup.players.findIndex(
-      (player) => player.id === this.turn.player?.id
+      (player) => player.id === this.turn.player?.id,
     );
 
     const nextPlayerIndex = currentPlayerIndex + 1;
@@ -53,5 +55,10 @@ export class GameState {
     this.gameDirection = newDirection;
 
     this.playersGroup.players.reverse();
+  }
+
+  changePlayableColor(stackCard: Card, color: Color) {
+    stackCard.setColor(color);
+    console.warn(`El nuevo color es ${color}`);
   }
 }

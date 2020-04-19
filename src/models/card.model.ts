@@ -1,12 +1,12 @@
-import { generateUniqueId } from "../utils/id-generator.helper";
-import { Color } from "./color.model";
-import { Value, isSpecial } from "./values.model";
+import { generateUniqueId } from '../utils/id-generator.helper';
+import { Color } from './color.model';
+import { Value, isSpecial } from './values.model';
 
 export class Card {
   readonly id: string;
   readonly sprite: string;
   readonly value: Value;
-  readonly color?: Color;
+  color?: Color;
 
   constructor(value: Value, color?: Color) {
     if (isSpecial(value) && color) {
@@ -66,6 +66,10 @@ export class Card {
     );
   }
 
+  setColor(color: Color) {
+    this.color = color;
+  }
+
   isPlayable(otherCard: Card) {
     if (this.isSpecialCard()) {
       return true;
@@ -73,7 +77,7 @@ export class Card {
 
     if (!this.color || !otherCard.color) {
       throw new Error(
-        "Ambas cartas deben tener definido un color para poder compararlas"
+        'Ambas cartas deben tener definido un color para poder compararlas',
       );
     }
 

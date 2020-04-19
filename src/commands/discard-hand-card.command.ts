@@ -1,6 +1,7 @@
-import { GameCommand } from "./game.command";
-import { GameState } from "../models/game-state.model";
-import { Value } from "../models/values.model";
+import { GameCommand } from './game.command';
+import { GameState } from '../models/game-state.model';
+import { Value } from '../models/values.model';
+import { isValidColor, Color } from '../models/color.model';
 
 export class DiscardHandCardCommand extends GameCommand {
   readonly cardId: string;
@@ -13,29 +14,41 @@ export class DiscardHandCardCommand extends GameCommand {
 
   execute(state: GameState) {
     if (!state.turn.player) {
-      console.error("No hay un turno de un jugador activo");
+      console.error('No hay un turno de un jugador activo');
 
-      throw new Error("No hay un turno de un jugador activo");
+      throw new Error('No hay un turno de un jugador activo');
     }
 
     const handCard = state.turn.player?.hand.cards.find(
-      (handCard) => handCard.id === this.cardId
+      (handCard) => handCard.id === this.cardId,
     );
 
     if (!handCard) {
-      console.error("No se ha encontrado la carta de la mano del jugador");
+      console.error('No se ha encontrado la carta de la mano del jugador');
 
-      throw new Error("No se ha encontrado la carta de la mano del jugador");
+      throw new Error('No se ha encontrado la carta de la mano del jugador');
     }
 
     if (state.stack.cardOnTop && !handCard.isPlayable(state.stack.cardOnTop)) {
       console.error(
-        "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
+        'La carta que quiere tirar no tiene el mismo color o valor que la del stack',
       );
 
       throw new Error(
-        "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
+        'La carta que quiere tirar no tiene el mismo color o valor que la del stack',
       );
+    }
+
+    // si la carta a tirar es especial, entonces pedir cambiar a x color
+    // y poner como carta dummy en el stack
+    if (handCard.value === Value.WILDCARD) {
+      let newColor;
+      while (!isValidColor(newColor as Color)) {
+        newColor = prompt(
+          'Escribe el nuevo color a jugar: azul, rojo, verde o amarillo',
+        );
+      }
+      state.changePlayableColor(handCard, newColor as Color);
     }
 
     state.turn.player.hand.removeCard(handCard);
@@ -47,7 +60,7 @@ export class DiscardHandCardCommand extends GameCommand {
     }
 
     console.log(
-      `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
+      `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`,
     );
   }
 }
