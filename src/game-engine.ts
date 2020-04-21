@@ -19,6 +19,8 @@ export class GameEngine {
   private constructor() {
     this.state = new GameState();
     this.events = GameEvents.getInstance();
+
+    this.setSubscriptions();
   }
 
   static getInstance(): GameEngine {
@@ -39,6 +41,16 @@ export class GameEngine {
 
   get stackCard() {
     return this.state.stack.cardOnTop;
+  }
+
+  setSubscriptions() {
+    this.events.on(GameEventName.AFTER_TAKE_CARD, () => {
+      if (!this.state.deck.cards.length) {
+        const regenerateDeckCommand = new RegenerateDeckCommand();
+
+        regenerateDeckCommand.execute(this.state);
+      }
+    });
   }
 
   start() {
@@ -69,12 +81,6 @@ export class GameEngine {
     finalizeTurnCommand.execute(this.state);
 
     this.events.dispatch(GameEventName.AFTER_PLAY_CARD);
-  }
-
-  regenerateDeck() {
-    const regenerateDeckCommand = new RegenerateDeckCommand();
-
-    regenerateDeckCommand.execute(this.state);
   }
 
   takeCard() {
