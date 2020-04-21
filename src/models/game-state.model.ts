@@ -3,6 +3,8 @@ import { PlayersGroup } from "./players-group.model";
 import { Turn } from "./turn.model";
 import { Stack } from "./stack.model";
 import { GameDirection } from "./game-direction.model";
+import { Color } from "./color.model";
+import { Card } from "./card.model";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -53,5 +55,10 @@ export class GameState {
     this.gameDirection = newDirection;
 
     this.playersGroup.players.reverse();
+  }
+
+  changePlayableColor(color: Color) {
+    this.stack.cardOnTop?.setColor(color);
+    console.warn(`El nuevo color es ${color}`);
   }
 }

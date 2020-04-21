@@ -6,7 +6,7 @@ export class Card {
   readonly id: string;
   readonly sprite: string;
   readonly value: Value;
-  readonly color?: Color;
+  color?: Color;
 
   constructor(value: Value, color?: Color) {
     if (isSpecial(value) && color) {
@@ -64,6 +64,10 @@ export class Card {
       this.value === Value.REVERSE ||
       this.value === Value.SKIP
     );
+  }
+
+  setColor(color: Color) {
+    this.color = color;
   }
 
   isPlayable(otherCard: Card) {
