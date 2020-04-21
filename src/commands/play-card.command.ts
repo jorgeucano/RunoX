@@ -70,6 +70,7 @@ export class PlayCardCommand extends GameCommand {
       let newColor;
       // TODO: Cambiar el metodo de entrada del color
       // TODO: hacer la validación de color en changePlayableColor
+      // TODO: Agregar finalizar turno del siguiente jugador. U aplicar efecto de carta Skip
       while (!isValidColor(newColor as Color)) {
         newColor = prompt(
           "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
