@@ -61,4 +61,28 @@ export class GameState {
     this.stack.cardOnTop?.setColor(color);
     console.warn(`El nuevo color es ${color}`);
   }
+
+  giveCards(quantity: number) {
+    const avaibleCards = this.deck.cards.length + this.stack.cards.length;
+    while(quantity > avaibleCards) {
+      // No puede entregar mas cartas que las que hay jugables.
+      quantity -= 1;
+    }
+    if (quantity > this.deck.cards.length) {
+      //Si no alcanza del mazo, entonces mezcla el deck con el stack.
+      this.reshuffle();
+    }
+    for (let index = 0; index < quantity; index++) {
+      const newCard = this.deck.takeCard();
+      this.nextPlayerToPlay.hand.addCard(newCard as Card)
+    }
+    console.log(`Se entregaron ${quantity} cartas al jugador ${this.nextPlayerToPlay.name}`);
+  }
+
+  reshuffle() {
+    // No mezcla las cartas, simplemente las pone tal cual en el maso.
+    // TODO: Mezclar el deck al juntarlas con el stack.
+    this.deck.addCards(this.stack.cards);
+    this.stack.empty()
+  }
 }

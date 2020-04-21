@@ -44,7 +44,7 @@ export class DiscardHandCardCommand extends GameCommand {
     
     state.stack.addCard(handCard);
     
-    if (handCard.value === Value.WILDCARD) {
+    if (handCard.value === Value.WILDCARD || handCard.value === Value.PLUS_FOUR) {
       let newColor;
       // TODO: Cambiar el metodo de entrada del color
       // TODO: hacer la validación de color en changePlayableColor
@@ -55,7 +55,11 @@ export class DiscardHandCardCommand extends GameCommand {
       }
       state.changePlayableColor(newColor as Color);
     }
-    
+
+    if(handCard.value === Value.PLUS_FOUR) {
+      state.giveCards(4);
+    }
+
     if (handCard.value === Value.REVERSE) {
       state.changeDirection();
     }
