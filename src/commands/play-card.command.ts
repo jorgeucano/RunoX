@@ -14,25 +14,28 @@ export class PlayCardCommand extends GameCommand {
     this.cardId = cardId;
   }
 
-  execute(state: GameState) {
+  execute(state: GameState): boolean {
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {
       console.error("No ha sido posible encontrar al jugador en la partida");
 
-      throw new Error("No ha sido posible encontrar al jugador en la partida");
+      alert("No ha sido posible encontrar al jugador en la partida");
+      return false;
     }
 
     if (!state.turn.player) {
       console.error("No hay un turno activo");
 
-      throw new Error("No hay un turno activo");
+      alert("No hay un turno activo");
+      return false;
     }
 
     if (player.id !== state.turn.player.id) {
       console.error("No es el turno del jugador");
 
-      throw new Error("No es el turno del jugador");
+      alert("No es el turno del jugador");
+      return false;
     }
 
     const handCard = player.hand.cards.find(
@@ -40,19 +43,22 @@ export class PlayCardCommand extends GameCommand {
     );
 
     if (!handCard) {
-      console.error("No se ha encontrado la carta de la mano del jugador");
+      alert("No se ha encontrado la carta de la mano del jugador");
 
-      throw new Error("No se ha encontrado la carta de la mano del jugador");
+      // alert("No se ha encontrado la carta de la mano del jugador");
+      return false;
     }
 
-    if (state.stack.cardOnTop && !handCard.isPlayable(state.stack.cardOnTop)) {
+    if (state.stack.cardOnTop && !handCard?.isPlayable(state.stack.cardOnTop)) {
       console.error(
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );
 
-      throw new Error(
+      alert(
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );
+      return false;
+
     }
 
     
@@ -60,7 +66,7 @@ export class PlayCardCommand extends GameCommand {
     
     state.stack.addCard(handCard);
     
-    if (handCard.value === Value.WILDCARD || handCard.value === Value.PLUS_FOUR) {
+    if (handCard?.value === Value.WILDCARD || handCard?.value === Value.PLUS_FOUR) {
       let newColor;
       // TODO: Cambiar el metodo de entrada del color
       // TODO: hacer la validación de color en changePlayableColor
@@ -72,16 +78,17 @@ export class PlayCardCommand extends GameCommand {
       state.changePlayableColor(newColor as Color);
     }
 
-    if(handCard.value === Value.PLUS_FOUR) {
+    if(handCard?.value === Value.PLUS_FOUR) {
       state.giveCards(4);
     }
 
-    if (handCard.value === Value.REVERSE) {
+    if (handCard?.value === Value.REVERSE) {
       state.changeDirection();
     }
 
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
+    return true;
   }
 }

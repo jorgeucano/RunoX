@@ -74,8 +74,8 @@ export class GameEngine {
   playCard(playerId: string, cardId: string) {
     const playCardCommand = new PlayCardCommand(playerId, cardId);
 
-    playCardCommand.execute(this.state);
-
+    const next = playCardCommand.execute(this.state);
+    if (!next) return;
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
     finalizeTurnCommand.execute(this.state);

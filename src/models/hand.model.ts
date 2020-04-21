@@ -23,7 +23,11 @@ export class Hand {
     this.cards.push(...cards);
   }
 
-  removeCard(card: Card) {
+  removeCard(card: Card | undefined) {
+    if (card === undefined) {
+      console.error(`La mano del jugador no posee cartas`);
+      return;
+    } 
     const cardIndex = this.cards.findIndex(
       (handCard) => handCard.id === card.id
     );

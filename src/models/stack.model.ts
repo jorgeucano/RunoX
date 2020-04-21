@@ -15,7 +15,8 @@ export class Stack {
     return this.cards[this.cards.length - 1];
   }
 
-  addCard(card: Card) {
+  addCard(card: Card | undefined) {
+    if (!card) return;
     this.cards.push(card);
   }
 
