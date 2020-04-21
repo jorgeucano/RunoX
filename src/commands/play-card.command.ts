@@ -87,6 +87,10 @@ export class PlayCardCommand extends GameCommand {
       state.changeDirection();
     }
 
+    if(handCard?.value === Value.SKIP) {
+      state.skipNextTurn();
+    }
+
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
