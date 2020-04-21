@@ -1,12 +1,13 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
+import { CommandResult } from "./command-result";
 
 export class RegenerateDeckCommand extends GameCommand {
   execute(state: GameState) {
     if (state.deck.cards.length) {
       console.error("El mazo aun tiene cartas");
 
-      return;
+      return new CommandResult(false, "El mazo aun tiene cartas");
     }
 
     const newDeckCards = state.stack.cards.filter(
@@ -20,7 +21,10 @@ export class RegenerateDeckCommand extends GameCommand {
     if (!currentCard) {
       console.error("No se pudo obtener la carta de la cima del stack");
 
-      return;
+      return new CommandResult(
+        false,
+        "No se pudo obtener la carta de la cima del stack"
+      );
     }
 
     state.stack.empty();
@@ -29,6 +33,8 @@ export class RegenerateDeckCommand extends GameCommand {
 
     state.deck.shuffle();
 
-    console.log(`Se ha regenerado el deck: ${JSON.stringify(state.deck.cards)}`);
+    console.log("Se ha regenerado el deck");
+
+    return new CommandResult(true);
   }
 }

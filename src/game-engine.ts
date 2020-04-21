@@ -54,13 +54,28 @@ export class GameEngine {
   }
 
   start() {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const buildDeckCommand = new BuildDeckCommand();
 
-    buildDeckCommand.execute(this.state);
+    commandResult = buildDeckCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     const startGameCommand = new StartGameCommand();
 
-    startGameCommand.execute(this.state);
+    commandResult = startGameCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     this.events.dispatch(GameEventName.AFTER_GAME_START);
   }
@@ -68,29 +83,65 @@ export class GameEngine {
   join(players: Player[]) {
     const addPlayersCommand = new AddPlayersCommand(players);
 
-    addPlayersCommand.execute(this.state);
+    const commandResult = addPlayersCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
   }
 
   playCard(playerId: string, cardId: string) {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const playCardCommand = new PlayCardCommand(playerId, cardId);
 
-    const next = playCardCommand.execute(this.state);
-    if (!next) return;
+    commandResult = playCardCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
+
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
-    finalizeTurnCommand.execute(this.state);
+    commandResult = finalizeTurnCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     this.events.dispatch(GameEventName.AFTER_PLAY_CARD);
   }
 
   takeCard() {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const takeDeckCardCommand = new TakeDeckCardCommand();
 
-    takeDeckCardCommand.execute(this.state);
+    commandResult = takeDeckCardCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
-    finalizeTurnCommand.execute(this.state);
+    commandResult = finalizeTurnCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     this.events.dispatch(GameEventName.AFTER_TAKE_CARD);
   }
