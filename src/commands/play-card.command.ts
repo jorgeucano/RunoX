@@ -66,6 +66,12 @@ export class PlayCardCommand extends GameCommand {
     
     state.stack.addCard(handCard);
     
+    if(handCard?.value === Value.PLUS_FOUR) {
+      // Es importante el orden en que se aplica los efectos. Primero se aplica +4 y luego saltea turno.
+      state.giveCards(4);
+      state.skipNextTurn();
+    }
+
     if (handCard?.value === Value.WILDCARD || handCard?.value === Value.PLUS_FOUR) {
       let newColor;
       // TODO: Cambiar el metodo de entrada del color
@@ -76,10 +82,6 @@ export class PlayCardCommand extends GameCommand {
         );
       }
       state.changePlayableColor(newColor as Color);
-    }
-
-    if(handCard?.value === Value.PLUS_FOUR) {
-      state.giveCards(4);
     }
 
     if (handCard?.value === Value.REVERSE) {
