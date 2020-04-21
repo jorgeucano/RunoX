@@ -2,20 +2,11 @@ import "./styles/styles.css";
 
 import { fromEvent, merge } from "rxjs";
 import { map, filter } from "rxjs/operators";
-import { GameState } from "./models/game-state.model";
-import { BuildDeckCommand } from "./commands/build-deck.command";
 import { Player } from "./models/player.model";
-import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
-import { StartGameCommand } from "./commands/start-game.command";
-import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
-import { AddPlayersCommand } from "./commands/add-players.command";
-import { DiscardHandCardCommand } from "./commands/discard-hand-card.command";
+import { GameEngine } from "./game-engine";
+import { GameEventName } from "./events/game-events.enum";
 
-const gameState = new GameState();
-
-const buildDeckCommand = new BuildDeckCommand();
-
-buildDeckCommand.execute(gameState);
+const engine = GameEngine.getInstance();
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
@@ -24,7 +15,7 @@ const _turn = document.getElementById("turn");
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
 
-const addPlayersCommand = new AddPlayersCommand([
+engine.join([
   new Player(
     "jorge1234",
     "Jorge",
@@ -47,17 +38,31 @@ const addPlayersCommand = new AddPlayersCommand([
   ),
 ]);
 
-addPlayersCommand.execute(gameState);
+engine.on(GameEventName.AFTER_GAME_START, () => {
+  drawPlayersCards();
 
-const startGameCommand = new StartGameCommand();
+  drawStack();
 
-startGameCommand.execute(gameState);
+  drawTurn();
+});
 
-drawPlayersCards();
+engine.on(GameEventName.AFTER_PLAY_CARD, () => {
+  selectedCardId = "";
 
-drawStack();
+  drawPlayersCards();
 
-drawTurn();
+  drawStack();
+
+  drawTurn();
+});
+
+engine.on(GameEventName.AFTER_TAKE_CARD, () => {
+  drawPlayersCards();
+
+  drawTurn();
+});
+
+engine.start();
 
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
@@ -65,53 +70,12 @@ const getElement = (id: string): HTMLElement => document.getElementById(id);
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
-/**
- * Finaliza el turno del currentPlayer
- */
-const _next = () => {
-  const finalizeTurnCommand = new FinalizeTurnCommand();
-
-  finalizeTurnCommand.execute(gameState);
-
-  clearCardSelection();
-
-  drawTurn();
-};
-
-/**
- * Toma una carta y la asigna al currentPlayer
- */
-const _take = () => {
-  const takeDeckCardCommand = new TakeDeckCardCommand();
-
-  takeDeckCardCommand.execute(gameState);
-
-  drawPlayersCards();
-};
-
-/**
- * Descarta la carta seleccionada por el currentPlayer
- */
-const _discard = () => {
-  try {
-    const discardHandCardCommand = new DiscardHandCardCommand(selectedCardId);
-
-    discardHandCardCommand.execute(gameState);
-
-    selectedCardId = "";
-
-    drawPlayersCards();
-
-    drawStack();
-
-    getElement("button-next")?.click();
-  } catch (e) {}
-};
-
 const buttons$ = merge(
-  fromClickMap("button-next", _next),
-  fromClickMap("button-take", _take),
-  fromClickMap("button-discard", _discard)
+  fromClickMap("button-take", () => engine.takeCard()),
+  fromClickMap("button-play", () =>
+    // @ts-ignore
+    engine.playCard(engine.playerTurn?.id, selectedCardId)
+  )
 );
 
 buttons$.subscribe();
@@ -124,7 +88,7 @@ function drawPlayersCards() {
     _players?.removeChild(_players?.lastElementChild);
   }
 
-  gameState.playersGroup.players.forEach((player) => {
+  engine.players.forEach((player) => {
     const playerDiv = document.createElement("div");
 
     playerDiv.append(`Mano de ${player.name}:`);
@@ -152,7 +116,7 @@ function drawPlayersCards() {
  * TODO: observar los cambios de gameState.stack.cardOnTop
  */
 function drawStack() {
-  if (!gameState.stack.cardOnTop) {
+  if (!engine.stackCard) {
     return;
   }
 
@@ -166,10 +130,7 @@ function drawStack() {
 
   const stackCardDiv = document.createElement("div");
 
-  stackCardDiv.setAttribute(
-    "class",
-    `carta ${gameState.stack.cardOnTop.sprite}`
-  );
+  stackCardDiv.setAttribute("class", `carta ${engine.stackCard.sprite}`);
 
   stackTitleDiv.appendChild(stackCardDiv);
 
@@ -184,7 +145,7 @@ function setPlayerClicks(id: string) {
     .pipe(
       // @ts-ignore
       filter((event) => event.target.classList.contains("carta")),
-      filter(() => id === gameState.turn.player?.id),
+      filter(() => id === engine.playerTurn?.id),
       map((event) => {
         // @ts-ignore
         return event.target.id;
@@ -209,7 +170,7 @@ function setPlayerClicks(id: string) {
 
 /** Dibuja el nombre del current player */
 function drawTurn() {
-  if (!gameState.turn.player) {
+  if (!engine.playerTurn) {
     return;
   }
 
@@ -224,28 +185,12 @@ function drawTurn() {
     el.classList.remove("player-select-button");
   });
 
+  document.getElementById(engine.playerTurn.id)?.classList.add("player-select");
   document
-    .getElementById(gameState.turn.player.id)
-    ?.classList.add("player-select");
-  document
-    .getElementById(gameState.turn.player.id)
+    .getElementById(engine.playerTurn.id)
     ?.classList.add("player-select-button");
 
-  turnDiv.append(`Es el turno de: ${gameState.turn.player.name}`);
+  turnDiv.append(`Es el turno de: ${engine.playerTurn.name}`);
 
   _turn?.appendChild(turnDiv);
-}
-
-/** Limpia la seleccion de cartas en la partida */
-function clearCardSelection() {
-  _players?.querySelectorAll(".carta-select").forEach((el) => {
-    el.classList.remove("carta-select");
-  });
-}
-
-/** Activa o desactiva el boton de tomar cartas */
-function toggleTakeButton() {
-  const takeButton = document.getElementById("button-take") as HTMLInputElement;
-
-  takeButton.disabled = !takeButton.disabled;
 }
