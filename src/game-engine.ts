@@ -7,7 +7,7 @@ import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
 import { RegenerateDeckCommand } from "./commands/regenerate-deck.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
-import { GameEvents } from "./events/game-events";
+import { GameEvents, EventHandler } from "./events/game-events";
 import { GameEventName } from "./events/game-events.enum";
 
 export class GameEngine {
@@ -87,5 +87,9 @@ export class GameEngine {
     finalizeTurnCommand.execute(this.state);
 
     this.events.dispatch(GameEventName.AFTER_TAKE_CARD);
+  }
+
+  on(event: GameEventName, action: EventHandler) {
+    this.events.on(event, action);
   }
 }
