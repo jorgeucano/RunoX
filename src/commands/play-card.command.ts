@@ -1,6 +1,7 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
+import { isValidColor, Color } from "../models/color.model";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -54,9 +55,26 @@ export class PlayCardCommand extends GameCommand {
       );
     }
 
+    
     state.turn.player.hand.removeCard(handCard);
-
+    
     state.stack.addCard(handCard);
+    
+    if (handCard.value === Value.WILDCARD || handCard.value === Value.PLUS_FOUR) {
+      let newColor;
+      // TODO: Cambiar el metodo de entrada del color
+      // TODO: hacer la validación de color en changePlayableColor
+      while (!isValidColor(newColor as Color)) {
+        newColor = prompt(
+          "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
+        );
+      }
+      state.changePlayableColor(newColor as Color);
+    }
+
+    if(handCard.value === Value.PLUS_FOUR) {
+      state.giveCards(4);
+    }
 
     if (handCard.value === Value.REVERSE) {
       state.changeDirection();
