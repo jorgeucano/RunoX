@@ -1,15 +1,28 @@
 import { GameState } from "../../src/models/game-state.model";
-import { DiscardHandCardCommand } from "../../src/commands/discard-hand-card.command";
+import { PlayCardCommand } from "../../src/commands/play-card.command";
 import { Player } from "../../src/models/player.model";
 import { Card } from "../../src/models/card.model";
 import { Value } from "../../src/models/values.model";
 import { Color } from "../../src/models/color.model";
 
-describe("DiscardHandCardCommand", () => {
+describe("PlayCardCommand", () => {
+  it("should log error when we execute the command and the player is not playing", () => {
+    const state = new GameState();
+    const player = new Player("p1", "player 1", "avatar");
+    const command = new PlayCardCommand(player.id, "card1");
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    expect(() => command.execute(state)).toThrow(Error);
+    expect(spy).toBeCalled();
+  });
+
   it("should log error when we execute the command and there is not a current player", () => {
     const state = new GameState();
-    const command = new DiscardHandCardCommand("card1");
+    const player = new Player("p1", "player 1", "avatar");
+    const command = new PlayCardCommand(player.id, "card1");
     const spy = spyOn(global.console, "error").and.callThrough();
+
+    state.playersGroup.addPlayer(player);
 
     expect(() => command.execute(state)).toThrow(Error);
     expect(spy).toBeCalled();
@@ -19,9 +32,10 @@ describe("DiscardHandCardCommand", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const card = new Card(Value.PLUS_FOUR);
-    const command = new DiscardHandCardCommand("card2");
+    const command = new PlayCardCommand(player.id, "card2");
     const spy = spyOn(global.console, "error").and.callThrough();
 
+    state.playersGroup.addPlayer(player);
     player.hand.addCard(card);
     state.turn.setPlayerTurn(player);
 
@@ -34,9 +48,10 @@ describe("DiscardHandCardCommand", () => {
     const player = new Player("p1", "player 1", "avatar");
     const stackCardRedTwo = new Card(Value.TWO, Color.RED);
     const handCardBlueFour = new Card(Value.FOUR, Color.BLUE);
-    const command = new DiscardHandCardCommand("cardBlueFour");
+    const command = new PlayCardCommand(player.id, "cardBlueFour");
     const spy = spyOn(global.console, "error").and.callThrough();
 
+    state.playersGroup.addPlayer(player);
     state.stack.addCard(stackCardRedTwo);
     player.hand.addCard(handCardBlueFour);
     state.turn.setPlayerTurn(player);
@@ -49,6 +64,7 @@ describe("DiscardHandCardCommand", () => {
     const state = new GameState();
 
     const player = new Player("p1", "player 1", "avatar");
+    state.playersGroup.addPlayer(player);
     state.turn.setPlayerTurn(player);
 
     const stackCardRedTwo = new Card(Value.TWO, Color.RED);
@@ -61,7 +77,7 @@ describe("DiscardHandCardCommand", () => {
     // @ts-ignore
     const spy = spyOn(state.turn.player.hand, "removeCard").and.callThrough();
 
-    const command = new DiscardHandCardCommand(handCardRedFour.id);
+    const command = new PlayCardCommand(player.id, handCardRedFour.id);
     command.execute(state);
 
     expect(spy).toBeCalled();
@@ -85,7 +101,7 @@ describe("DiscardHandCardCommand", () => {
     const handCardReverseRed = new Card(Value.REVERSE, Color.RED);
     player3.hand.addCard(handCardReverseRed);
 
-    const command = new DiscardHandCardCommand(handCardReverseRed.id);
+    const command = new PlayCardCommand(player3.id, handCardReverseRed.id);
 
     command.execute(state);
 

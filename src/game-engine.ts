@@ -1,21 +1,24 @@
 import { GameState } from "./models/game-state.model";
 import { Player } from "./models/player.model";
-import { AddPlayerCommand } from "./commands/add-player.command";
 import { AddPlayersCommand } from "./commands/add-players.command";
 import { BuildDeckCommand } from "./commands/build-deck.command";
-import { DiscardHandCardCommand } from "./commands/discard-hand-card.command";
+import { PlayCardCommand } from "./commands/play-card.command";
 import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
 import { RegenerateDeckCommand } from "./commands/regenerate-deck.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
+import { GameEvents } from "./events/game-events";
+import { GameEventName } from "./events/game-events.enum";
 
 export class GameEngine {
   private static instance: GameEngine;
 
   private state: GameState;
+  private events: GameEvents;
 
   private constructor() {
     this.state = new GameState();
+    this.events = GameEvents.getInstance();
   }
 
   static getInstance(): GameEngine {
@@ -38,34 +41,34 @@ export class GameEngine {
     return this.state.stack.cardOnTop;
   }
 
-  addPlayer(player: Player) {
-    const addPlayerCommand = new AddPlayerCommand(player);
+  start() {
+    const buildDeckCommand = new BuildDeckCommand();
 
-    addPlayerCommand.execute(this.state);
+    buildDeckCommand.execute(this.state);
+
+    const startGameCommand = new StartGameCommand();
+
+    startGameCommand.execute(this.state);
+
+    this.events.dispatch(GameEventName.GAME_STARTED);
   }
 
-  addPlayers(players: Player[]) {
+  join(players: Player[]) {
     const addPlayersCommand = new AddPlayersCommand(players);
 
     addPlayersCommand.execute(this.state);
   }
 
-  buildDeck() {
-    const buildDeckCommand = new BuildDeckCommand();
+  playCard(playerId: string, cardId: string) {
+    const playCardCommand = new PlayCardCommand(playerId, cardId);
 
-    buildDeckCommand.execute(this.state);
-  }
+    playCardCommand.execute(this.state);
 
-  discardHandCard(cardId: string) {
-    const discardHandCardCommand = new DiscardHandCardCommand(cardId);
-
-    discardHandCardCommand.execute(this.state);
-  }
-
-  finalizeTurn() {
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
     finalizeTurnCommand.execute(this.state);
+
+    this.events.dispatch(GameEventName.AFTER_PLAY_CARD);
   }
 
   regenerateDeck() {
@@ -74,15 +77,15 @@ export class GameEngine {
     regenerateDeckCommand.execute(this.state);
   }
 
-  startGame() {
-    const startGameCommand = new StartGameCommand();
-
-    startGameCommand.execute(this.state);
-  }
-
-  takeDeckCard() {
+  takeCard() {
     const takeDeckCardCommand = new TakeDeckCardCommand();
 
     takeDeckCardCommand.execute(this.state);
+
+    const finalizeTurnCommand = new FinalizeTurnCommand();
+
+    finalizeTurnCommand.execute(this.state);
+
+    this.events.dispatch(GameEventName.AFTER_TAKE_CARD);
   }
 }

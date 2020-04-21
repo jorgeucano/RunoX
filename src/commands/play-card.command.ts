@@ -2,23 +2,39 @@ import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
 
-export class DiscardHandCardCommand extends GameCommand {
+export class PlayCardCommand extends GameCommand {
+  private readonly playerId: string;
   private readonly cardId: string;
 
-  constructor(cardId: string) {
+  constructor(playerId: string, cardId: string) {
     super();
 
+    this.playerId = playerId;
     this.cardId = cardId;
   }
 
   execute(state: GameState) {
-    if (!state.turn.player) {
-      console.error("No hay un turno de un jugador activo");
+    const player = state.playersGroup.getPlayerById(this.playerId);
 
-      throw new Error("No hay un turno de un jugador activo");
+    if (!player) {
+      console.error("No ha sido posible encontrar al jugador en la partida");
+
+      throw new Error("No ha sido posible encontrar al jugador en la partida");
     }
 
-    const handCard = state.turn.player?.hand.cards.find(
+    if (!state.turn.player) {
+      console.error("No hay un turno activo");
+
+      throw new Error("No hay un turno activo");
+    }
+
+    if (player.id !== state.turn.player.id) {
+      console.error("No es el turno del jugador");
+
+      throw new Error("No es el turno del jugador");
+    }
+
+    const handCard = player.hand.cards.find(
       (handCard) => handCard.id === this.cardId
     );
 
