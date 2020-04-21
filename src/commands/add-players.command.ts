@@ -3,7 +3,7 @@ import { Player } from "../models/player.model";
 import { GameState } from "../models/game-state.model";
 
 export class AddPlayersCommand extends GameCommand {
-  readonly players: Player[];
+  private readonly players: Player[];
 
   constructor(players: Player[]) {
     super();

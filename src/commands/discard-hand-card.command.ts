@@ -4,7 +4,7 @@ import { Value } from "../models/values.model";
 import { isValidColor, Color } from "../models/color.model";
 
 export class DiscardHandCardCommand extends GameCommand {
-  readonly cardId: string;
+  private readonly cardId: string;
 
   constructor(cardId: string) {
     super();
