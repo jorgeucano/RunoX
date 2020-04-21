@@ -40,7 +40,7 @@ engine.join([
   ),
 ]);
 
-events.on(GameEventName.GAME_STARTED, () => {
+events.on(GameEventName.AFTER_GAME_START, () => {
   drawPlayersCards();
 
   drawStack();

@@ -50,7 +50,7 @@ export class GameEngine {
 
     startGameCommand.execute(this.state);
 
-    this.events.dispatch(GameEventName.GAME_STARTED);
+    this.events.dispatch(GameEventName.AFTER_GAME_START);
   }
 
   join(players: Player[]) {

@@ -9,7 +9,7 @@ export class GameEvents {
   private events: {
     [key: string]: Subject<void>;
   } = {
-    [GameEventName.GAME_STARTED]: new Subject(),
+    [GameEventName.AFTER_GAME_START]: new Subject(),
     [GameEventName.AFTER_PLAY_CARD]: new Subject(),
     [GameEventName.AFTER_TAKE_CARD]: new Subject(),
   };

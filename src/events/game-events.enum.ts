@@ -1,5 +1,5 @@
 export enum GameEventName {
-  GAME_STARTED = 'gameStarted',
+  AFTER_GAME_START = 'afterGameStart',
   AFTER_PLAY_CARD = 'afterPlayCard',
   AFTER_TAKE_CARD = 'afterTakeCard',
 }
