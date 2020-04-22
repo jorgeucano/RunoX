@@ -1,8 +1,6 @@
 import { GameEvent } from "./game-event.enum";
 import { Subject } from "rxjs";
 
-export type EventHandler = () => void;
-
 export class GameEvents {
   private static instance: GameEvents;
 
