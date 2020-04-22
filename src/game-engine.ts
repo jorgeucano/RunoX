@@ -9,6 +9,7 @@ import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
 import { GameEvents } from "./events/game-events";
 import { GameEvent } from "./events/game-event.enum";
+import { filter } from "rxjs/operators";
 
 export class GameEngine {
   private static instance: GameEngine;
@@ -44,13 +45,14 @@ export class GameEngine {
   }
 
   setSubscriptions() {
-    this.events.on(GameEvent.AFTER_TAKE_CARD).subscribe(() => {
-      if (!this.state.deck.cards.length) {
+    this.events
+      .on(GameEvent.AFTER_TAKE_CARD)
+      .pipe(filter(() => !this.state.deck.cards.length))
+      .subscribe(() => {
         const regenerateDeckCommand = new RegenerateDeckCommand();
 
         regenerateDeckCommand.execute(this.state);
-      }
-    });
+      });
   }
 
   start() {
