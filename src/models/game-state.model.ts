@@ -79,7 +79,6 @@ export class GameState {
     
     if (!toPlayer) {
       throw(`No se asignó correctamente un jugador: ${this.giveCards.name}`);
-      return;
     }
 
     for (let index = 0; index < quantity; index++) {
