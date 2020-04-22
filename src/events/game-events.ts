@@ -1,4 +1,4 @@
-import { GameEventName } from "./game-events.enum";
+import { GameEvent } from "./game-event.enum";
 import { Subject } from "rxjs";
 
 export type EventHandler = () => void;
@@ -9,9 +9,9 @@ export class GameEvents {
   private events: {
     [key: string]: Subject<void>;
   } = {
-    [GameEventName.AFTER_GAME_START]: new Subject(),
-    [GameEventName.AFTER_PLAY_CARD]: new Subject(),
-    [GameEventName.AFTER_TAKE_CARD]: new Subject(),
+    [GameEvent.AFTER_GAME_START]: new Subject(),
+    [GameEvent.AFTER_PLAY_CARD]: new Subject(),
+    [GameEvent.AFTER_TAKE_CARD]: new Subject(),
   };
 
   private constructor() {}
@@ -24,11 +24,11 @@ export class GameEvents {
     return GameEvents.instance;
   }
 
-  on(event: GameEventName, action: EventHandler) {
-    this.events[event].subscribe(() => action());
+  on(event: GameEvent) {
+    return this.events[event].asObservable();
   }
 
-  dispatch(event: GameEventName) {
+  dispatch(event: GameEvent) {
     this.events[event].next();
   }
 }

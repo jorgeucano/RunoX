@@ -7,8 +7,8 @@ import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
 import { RegenerateDeckCommand } from "./commands/regenerate-deck.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
-import { GameEvents, EventHandler } from "./events/game-events";
-import { GameEventName } from "./events/game-events.enum";
+import { GameEvents } from "./events/game-events";
+import { GameEvent } from "./events/game-event.enum";
 
 export class GameEngine {
   private static instance: GameEngine;
@@ -44,7 +44,7 @@ export class GameEngine {
   }
 
   setSubscriptions() {
-    this.events.on(GameEventName.AFTER_TAKE_CARD, () => {
+    this.events.on(GameEvent.AFTER_TAKE_CARD).subscribe(() => {
       if (!this.state.deck.cards.length) {
         const regenerateDeckCommand = new RegenerateDeckCommand();
 
@@ -77,7 +77,7 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEventName.AFTER_GAME_START);
+    this.events.dispatch(GameEvent.AFTER_GAME_START);
   }
 
   join(players: Player[]) {
@@ -116,7 +116,7 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEventName.AFTER_PLAY_CARD);
+    this.events.dispatch(GameEvent.AFTER_PLAY_CARD);
   }
 
   takeCard() {
@@ -143,10 +143,10 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEventName.AFTER_TAKE_CARD);
+    this.events.dispatch(GameEvent.AFTER_TAKE_CARD);
   }
 
-  on(event: GameEventName, action: EventHandler) {
-    this.events.on(event, action);
+  on(event: GameEvent) {
+    return this.events.on(event);
   }
 }

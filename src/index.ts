@@ -4,7 +4,7 @@ import { fromEvent, merge } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
-import { GameEventName } from "./events/game-events.enum";
+import { GameEvent } from "./events/game-event.enum";
 
 const engine = GameEngine.getInstance();
 
@@ -38,7 +38,7 @@ engine.join([
   ),
 ]);
 
-engine.on(GameEventName.AFTER_GAME_START, () => {
+engine.on(GameEvent.AFTER_GAME_START).subscribe(() => {
   drawPlayersCards();
 
   drawStack();
@@ -46,7 +46,7 @@ engine.on(GameEventName.AFTER_GAME_START, () => {
   drawTurn();
 });
 
-engine.on(GameEventName.AFTER_PLAY_CARD, () => {
+engine.on(GameEvent.AFTER_PLAY_CARD).subscribe(() => {
   selectedCardId = "";
 
   drawPlayersCards();
@@ -56,7 +56,7 @@ engine.on(GameEventName.AFTER_PLAY_CARD, () => {
   drawTurn();
 });
 
-engine.on(GameEventName.AFTER_TAKE_CARD, () => {
+engine.on(GameEvent.AFTER_TAKE_CARD).subscribe(() => {
   drawPlayersCards();
 
   drawTurn();

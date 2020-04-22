@@ -1,4 +1,4 @@
-export enum GameEventName {
+export enum GameEvent {
   AFTER_GAME_START = 'afterGameStart',
   AFTER_PLAY_CARD = 'afterPlayCard',
   AFTER_TAKE_CARD = 'afterTakeCard',
