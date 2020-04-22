@@ -44,17 +44,6 @@ export class GameEngine {
     return this.state.stack.cardOnTop;
   }
 
-  setSubscriptions() {
-    this.events
-      .on(GameEvent.AFTER_TAKE_CARD)
-      .pipe(filter(() => !this.state.deck.cards.length))
-      .subscribe(() => {
-        const regenerateDeckCommand = new RegenerateDeckCommand();
-
-        regenerateDeckCommand.execute(this.state);
-      });
-  }
-
   start() {
     // TODO: esto puede ser mejorado para evitar la repeticion
     let commandResult;
@@ -150,5 +139,20 @@ export class GameEngine {
 
   on(event: GameEvent) {
     return this.events.on(event);
+  }
+
+  private setSubscriptions() {
+    this.subscribeToAfterTakeCard();
+  }
+
+  private subscribeToAfterTakeCard() {
+    this.events
+      .on(GameEvent.AFTER_TAKE_CARD)
+      .pipe(filter(() => !this.state.deck.cards.length))
+      .subscribe(() => {
+        const regenerateDeckCommand = new RegenerateDeckCommand();
+
+        regenerateDeckCommand.execute(this.state);
+      });
   }
 }
