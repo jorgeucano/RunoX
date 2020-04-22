@@ -15,11 +15,11 @@ export class GameEngine {
   private static instance: GameEngine;
 
   private state: GameState;
-  private events: GameEvents;
+  private gameEvents: GameEvents;
 
   private constructor() {
     this.state = new GameState();
-    this.events = GameEvents.getInstance();
+    this.gameEvents = GameEvents.getInstance();
 
     this.setSubscriptions();
   }
@@ -30,6 +30,14 @@ export class GameEngine {
     }
 
     return GameEngine.instance;
+  }
+
+  get events() {
+    return {
+      [GameEvent.AFTER_GAME_START]: this.gameEvents.afterGameStart$,
+      [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
+      [GameEvent.AFTER_TAKE_CARD]: this.gameEvents.afterTakeCard$,
+    };
   }
 
   get players() {
@@ -68,7 +76,7 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEvent.AFTER_GAME_START);
+    this.gameEvents.dispatchAfterGameStart();
   }
 
   join(players: Player[]) {
@@ -107,7 +115,7 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEvent.AFTER_PLAY_CARD);
+    this.gameEvents.dispatchAfterPlayCard();
   }
 
   takeCard() {
@@ -134,11 +142,7 @@ export class GameEngine {
       return;
     }
 
-    this.events.dispatch(GameEvent.AFTER_TAKE_CARD);
-  }
-
-  on(event: GameEvent) {
-    return this.events.on(event);
+    this.gameEvents.dispatchAfterTakeCard();
   }
 
   private setSubscriptions() {
@@ -146,8 +150,7 @@ export class GameEngine {
   }
 
   private subscribeToAfterTakeCard() {
-    this.events
-      .on(GameEvent.AFTER_TAKE_CARD)
+    this.gameEvents.afterTakeCard$
       .pipe(filter(() => !this.state.deck.cards.length))
       .subscribe(() => {
         const regenerateDeckCommand = new RegenerateDeckCommand();
