@@ -6,6 +6,7 @@ import { GameDirection } from "./game-direction.model";
 import { Color } from "./color.model";
 import { Card } from "./card.model";
 import { Player } from "./player.model";
+import { RegenerateDeckCommand } from "../commands/regenerate-deck.command";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -69,12 +70,8 @@ export class GameState {
   giveCards(quantity: number, toPlayer: Player | null) {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
     while(quantity > avaibleCards) {
-      // No puede entregar mas cartas que las que hay jugables.
-      quantity -= 1;
-    }
-    if (quantity > this.deck.cards.length) {
-      //Si no alcanza del mazo, entonces mezcla el deck con el stack.
-      this.reshuffle();
+      console.error("No se puede tirar más cartas que las jugables");
+      throw("No se puede tirar más cartas que las jugables");
     }
     
     if (!toPlayer) {
@@ -82,7 +79,7 @@ export class GameState {
     }
 
     for (let index = 0; index < quantity; index++) {
-      // TODO: Fijarse si take card es mejor de take command
+      // TODO: Chequear si es mejor tomar la carta utilizando el command.
       const newCard = this.deck.takeCard();
       toPlayer?.hand.addCard(newCard as Card)
     }
@@ -91,12 +88,5 @@ export class GameState {
 
   skipNextTurn() {
     this.turn.setPlayerTurn(this.nextPlayerToPlay);
-  }
-
-  reshuffle() {
-    // No mezcla las cartas, simplemente las pone tal cual en el maso.
-    // TODO: Mezclar el deck al juntarlas con el stack.
-    this.deck.addCards(this.stack.cards);
-    this.stack.empty()
   }
 }
