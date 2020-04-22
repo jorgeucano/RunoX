@@ -86,7 +86,7 @@ export class GameState {
       const newCard = this.deck.takeCard();
       toPlayer?.hand.addCard(newCard as Card)
     }
-    console.log(`Se entregaron ${quantity} cartas al jugador ${this.nextPlayerToPlay.name}`);
+    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
   }
 
   skipNextTurn() {

@@ -49,7 +49,7 @@ export class PlayCardCommand extends GameCommand {
       return false;
     }
 
-    if(state.stack.cardOnTop?.value === Value.PLUS_TWO && handCard.value !== Value.PLUS_TWO) {
+    if(state.stack.cardOnTop?.value === Value.PLUS_TWO && handCard.value !== Value.PLUS_TWO && state.cardsToGive > 0) {
       console.error(
         "La carta que quiere tirar no es +2"
       );
