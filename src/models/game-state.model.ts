@@ -5,6 +5,7 @@ import { Stack } from "./stack.model";
 import { GameDirection } from "./game-direction.model";
 import { Color } from "./color.model";
 import { Card } from "./card.model";
+import { Player } from "./player.model";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -17,12 +18,15 @@ export class GameState {
 
   gameDirection: GameDirection;
 
+  cardsToGive: number;
+
   constructor() {
     this.deck = new Deck();
     this.stack = new Stack();
     this.playersGroup = new PlayersGroup();
     this.turn = new Turn();
     this.gameDirection = GameDirection.CLOCKWISE;
+    this.cardsToGive = 0;
   }
 
   get nextPlayerToPlay() {
@@ -62,7 +66,7 @@ export class GameState {
     console.warn(`El nuevo color es ${color}`);
   }
 
-  giveCards(quantity: number) {
+  giveCards(quantity: number, toPlayer: Player | null) {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
     while(quantity > avaibleCards) {
       // No puede entregar mas cartas que las que hay jugables.
@@ -72,9 +76,16 @@ export class GameState {
       //Si no alcanza del mazo, entonces mezcla el deck con el stack.
       this.reshuffle();
     }
+    
+    if (!toPlayer) {
+      throw(`No se asignó correctamente un jugador: ${this.giveCards.name}`);
+      return;
+    }
+
     for (let index = 0; index < quantity; index++) {
+      // TODO: Fijarse si take card es mejor de take command
       const newCard = this.deck.takeCard();
-      this.nextPlayerToPlay.hand.addCard(newCard as Card)
+      toPlayer?.hand.addCard(newCard as Card)
     }
     console.log(`Se entregaron ${quantity} cartas al jugador ${this.nextPlayerToPlay.name}`);
   }

@@ -17,7 +17,12 @@ export class TakeDeckCardCommand extends GameCommand {
       return;
     }
 
-    state.turn.player?.hand.addCard(card);
+    if (state.cardsToGive > 0) {
+      state.giveCards(state.cardsToGive, state.turn.player)
+      state.cardsToGive = 0;
+    } else {
+      state.turn.player?.hand.addCard(card);
+    }
 
     console.log(
       `El jugador ${state.turn.player?.id} ha agregado a su mano la carta ${card.id}`
