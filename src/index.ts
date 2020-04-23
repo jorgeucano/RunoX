@@ -42,7 +42,8 @@ game.events.afterGameStart.subscribe(() => {
 
   drawStack();
 
-  drawTurn();
+  // @ts-ignore
+  drawTurn(game.playerTurn);
 });
 
 game.events.afterPlayCard.subscribe(() => {
@@ -51,14 +52,14 @@ game.events.afterPlayCard.subscribe(() => {
   drawPlayersCards();
 
   drawStack();
-
-  drawTurn();
 });
 
 game.events.afterTakeCard.subscribe(() => {
   drawPlayersCards();
+});
 
-  drawTurn();
+game.events.beforeTurn.subscribe((data) => {
+  drawTurn(data.player);
 });
 
 game.start();
@@ -168,11 +169,7 @@ function setPlayerClicks(id: string) {
 }
 
 /** Dibuja el nombre del current player */
-function drawTurn() {
-  if (!game.playerTurn) {
-    return;
-  }
-
+function drawTurn(player: Player) {
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
@@ -184,12 +181,10 @@ function drawTurn() {
     el.classList.remove("player-select-button");
   });
 
-  document.getElementById(game.playerTurn.id)?.classList.add("player-select");
-  document
-    .getElementById(game.playerTurn.id)
-    ?.classList.add("player-select-button");
+  document.getElementById(player.id)?.classList.add("player-select");
+  document.getElementById(player.id)?.classList.add("player-select-button");
 
-  turnDiv.append(`Es el turno de: ${game.playerTurn.name}`);
+  turnDiv.append(`Es el turno de: ${player.name}`);
 
   _turn?.appendChild(turnDiv);
 }

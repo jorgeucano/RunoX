@@ -37,6 +37,7 @@ export class GameEngine {
       [GameEvent.AFTER_GAME_START]: this.gameEvents.afterGameStart$,
       [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
       [GameEvent.AFTER_TAKE_CARD]: this.gameEvents.afterTakeCard$,
+      [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
     };
   }
 
@@ -114,8 +115,6 @@ export class GameEngine {
 
       return;
     }
-
-    this.gameEvents.dispatchAfterPlayCard();
   }
 
   takeCard() {
@@ -141,8 +140,6 @@ export class GameEngine {
 
       return;
     }
-
-    this.gameEvents.dispatchAfterTakeCard();
   }
 
   private setSubscriptions() {

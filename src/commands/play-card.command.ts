@@ -3,6 +3,7 @@ import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
 import { isValidColor, Color } from "../models/color.model";
 import { CommandResult } from "./command-result";
+import { AfterPlayCardEvent } from "../events/after-play-card.event";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -91,6 +92,8 @@ export class PlayCardCommand extends GameCommand {
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
+
+    this.events.dispatchAfterPlayCard(new AfterPlayCardEvent(handCard, player));
 
     return new CommandResult(true);
   }
