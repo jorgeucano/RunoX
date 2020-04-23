@@ -56,8 +56,7 @@ export class PlayCardCommand extends GameCommand {
         "La carta que quiere tirar no es +2"
       );
       
-      alert("La carta que quiere tirar no es +2");
-      return  new CommandResult(
+      return new CommandResult(
         false,
         "La carta que quiere tirar no es +2"
       );
