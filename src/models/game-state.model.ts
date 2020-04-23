@@ -69,13 +69,13 @@ export class GameState {
 
   giveCards(quantity: number, toPlayer: Player | null) {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
-    while(quantity > avaibleCards) {
-      console.error("No se puede tirar más cartas que las jugables");
-      throw("No se puede tirar más cartas que las jugables");
+    if(quantity > avaibleCards) {
+      console.error("No se puede dar más cartas que las jugables");
+      throw("No se puede dar más cartas que las jugables");
     }
     
     if (!toPlayer) {
-      throw(`No se asignó correctamente un jugador: ${this.giveCards.name}`);
+      throw(`No se asignó correctamente un jugador [${this.giveCards.name}]`);
     }
 
     for (let index = 0; index < quantity; index++) {
