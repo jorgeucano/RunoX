@@ -5,6 +5,8 @@ import { Stack } from "./stack.model";
 import { GameDirection } from "./game-direction.model";
 import { Color } from "./color.model";
 import { Card } from "./card.model";
+import { Player } from "./player.model";
+import { RegenerateDeckCommand } from "../commands/regenerate-deck.command";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -17,12 +19,15 @@ export class GameState {
 
   gameDirection: GameDirection;
 
+  cardsToGive: number;
+
   constructor() {
     this.deck = new Deck();
     this.stack = new Stack();
     this.playersGroup = new PlayersGroup();
     this.turn = new Turn();
     this.gameDirection = GameDirection.CLOCKWISE;
+    this.cardsToGive = 0;
   }
 
   get nextPlayerToPlay() {
@@ -62,31 +67,26 @@ export class GameState {
     console.warn(`El nuevo color es ${color}`);
   }
 
-  giveCards(quantity: number) {
+  giveCards(quantity: number, toPlayer: Player | null) {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
     while(quantity > avaibleCards) {
-      // No puede entregar mas cartas que las que hay jugables.
-      quantity -= 1;
+      console.error("No se puede tirar más cartas que las jugables");
+      throw("No se puede tirar más cartas que las jugables");
     }
-    if (quantity > this.deck.cards.length) {
-      //Si no alcanza del mazo, entonces mezcla el deck con el stack.
-      this.reshuffle();
+    
+    if (!toPlayer) {
+      throw(`No se asignó correctamente un jugador: ${this.giveCards.name}`);
     }
+
     for (let index = 0; index < quantity; index++) {
+      // TODO: Chequear si es mejor tomar la carta utilizando el command.
       const newCard = this.deck.takeCard();
-      this.nextPlayerToPlay.hand.addCard(newCard as Card)
+      toPlayer?.hand.addCard(newCard as Card)
     }
-    console.log(`Se entregaron ${quantity} cartas al jugador ${this.nextPlayerToPlay.name}`);
+    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
   }
 
   skipNextTurn() {
     this.turn.setPlayerTurn(this.nextPlayerToPlay);
-  }
-
-  reshuffle() {
-    // No mezcla las cartas, simplemente las pone tal cual en el maso.
-    // TODO: Mezclar el deck al juntarlas con el stack.
-    this.deck.addCards(this.stack.cards);
-    this.stack.empty()
   }
 }

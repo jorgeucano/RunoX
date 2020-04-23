@@ -51,6 +51,15 @@ export class PlayCardCommand extends GameCommand {
       );
     }
 
+    if(state.stack.cardOnTop?.value === Value.PLUS_TWO && handCard.value !== Value.PLUS_TWO && state.cardsToGive > 0) {
+      console.error(
+        "La carta que quiere tirar no es +2"
+      );
+      
+      alert("La carta que quiere tirar no es +2");
+      return false;
+    }
+
     if (state.stack.cardOnTop && !handCard?.isPlayable(state.stack.cardOnTop)) {
       console.error(
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
@@ -68,8 +77,12 @@ export class PlayCardCommand extends GameCommand {
     
     if(handCard?.value === Value.PLUS_FOUR) {
       // Es importante el orden en que se aplica los efectos. Primero se aplica +4 y luego saltea turno.
-      state.giveCards(4);
+      state.giveCards(4, state.nextPlayerToPlay);
       state.skipNextTurn();
+    }
+    
+    if(handCard?.value === Value.PLUS_TWO) {
+      state.cardsToGive += 2;
     }
 
     if (handCard?.value === Value.WILDCARD || handCard?.value === Value.PLUS_FOUR) {

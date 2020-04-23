@@ -17,6 +17,12 @@ export class TakeDeckCardCommand extends GameCommand {
       return new CommandResult(false, "No se le asigno turno a un jugador");
     }
 
+    if (state.cardsToGive > 0) {
+      state.giveCards(state.cardsToGive, state.turn.player)
+      state.cardsToGive = 0;
+      return ;
+    } 
+
     const card = state.deck.takeCard();
 
     if (!card) {
@@ -28,8 +34,7 @@ export class TakeDeckCardCommand extends GameCommand {
       );
     }
 
-    state.turn.player.hand.addCard(card);
-
+    state.turn.player?.hand.addCard(card);
     console.log(
       `El jugador ${state.turn.player.id} ha agregado a su mano la carta ${card.id}`
     );
