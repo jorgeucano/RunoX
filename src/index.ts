@@ -4,9 +4,8 @@ import { fromEvent, merge } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
-import { GameEventName } from "./events/game-events.enum";
 
-const engine = GameEngine.getInstance();
+const game = GameEngine.getInstance();
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
@@ -15,7 +14,7 @@ const _turn = document.getElementById("turn");
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
 
-engine.join([
+game.join([
   new Player(
     "jorge1234",
     "Jorge",
@@ -38,31 +37,32 @@ engine.join([
   ),
 ]);
 
-engine.on(GameEventName.AFTER_GAME_START, () => {
+game.events.afterGameStart.subscribe(() => {
   drawPlayersCards();
 
   drawStack();
 
-  drawTurn();
+  // @ts-ignore
+  drawTurn(game.playerTurn);
 });
 
-engine.on(GameEventName.AFTER_PLAY_CARD, () => {
+game.events.afterPlayCard.subscribe(() => {
   selectedCardId = "";
 
   drawPlayersCards();
 
   drawStack();
-
-  drawTurn();
 });
 
-engine.on(GameEventName.AFTER_TAKE_CARD, () => {
+game.events.afterTakeCard.subscribe(() => {
   drawPlayersCards();
-
-  drawTurn();
 });
 
-engine.start();
+game.events.beforeTurn.subscribe((data) => {
+  drawTurn(data.player);
+});
+
+game.start();
 
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
@@ -71,10 +71,10 @@ const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 const buttons$ = merge(
-  fromClickMap("button-take", () => engine.takeCard()),
+  fromClickMap("button-take", () => game.takeCard()),
   fromClickMap("button-play", () =>
     // @ts-ignore
-    engine.playCard(engine.playerTurn?.id, selectedCardId)
+    game.playCard(game.playerTurn?.id, selectedCardId)
   )
 );
 
@@ -88,7 +88,7 @@ function drawPlayersCards() {
     _players?.removeChild(_players?.lastElementChild);
   }
 
-  engine.players.forEach((player) => {
+  game.players.forEach((player) => {
     const playerDiv = document.createElement("div");
 
     playerDiv.append(`Mano de ${player.name}:`);
@@ -116,7 +116,7 @@ function drawPlayersCards() {
  * TODO: observar los cambios de gameState.stack.cardOnTop
  */
 function drawStack() {
-  if (!engine.stackCard) {
+  if (!game.stackCard) {
     return;
   }
 
@@ -130,7 +130,7 @@ function drawStack() {
 
   const stackCardDiv = document.createElement("div");
 
-  stackCardDiv.setAttribute("class", `carta ${engine.stackCard.sprite}`);
+  stackCardDiv.setAttribute("class", `carta ${game.stackCard.sprite}`);
 
   stackTitleDiv.appendChild(stackCardDiv);
 
@@ -145,7 +145,7 @@ function setPlayerClicks(id: string) {
     .pipe(
       // @ts-ignore
       filter((event) => event.target.classList.contains("carta")),
-      filter(() => id === engine.playerTurn?.id),
+      filter(() => id === game.playerTurn?.id),
       map((event) => {
         // @ts-ignore
         return event.target.id;
@@ -169,11 +169,7 @@ function setPlayerClicks(id: string) {
 }
 
 /** Dibuja el nombre del current player */
-function drawTurn() {
-  if (!engine.playerTurn) {
-    return;
-  }
-
+function drawTurn(player: Player) {
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
@@ -185,12 +181,10 @@ function drawTurn() {
     el.classList.remove("player-select-button");
   });
 
-  document.getElementById(engine.playerTurn.id)?.classList.add("player-select");
-  document
-    .getElementById(engine.playerTurn.id)
-    ?.classList.add("player-select-button");
+  document.getElementById(player.id)?.classList.add("player-select");
+  document.getElementById(player.id)?.classList.add("player-select-button");
 
-  turnDiv.append(`Es el turno de: ${engine.playerTurn.name}`);
+  turnDiv.append(`Es el turno de: ${player.name}`);
 
   _turn?.appendChild(turnDiv);
 }

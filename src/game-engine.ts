@@ -7,18 +7,19 @@ import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
 import { RegenerateDeckCommand } from "./commands/regenerate-deck.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
-import { GameEvents, EventHandler } from "./events/game-events";
-import { GameEventName } from "./events/game-events.enum";
+import { GameEvents } from "./events/game-events";
+import { GameEvent } from "./events/game-event.enum";
+import { filter } from "rxjs/operators";
 
 export class GameEngine {
   private static instance: GameEngine;
 
   private state: GameState;
-  private events: GameEvents;
+  private gameEvents: GameEvents;
 
   private constructor() {
     this.state = new GameState();
-    this.events = GameEvents.getInstance();
+    this.gameEvents = GameEvents.getInstance();
 
     this.setSubscriptions();
   }
@@ -29,6 +30,15 @@ export class GameEngine {
     }
 
     return GameEngine.instance;
+  }
+
+  get events() {
+    return {
+      [GameEvent.AFTER_GAME_START]: this.gameEvents.afterGameStart$,
+      [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
+      [GameEvent.AFTER_TAKE_CARD]: this.gameEvents.afterTakeCard$,
+      [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
+    };
   }
 
   get players() {
@@ -43,59 +53,106 @@ export class GameEngine {
     return this.state.stack.cardOnTop;
   }
 
-  setSubscriptions() {
-    this.events.on(GameEventName.AFTER_TAKE_CARD, () => {
-      if (!this.state.deck.cards.length) {
-        const regenerateDeckCommand = new RegenerateDeckCommand();
-
-        regenerateDeckCommand.execute(this.state);
-      }
-    });
-  }
-
   start() {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const buildDeckCommand = new BuildDeckCommand();
 
-    buildDeckCommand.execute(this.state);
+    commandResult = buildDeckCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     const startGameCommand = new StartGameCommand();
 
-    startGameCommand.execute(this.state);
+    commandResult = startGameCommand.execute(this.state);
 
-    this.events.dispatch(GameEventName.AFTER_GAME_START);
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
+
+    this.gameEvents.dispatchAfterGameStart();
   }
 
   join(players: Player[]) {
     const addPlayersCommand = new AddPlayersCommand(players);
 
-    addPlayersCommand.execute(this.state);
+    const commandResult = addPlayersCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
   }
 
   playCard(playerId: string, cardId: string) {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const playCardCommand = new PlayCardCommand(playerId, cardId);
 
-    const next = playCardCommand.execute(this.state);
-    if (!next) return;
+    commandResult = playCardCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
+
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
-    finalizeTurnCommand.execute(this.state);
+    commandResult = finalizeTurnCommand.execute(this.state);
 
-    this.events.dispatch(GameEventName.AFTER_PLAY_CARD);
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
   }
 
   takeCard() {
+    // TODO: esto puede ser mejorado para evitar la repeticion
+    let commandResult;
+
     const takeDeckCardCommand = new TakeDeckCardCommand();
 
-    takeDeckCardCommand.execute(this.state);
+    commandResult = takeDeckCardCommand.execute(this.state);
+
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
 
     const finalizeTurnCommand = new FinalizeTurnCommand();
 
-    finalizeTurnCommand.execute(this.state);
+    commandResult = finalizeTurnCommand.execute(this.state);
 
-    this.events.dispatch(GameEventName.AFTER_TAKE_CARD);
+    if (!commandResult.success) {
+      alert(commandResult.error);
+
+      return;
+    }
   }
 
-  on(event: GameEventName, action: EventHandler) {
-    this.events.on(event, action);
+  private setSubscriptions() {
+    this.subscribeToAfterTakeCard();
+  }
+
+  private subscribeToAfterTakeCard() {
+    this.gameEvents.afterTakeCard$
+      .pipe(filter(() => !this.state.deck.cards.length))
+      .subscribe(() => {
+        const regenerateDeckCommand = new RegenerateDeckCommand();
+
+        regenerateDeckCommand.execute(this.state);
+      });
   }
 }

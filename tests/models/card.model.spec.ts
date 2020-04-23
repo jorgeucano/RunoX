@@ -10,8 +10,12 @@ describe("Card", () => {
     expect(card.sprite).toEqual(`${Value.ONE}--${Color.BLUE}`);
   });
 
-  it("should throw error if we try to create a wildcard with a color", () => {
-    expect(() => new Card(Value.WILDCARD, Color.BLUE)).toThrow(Error);
+  it("should log error if we try to create a wildcard with a color", () => {
+    const spy = spyOn(global.console, "error").and.callThrough();
+
+    new Card(Value.WILDCARD, Color.BLUE);
+
+    expect(spy).toBeCalled();
   });
 
   it("should return true when we invoke isSpecialCard and the card is special", () => {

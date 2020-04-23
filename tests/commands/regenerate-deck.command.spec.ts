@@ -4,29 +4,27 @@ import { Card } from "../../src/models/card.model";
 import { Value } from "../../src/models/values.model";
 
 describe("RegenerateDeckCommand", () => {
-  it("should log error if there are cards on the deck when we execute the command", () => {
+  it("should return error result if there are cards on the deck when we execute the command", () => {
     const command = new RegenerateDeckCommand();
     const state = new GameState();
     const card = new Card(Value.PLUS_FOUR);
-    const spy = spyOn(global.console, "error").and.callThrough();
 
     state.deck.addCards([card]);
 
-    command.execute(state);
+    const result = command.execute(state);
 
-    expect(spy).toBeCalled();
+    expect(result.success).toBeFalsy();
   });
 
-  it("should log error if there are not cards on the stack when we execute the command", () => {
+  it("should return error result if there are not cards on the stack when we execute the command", () => {
     const command = new RegenerateDeckCommand();
     const state = new GameState();
-    const errorSpy = spyOn(global.console, "error").and.callThrough();
     const addCardsSpy = spyOn(state.deck, "addCards").and.callThrough();
     const cardOnTopSpy = jest.spyOn(state.stack, "cardOnTop", "get");
 
-    command.execute(state);
+    const result = command.execute(state);
 
-    expect(errorSpy).toBeCalled();
+    expect(result.success).toBeFalsy();
     expect(addCardsSpy).toBeCalled();
     expect(cardOnTopSpy).toBeCalled();
   });

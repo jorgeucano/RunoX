@@ -10,7 +10,7 @@ export class Card {
 
   constructor(value: Value, color?: Color) {
     if (isSpecial(value) && color) {
-      throw Error(`La carta "${value}" no puede tener el color "${color}"`);
+      console.error(`La carta "${value}" no puede tener el color "${color}"`);
     }
 
     this.id = generateUniqueId();
@@ -76,9 +76,11 @@ export class Card {
     }
 
     if (!this.color || !otherCard.color) {
-      throw new Error(
+      console.error(
         "Ambas cartas deben tener definido un color para poder compararlas"
       );
+
+      return false;
     }
 
     return otherCard.value === this.value || otherCard.color === this.color;
