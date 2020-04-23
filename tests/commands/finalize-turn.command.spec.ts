@@ -3,14 +3,13 @@ import { GameState } from "../../src/models/game-state.model";
 import { Player } from "../../src/models/player.model";
 
 describe("FinalizeTurnCommand", () => {
-  it("should log an error when when we execute the command and there are not players playing", () => {
+  it("should return error result when when we execute the command and there are not players playing", () => {
     const command = new FinalizeTurnCommand();
     const state = new GameState();
-    const spy = spyOn(global.console, "error").and.callThrough();
 
-    command.execute(state);
+    const result = command.execute(state);
 
-    expect(spy).toBeCalled();
+    expect(result.success).toBeFalsy();
   });
 
   it("should set first player as current player when we start the game", () => {

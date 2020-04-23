@@ -6,58 +6,58 @@ import { Value } from "../../src/models/values.model";
 import { Color } from "../../src/models/color.model";
 
 describe("PlayCardCommand", () => {
-  it("should log error when we execute the command and the player is not playing", () => {
+  it("should return error result when we execute the command and the player is not playing", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const command = new PlayCardCommand(player.id, "card1");
-    const spy = spyOn(global.console, "error").and.callThrough();
 
-    expect(() => command.execute(state)).toThrow(Error);
-    expect(spy).toBeCalled();
+    const result = command.execute(state);
+
+    expect(result.success).toBeFalsy();
   });
 
-  it("should log error when we execute the command and there is not a current player", () => {
+  it("should return error result when we execute the command and there is not a current player", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const command = new PlayCardCommand(player.id, "card1");
-    const spy = spyOn(global.console, "error").and.callThrough();
 
     state.playersGroup.addPlayer(player);
 
-    expect(() => command.execute(state)).toThrow(Error);
-    expect(spy).toBeCalled();
+    const result = command.execute(state);
+
+    expect(result.success).toBeFalsy();
   });
 
-  it("should log error when we execute the command and the current player does not have the card", () => {
+  it("should return error result when we execute the command and the current player does not have the card", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const card = new Card(Value.PLUS_FOUR);
     const command = new PlayCardCommand(player.id, "card2");
-    const spy = spyOn(global.console, "error").and.callThrough();
 
     state.playersGroup.addPlayer(player);
     player.hand.addCard(card);
     state.turn.setPlayerTurn(player);
 
-    expect(() => command.execute(state)).toThrow(Error);
-    expect(spy).toBeCalled();
+    const result = command.execute(state);
+
+    expect(result.success).toBeFalsy();
   });
 
-  it("should log error when we execute the command and the card discarded is invalid", () => {
+  it("should return error result when we execute the command and the card discarded is invalid", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const stackCardRedTwo = new Card(Value.TWO, Color.RED);
     const handCardBlueFour = new Card(Value.FOUR, Color.BLUE);
     const command = new PlayCardCommand(player.id, "cardBlueFour");
-    const spy = spyOn(global.console, "error").and.callThrough();
 
     state.playersGroup.addPlayer(player);
     state.stack.addCard(stackCardRedTwo);
     player.hand.addCard(handCardBlueFour);
     state.turn.setPlayerTurn(player);
 
-    expect(() => command.execute(state)).toThrow(Error);
-    expect(spy).toBeCalled();
+    const result = command.execute(state);
+
+    expect(result.success).toBeFalsy();
   });
 
   it("should discard current player card when we execute the command", () => {

@@ -2,6 +2,8 @@ import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
 import { isValidColor, Color } from "../models/color.model";
+import { CommandResult } from "./command-result";
+import { AfterPlayCardEvent } from "../events/after-play-card.event";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -14,28 +16,28 @@ export class PlayCardCommand extends GameCommand {
     this.cardId = cardId;
   }
 
-  execute(state: GameState): boolean {
+  execute(state: GameState) {
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {
       console.error("No ha sido posible encontrar al jugador en la partida");
 
-      alert("No ha sido posible encontrar al jugador en la partida");
-      return false;
+      return new CommandResult(
+        false,
+        "No ha sido posible encontrar al jugador en la partida"
+      );
     }
 
     if (!state.turn.player) {
       console.error("No hay un turno activo");
 
-      alert("No hay un turno activo");
-      return false;
+      return new CommandResult(false, "No hay un turno activo");
     }
 
     if (player.id !== state.turn.player.id) {
       console.error("No es el turno del jugador");
 
-      alert("No es el turno del jugador");
-      return false;
+      return new CommandResult(false, "No es el turno del jugador");
     }
 
     const handCard = player.hand.cards.find(
@@ -43,10 +45,10 @@ export class PlayCardCommand extends GameCommand {
     );
 
     if (!handCard) {
-      alert("No se ha encontrado la carta de la mano del jugador");
-
-      // alert("No se ha encontrado la carta de la mano del jugador");
-      return false;
+      return new CommandResult(
+        false,
+        "No se ha encontrado la carta de la mano del jugador"
+      );
     }
 
     if(state.stack.cardOnTop?.value === Value.PLUS_TWO && handCard.value !== Value.PLUS_TWO && state.cardsToGive > 0) {
@@ -63,16 +65,14 @@ export class PlayCardCommand extends GameCommand {
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );
 
-      alert(
+      return new CommandResult(
+        false,
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );
-      return false;
-
     }
 
-    
     state.turn.player.hand.removeCard(handCard);
-    
+
     state.stack.addCard(handCard);
     
     if(handCard?.value === Value.PLUS_FOUR) {
@@ -97,6 +97,9 @@ export class PlayCardCommand extends GameCommand {
       state.changePlayableColor(newColor as Color);
     }
 
+    if (handCard?.value === Value.PLUS_FOUR) {
+      state.giveCards(4);
+    }
     if (handCard?.value === Value.REVERSE) {
       state.changeDirection();
     }
@@ -108,6 +111,9 @@ export class PlayCardCommand extends GameCommand {
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
-    return true;
+
+    this.events.dispatchAfterPlayCard(new AfterPlayCardEvent(handCard, player));
+
+    return new CommandResult(true);
   }
 }
