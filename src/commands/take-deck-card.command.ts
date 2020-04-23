@@ -21,7 +21,6 @@ export class TakeDeckCardCommand extends GameCommand {
     if (state.cardsToGive > 0) {
       state.giveCards(state.cardsToGive, state.turn.player)
       state.cardsToGive = 0;
-      return;
     } 
 
     const card = state.deck.takeCard();
