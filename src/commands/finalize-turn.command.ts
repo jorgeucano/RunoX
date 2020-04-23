@@ -1,14 +1,25 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
+import { CommandResult } from "./command-result";
+import { BeforeTurnEvent } from "../events/before-turn.event";
 
 export class FinalizeTurnCommand extends GameCommand {
   execute(state: GameState) {
     if (!state.playersGroup.players.length) {
-      console.error("No se puede finalizar el turno si no hay jugadores");
+      return new CommandResult(
+        false,
+        "No se puede finalizar el turno si no hay jugadores"
+      );
     }
 
-    state.turn.setPlayerTurn(state.nextPlayerToPlay);
+    const nextPlayer = state.nextPlayerToPlay;
 
-    console.log(`Es el turno del jugador: ${state.turn.player?.name}`);
+    state.turn.setPlayerTurn(nextPlayer);
+
+    this.events.dispatchBeforeTurn(new BeforeTurnEvent(nextPlayer));
+
+    console.log(`Es el turno del jugador: ${nextPlayer.name}`);
+
+    return new CommandResult(true);
   }
 }
