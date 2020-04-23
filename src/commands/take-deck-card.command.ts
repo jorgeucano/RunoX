@@ -4,7 +4,7 @@ import { CommandResult } from "./command-result";
 import { AfterTakeCardEvent } from "../events/after-take-card.event";
 
 export class TakeDeckCardCommand extends GameCommand {
-  execute(state: GameState) {
+  execute(state: GameState): CommandResult {
     if (!state.deck.cards.length) {
       console.error("No hay cartas disponibles en el mazo");
 
@@ -17,10 +17,11 @@ export class TakeDeckCardCommand extends GameCommand {
       return new CommandResult(false, "No se le asigno turno a un jugador");
     }
 
+    
     if (state.cardsToGive > 0) {
       state.giveCards(state.cardsToGive, state.turn.player)
       state.cardsToGive = 0;
-      return ;
+      return;
     } 
 
     const card = state.deck.takeCard();

@@ -16,7 +16,7 @@ export class PlayCardCommand extends GameCommand {
     this.cardId = cardId;
   }
 
-  execute(state: GameState) {
+  execute(state: GameState): CommandResult {
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {
@@ -57,7 +57,10 @@ export class PlayCardCommand extends GameCommand {
       );
       
       alert("La carta que quiere tirar no es +2");
-      return false;
+      return  new CommandResult(
+        false,
+        "La carta que quiere tirar no es +2"
+      );
     }
 
     if (state.stack.cardOnTop && !handCard?.isPlayable(state.stack.cardOnTop)) {
@@ -83,6 +86,7 @@ export class PlayCardCommand extends GameCommand {
     
     if(handCard?.value === Value.PLUS_TWO) {
       state.cardsToGive += 2;
+      // state.giveCards(2, state.nextPlayerToPlay);
     }
 
     if (handCard?.value === Value.WILDCARD || handCard?.value === Value.PLUS_FOUR) {
@@ -98,7 +102,7 @@ export class PlayCardCommand extends GameCommand {
     }
 
     if (handCard?.value === Value.PLUS_FOUR) {
-      state.giveCards(4);
+      state.giveCards(4, state.nextPlayerToPlay);
     }
     if (handCard?.value === Value.REVERSE) {
       state.changeDirection();

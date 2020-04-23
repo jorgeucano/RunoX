@@ -45,6 +45,13 @@ export class GameEvents {
   }
 
   dispatchAfterPlayCard(data: AfterPlayCardEvent) {
+    /** 
+     * si la carta es un +2 vamos a tener que chequear
+     * si el siguiente jugador tiene un +2, si es asi 
+     * simplemente deja que lo juege (y si no lo juega, le agrega el +2)
+     * en el caso de que no tenga un +2 le entrega dos cartas directo
+     *  */
+    console.log(data);
     return this.events.afterPlayCard.next(data);
   }
 
@@ -53,6 +60,11 @@ export class GameEvents {
   }
 
   dispatchBeforeTurn(data: BeforeTurnEvent) {
+    /**
+     * Si el flag de la carta es un +2, lo que vamos a hacer
+     * es chequear la mano que tiene este jugador para ver si tiene +2
+     * en el caso de no ser asi, vamos a tener que entregarle 2 cartaS
+     */
     return this.events.beforeTurn.next(data);
   }
 }
