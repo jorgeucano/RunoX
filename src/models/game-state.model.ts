@@ -79,6 +79,10 @@ export class GameState {
     console.log(`Se entregaron ${quantity} cartas al jugador ${this.nextPlayerToPlay.name}`);
   }
 
+  skipNextTurn() {
+    this.turn.setPlayerTurn(this.nextPlayerToPlay);
+  }
+
   reshuffle() {
     // No mezcla las cartas, simplemente las pone tal cual en el maso.
     // TODO: Mezclar el deck al juntarlas con el stack.
