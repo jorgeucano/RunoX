@@ -100,9 +100,6 @@ export class PlayCardCommand extends GameCommand {
       state.changePlayableColor(newColor as Color);
     }
 
-    if (handCard?.value === Value.PLUS_FOUR) {
-      state.giveCards(4, state.nextPlayerToPlay);
-    }
     if (handCard?.value === Value.REVERSE) {
       state.changeDirection();
     }
