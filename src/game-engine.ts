@@ -4,7 +4,6 @@ import { AddPlayersCommand } from "./commands/add-players.command";
 import { BuildDeckCommand } from "./commands/build-deck.command";
 import { PlayCardCommand } from "./commands/play-card.command";
 import { FinalizeTurnCommand } from "./commands/finalize-turn.command";
-import { RegenerateDeckCommand } from "./commands/regenerate-deck.command";
 import { StartGameCommand } from "./commands/start-game.command";
 import { TakeDeckCardCommand } from "./commands/take-deck-card.command";
 import { GameEvents } from "./events/game-events";
@@ -150,9 +149,7 @@ export class GameEngine {
     this.gameEvents.afterTakeCard$
       .pipe(filter(() => !this.state.deck.cards.length))
       .subscribe(() => {
-        const regenerateDeckCommand = new RegenerateDeckCommand();
-
-        regenerateDeckCommand.execute(this.state);
+        this.state.addStackCardsToDeck();
       });
   }
 }
