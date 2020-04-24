@@ -46,12 +46,12 @@ export class Hand {
   }
 
   hasCard(value: Value, color?: Color) {
-    if (color) {
-      return this.cards.some(
-        (handCard) => handCard.value === value && handCard.color === color
-      );
+    if (!color) {
+      return this.cards.some((handCard) => handCard.value === value);
     }
 
-    return this.cards.some((handCard) => handCard.value === value);
+    return this.cards.some(
+      (handCard) => handCard.value === value && handCard.color === color
+    );
   }
 }
