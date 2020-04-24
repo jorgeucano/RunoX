@@ -1,4 +1,6 @@
 import { Card } from "./card.model";
+import { Value } from "./values.model";
+import { Color } from "./color.model";
 
 export class Hand {
   readonly cards: Card[];
@@ -27,7 +29,7 @@ export class Hand {
     if (card === undefined) {
       console.error(`La mano del jugador no posee cartas`);
       return;
-    } 
+    }
     const cardIndex = this.cards.findIndex(
       (handCard) => handCard.id === card.id
     );
@@ -41,5 +43,15 @@ export class Hand {
     this.cards.splice(cardIndex, 1);
 
     console.log(`Se ha descartado la carta: ${card.id}`);
+  }
+
+  hasCard(value: Value, color?: Color) {
+    if (!color) {
+      return this.cards.some((handCard) => handCard.value === value);
+    }
+
+    return this.cards.some(
+      (handCard) => handCard.value === value && handCard.color === color
+    );
   }
 }

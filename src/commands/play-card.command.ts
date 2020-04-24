@@ -40,29 +40,32 @@ export class PlayCardCommand extends GameCommand {
       return new CommandResult(false, "No es el turno del jugador");
     }
 
-    const handCard = player.hand.cards.find(
+    const cardToPlay = player.hand.cards.find(
       (handCard) => handCard.id === this.cardId
     );
 
-    if (!handCard) {
+    if (!cardToPlay) {
       return new CommandResult(
         false,
         "No se ha encontrado la carta de la mano del jugador"
       );
     }
 
-    if(state.stack.cardOnTop?.value === Value.PLUS_TWO && handCard.value !== Value.PLUS_TWO && state.cardsToGive > 0) {
-      console.error(
-        "La carta que quiere tirar no es +2"
-      );
-      
-      return new CommandResult(
-        false,
-        "La carta que quiere tirar no es +2"
-      );
+    if (
+      state.stack.cardOnTop?.value === Value.PLUS_TWO &&
+      cardToPlay.value !== Value.PLUS_TWO &&
+      state.cardsToGive > 0
+    ) {
+      console.error("La carta que quiere tirar no es +2");
+
+      alert("La carta que quiere tirar no es +2");
+      return new CommandResult(false, "La carta que quiere tirar no es +2");
     }
 
-    if (state.stack.cardOnTop && !handCard?.isPlayable(state.stack.cardOnTop)) {
+    if (
+      state.stack.cardOnTop &&
+      !cardToPlay?.isPlayable(state.stack.cardOnTop)
+    ) {
       console.error(
         "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
       );
@@ -73,46 +76,67 @@ export class PlayCardCommand extends GameCommand {
       );
     }
 
-    state.turn.player.hand.removeCard(handCard);
-
-    state.stack.addCard(handCard);
-    
-    if(handCard?.value === Value.PLUS_FOUR) {
-      // Es importante el orden en que se aplica los efectos. Primero se aplica +4 y luego saltea turno.
-      state.giveCards(4, state.nextPlayerToPlay);
-      state.skipNextTurn();
-    }
-    
-    if(handCard?.value === Value.PLUS_TWO) {
-      state.cardsToGive += 2;
-      // state.giveCards(2, state.nextPlayerToPlay);
-    }
-
-    if (handCard?.value === Value.WILDCARD || handCard?.value === Value.PLUS_FOUR) {
+    if (
+      cardToPlay?.value === Value.WILDCARD ||
+      cardToPlay?.value === Value.PLUS_FOUR
+    ) {
       let newColor;
       // TODO: Cambiar el metodo de entrada del color
-      // TODO: hacer la validación de color en changePlayableColor
       while (!isValidColor(newColor as Color)) {
         newColor = prompt(
           "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
         );
       }
-      state.changePlayableColor(newColor as Color);
+
+      cardToPlay.setColor(newColor as Color);
     }
 
-    if (handCard?.value === Value.REVERSE) {
-      state.changeDirection();
-    }
+    state.turn.player.hand.removeCard(cardToPlay);
 
-    if(handCard?.value === Value.SKIP) {
-      state.skipNextTurn();
-    }
+    state.stack.addCard(cardToPlay);
 
     console.log(
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
 
-    this.events.dispatchAfterPlayCard(new AfterPlayCardEvent(handCard, player));
+    if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
+      // Es importante el orden en que se aplica los efectos.
+      // Primero se aplica +4 y luego saltea turno.
+      state.giveCards(4, state.nextPlayerToPlay);
+      state.skipNextTurn();
+    }
+
+    if (state.stack.cardOnTop?.value === Value.PLUS_TWO) {
+      state.cardsToGive += 2;
+
+      const nextPlayerHasPlusTwo = state.nextPlayerToPlay.hand.hasCard(
+        Value.PLUS_TWO
+      );
+
+      if (!nextPlayerHasPlusTwo) {
+        state.giveCards(state.cardsToGive, state.nextPlayerToPlay);
+        state.cardsToGive = 0;
+
+        state.skipNextTurn();
+      }
+    }
+
+    if (state.stack.cardOnTop?.value === Value.SKIP) {
+      state.skipNextTurn();
+    }
+
+    if (state.stack.cardOnTop?.value === Value.REVERSE) {
+      state.changeDirection();
+
+      if (state.playersGroup.players.length === 2) {
+        // si son dos jugadores entonces funciona como SKIP
+        state.skipNextTurn();
+      }
+    }
+
+    this.events.dispatchAfterPlayCard(
+      new AfterPlayCardEvent(cardToPlay, player)
+    );
 
     return new CommandResult(true);
   }
