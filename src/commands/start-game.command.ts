@@ -22,7 +22,9 @@ export class StartGameCommand extends GameCommand {
 
     let firstStackCard = state.deck.takeCard() as Card;
 
-    while (firstStackCard.isSpecialCard()) {
+    // si la carta tiene efectos entonces busca otra
+    // TODO: esto simplifica la logica por el momento pero deberia ser solo para +4 y elegir color
+    while (firstStackCard.hasEffects()) {
       state.deck.addCards([firstStackCard]);
 
       state.deck.shuffle();
