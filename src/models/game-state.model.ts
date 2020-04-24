@@ -62,11 +62,6 @@ export class GameState {
     this.playersGroup.players.reverse();
   }
 
-  changePlayableColor(color: Color) {
-    this.stack.cardOnTop?.setColor(color);
-    console.warn(`El nuevo color es ${color}`);
-  }
-
   giveCards(quantity: number, toPlayer: Player | null) {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
     while(quantity > avaibleCards) {
