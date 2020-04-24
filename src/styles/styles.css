@@ -1,5 +1,3 @@
-@import "cards.css";
-@import "layout.css";
 /* 
    http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -56,4 +54,5 @@ table {
 
 /** Estilos UI */
 
+@import "colors.css";
 @import "ui/general.css";

@@ -1,11 +1,18 @@
 
 .carta {
-  background-image: url('../assets/images/cartas-uno.png');
+  background-image: url('/assets/images/cartas-uno.png');
+  box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
   display: inline-block;
   height: 134px;
-  width: 86px;
   margin: 5px;
+  transition: .2s ease-in-out all;
+  width: 86px;
 }
+
+.carta .overlay {
+  display: none;
+}
+
 /* Rojo */
 .uno--rojo { background-position: 0 0 ;}
 .dos--rojo { background-position: -85px 0 ;}
@@ -72,8 +79,7 @@
 .mas-cuatro { background-position: -342px -668px; }
 .desconocida { background-position: -769px -802px; }
 
-
 .carta-select {
-  border: 3px solid red;
-  border-radius: 20%;
+  border: 3px solid var(--main-red-color);
+  border-radius: 13px;
 }

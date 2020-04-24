@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500&display=swap');
+
 * {
   box-sizing: border-box;
   user-select: none !important;
@@ -8,13 +10,11 @@ input, textarea {
 }
 
 body {
-  background: url('/assets/images/bg-main.png') no-repeat center center;
-  background-size: cover;
+  font-family: 'Rubik', sans-serif;
   height: 100vh;
   overflow: hidden;
 }
 
-#root {
-  display: flex;
-  height: 100%;
-}
+@import "game-board.css";
+@import "player.css";
+@import "cards.css";
