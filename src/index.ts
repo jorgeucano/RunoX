@@ -71,19 +71,20 @@ const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 const fromKeyboard = () => fromEvent(document, "keyup");
-const fromKeyboardMapToTrue = (keyCode: number) => fromKeyboard().pipe(
-  pluck("keyCode"),
-  filter(k => k === keyCode),
+const fromKeyboardMapToTrue = (code: string) => fromKeyboard().pipe(
+  pluck("code"),
+  filter(c => c === code),
   mapTo(true)
-);
-const fromKeybordClickMap = (keyCode: number, id: string, fn: ()=> any) => 
-  merge(fromKeyboardMapToTrue(keyCode), fromClick(id)).pipe(map(fn));
+  );
+  const fromKeybordClickMap = (code: string, id: string, fn: ()=> any) => 
+  merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
+  const k = fromKeyboard().subscribe(console.log)
 
 const buttons$ = merge(
   // 83 es la tecla s y 68 la tecla d.
-  fromKeybordClickMap(83, "button-take", () => game.takeCard()),
+  fromKeybordClickMap("KeyS", "button-take", () => game.takeCard()),
   // @ts-ignore
-  fromKeybordClickMap(68, "button-play", () => game.playCard(game.playerTurn?.id, selectedCardId)),
+  fromKeybordClickMap("KeyD", "button-play", () => game.playCard(game.playerTurn?.id, selectedCardId)),
 );
 
 buttons$.subscribe();
