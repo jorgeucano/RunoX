@@ -1,7 +1,5 @@
-@import "cards.css";
-@import "layout.css";
-
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* 
+   http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -27,7 +25,7 @@ time, mark, audio, video {
     vertical-align: baseline;
     box-sizing: border-box;
 }
-*/
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
@@ -54,7 +52,7 @@ table {
     border-spacing: 0;
 }
 
-#root {
-    height: 100%;
-    display: flex;
-}
+/** Estilos UI */
+
+@import "colors.css";
+@import "ui/general.css";

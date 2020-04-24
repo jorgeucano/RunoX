@@ -89,24 +89,26 @@ function drawPlayersCards() {
   }
 
   game.players.forEach((player) => {
+
     const playerDiv = document.createElement("div");
-
-    playerDiv.append(`Mano de ${player.name}:`);
-
     playerDiv.setAttribute("id", player.id);
+    playerDiv.setAttribute("class", "player");
 
+    const playerTitleDiv = document.createElement("div");
+    playerTitleDiv.append(`Mano de ${player.name}:`);
+    playerDiv.appendChild(playerTitleDiv);
+
+    const playerCards = document.createElement("div");
     player.hand.cards.forEach((card) => {
       const _hand = document.createElement("div");
-
       _hand.setAttribute("id", `${card.id}`);
-
       _hand.setAttribute("class", `carta ${card.sprite}`);
-
-      playerDiv.appendChild(_hand);
+      playerCards.appendChild(_hand);
     });
 
-    _players?.appendChild(playerDiv);
+    playerDiv.appendChild(playerCards);
 
+    _players?.appendChild(playerDiv);
     setPlayerClicks(player.id);
   });
 }

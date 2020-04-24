@@ -1,5 +1,5 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-
+const path = require('path');
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const config = {
@@ -34,7 +34,12 @@ const config = {
       template: "./src/index.html",
       filename: "./index.html"
     })
-  ]
+  ],
+  devServer: {
+    contentBase: path.join(__dirname, 'src'),
+    compress: true,
+    port: 9000
+  }
 };
 
 module.exports = config;
