@@ -1,0 +1,20 @@
+* {
+  box-sizing: border-box;
+  user-select: none !important;
+}
+
+input, textarea {
+  user-select: text !important;
+}
+
+body {
+  background: url('/assets/images/bg-main.png') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  height: 100%;
+}

@@ -1,7 +1,5 @@
 @import "cards.css";
 @import "layout.css";
-@import "ui/general.css";
-
 /* 
    http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -56,26 +54,6 @@ table {
     border-spacing: 0;
 }
 
-/** */
+/** Estilos UI */
 
-* {
-  box-sizing: border-box;
-  user-select: none !important;
-}
-
-input, textarea {
-  user-select: text !important;
-}
-
-body {
-  background: url('/assets/images/bg-main.png') no-repeat center center;
-  background-size: cover;
-  height: 100vh;
-  overflow: hidden;
-}
-
-#root {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
+@import "ui/general.css";
