@@ -19,6 +19,11 @@
     margin-left: auto;
 }
 
+#top #stack {
+    display: flex;
+    flex-direction: column;
+}
+
 #players{
     display: grid;
     height: 100%;
