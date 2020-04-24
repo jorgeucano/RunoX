@@ -10,13 +10,20 @@ export class CommandsInvoker {
 
   invoke(currentState: GameState) {
     this.commands.every((command) => {
-      const commandResult = command.execute(currentState);
+      const commandValidation = command.validate(currentState);
 
-      if (!commandResult.success) {
-        alert(commandResult.error);
+      if (!commandValidation.isValid) {
+        console.error(commandValidation.error);
+
+        // TODO: esto solo funcionaria en entornos web
+        alert(commandValidation.error);
+
+        return false;
       }
 
-      return commandResult.success;
+      command.execute(currentState);
+
+      return true;
     });
   }
 }

@@ -1,5 +1,5 @@
 import { GameState } from "../models/game-state.model";
-import { CommandResult } from "./command-result";
+import { CommandValidation } from "./command-result";
 import { GameEvents } from "../events/game-events";
 
 export abstract class GameCommand {
@@ -7,5 +7,6 @@ export abstract class GameCommand {
 
   constructor() {}
 
-  abstract execute(state: GameState): CommandResult;
+  abstract execute(state: GameState): void;
+  abstract validate(state: GameState): CommandValidation;
 }

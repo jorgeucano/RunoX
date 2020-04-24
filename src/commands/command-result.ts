@@ -1,6 +1,6 @@
-export class CommandResult {
+export class CommandValidation {
   constructor(
-    public readonly success: boolean,
+    public readonly isValid: boolean,
     public readonly error?: string
   ) {}
 }
