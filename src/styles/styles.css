@@ -1,7 +1,9 @@
 @import "cards.css";
 @import "layout.css";
+@import "ui/general.css";
 
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* 
+   http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -27,7 +29,7 @@ time, mark, audio, video {
     vertical-align: baseline;
     box-sizing: border-box;
 }
-*/
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
@@ -54,7 +56,26 @@ table {
     border-spacing: 0;
 }
 
+/** */
+
+* {
+  box-sizing: border-box;
+  user-select: none !important;
+}
+
+input, textarea {
+  user-select: text !important;
+}
+
+body {
+  background: url('/assets/images/bg-main.png') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  overflow: hidden;
+}
+
 #root {
-    height: 100%;
-    display: flex;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
