@@ -38,6 +38,7 @@ export class StartGameCommand extends GameCommand {
 
     state.turn.setPlayerTurn(playerTurn);
 
+    this.events.dispatchAfterGameStart();
     this.events.dispatchBeforeTurn(new BeforeTurnEvent(playerTurn));
 
     return new CommandResult(true);
