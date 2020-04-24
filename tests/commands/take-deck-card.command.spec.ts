@@ -9,27 +9,10 @@ describe("TakeDeckCardCommand", () => {
     const command = new TakeDeckCardCommand();
     const state = new GameState();
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
     expect(state.deck.cards.length).toBe(0);
-  });
-
-  it("should return error result when there is a problem while taking a card from the deck", () => {
-    const command = new TakeDeckCardCommand();
-    const state = new GameState();
-    const card = new Card(Value.PLUS_FOUR);
-    const player = new Player("p1", "player 1", "avatar");
-
-    state.deck.addCards([card]);
-    state.turn.setPlayerTurn(player);
-
-    const takeCardSpy = spyOn(state.deck, "takeCard").and.returnValue(null);
-
-    const result = command.execute(state);
-
-    expect(result.success).toBeFalsy();
-    expect(takeCardSpy).toBeCalled();
   });
 
   it("should return error result when there is not a player turn", () => {
@@ -39,9 +22,9 @@ describe("TakeDeckCardCommand", () => {
 
     state.deck.addCards([card]);
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should add the card taken from the deck", () => {

@@ -2,8 +2,10 @@ import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { Value } from "../models/values.model";
 import { isValidColor, Color } from "../models/color.model";
-import { CommandResult } from "./command-result";
+import { CommandValidation } from "./command-result";
 import { AfterPlayCardEvent } from "../events/after-play-card.event";
+import { Player } from "../models/player.model";
+import { Card } from "../models/card.model";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -16,64 +18,12 @@ export class PlayCardCommand extends GameCommand {
     this.cardId = cardId;
   }
 
-  execute(state: GameState): CommandResult {
-    const player = state.playersGroup.getPlayerById(this.playerId);
-
-    if (!player) {
-      console.error("No ha sido posible encontrar al jugador en la partida");
-
-      return new CommandResult(
-        false,
-        "No ha sido posible encontrar al jugador en la partida"
-      );
-    }
-
-    if (!state.turn.player) {
-      console.error("No hay un turno activo");
-
-      return new CommandResult(false, "No hay un turno activo");
-    }
-
-    if (player.id !== state.turn.player.id) {
-      console.error("No es el turno del jugador");
-
-      return new CommandResult(false, "No es el turno del jugador");
-    }
+  execute(state: GameState) {
+    const player = state.playersGroup.getPlayerById(this.playerId) as Player;
 
     const cardToPlay = player.hand.cards.find(
       (handCard) => handCard.id === this.cardId
-    );
-
-    if (!cardToPlay) {
-      return new CommandResult(
-        false,
-        "No se ha encontrado la carta de la mano del jugador"
-      );
-    }
-
-    if (
-      state.stack.cardOnTop?.value === Value.PLUS_TWO &&
-      cardToPlay.value !== Value.PLUS_TWO &&
-      state.cardsToGive > 0
-    ) {
-      console.error("La carta que quiere tirar no es +2");
-
-      return new CommandResult(false, "La carta que quiere tirar no es +2");
-    }
-
-    if (
-      state.stack.cardOnTop &&
-      !cardToPlay?.isPlayable(state.stack.cardOnTop)
-    ) {
-      console.error(
-        "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
-      );
-
-      return new CommandResult(
-        false,
-        "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
-      );
-    }
+    ) as Card;
 
     if (
       cardToPlay?.value === Value.WILDCARD ||
@@ -90,7 +40,7 @@ export class PlayCardCommand extends GameCommand {
       cardToPlay.setColor(newColor as Color);
     }
 
-    state.turn.player.hand.removeCard(cardToPlay);
+    state.turn.player?.hand.removeCard(cardToPlay);
 
     state.stack.addCard(cardToPlay);
 
@@ -136,7 +86,55 @@ export class PlayCardCommand extends GameCommand {
     this.events.dispatchAfterPlayCard(
       new AfterPlayCardEvent(cardToPlay, player)
     );
+  }
 
-    return new CommandResult(true);
+  validate(state: GameState) {
+    const player = state.playersGroup.getPlayerById(this.playerId);
+
+    if (!player) {
+      return new CommandValidation(
+        false,
+        "No ha sido posible encontrar al jugador en la partida"
+      );
+    }
+
+    if (!state.turn.player) {
+      return new CommandValidation(false, "No hay un turno activo");
+    }
+
+    if (player.id !== state.turn.player.id) {
+      return new CommandValidation(false, "No es el turno del jugador");
+    }
+
+    const cardToPlay = player.hand.cards.find(
+      (handCard) => handCard.id === this.cardId
+    );
+
+    if (!cardToPlay) {
+      return new CommandValidation(
+        false,
+        "No se ha encontrado la carta de la mano del jugador"
+      );
+    }
+
+    if (
+      state.stack.cardOnTop?.value === Value.PLUS_TWO &&
+      cardToPlay.value !== Value.PLUS_TWO &&
+      state.cardsToGive > 0
+    ) {
+      return new CommandValidation(false, "La carta que quiere tirar no es +2");
+    }
+
+    if (
+      state.stack.cardOnTop &&
+      !cardToPlay?.isPlayable(state.stack.cardOnTop)
+    ) {
+      return new CommandValidation(
+        false,
+        "La carta que quiere tirar no tiene el mismo color o valor que la del stack"
+      );
+    }
+
+    return new CommandValidation(true);
   }
 }

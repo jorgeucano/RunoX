@@ -11,9 +11,9 @@ describe("PlayCardCommand", () => {
     const player = new Player("p1", "player 1", "avatar");
     const command = new PlayCardCommand(player.id, "card1");
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should return error result when we execute the command and there is not a current player", () => {
@@ -23,9 +23,9 @@ describe("PlayCardCommand", () => {
 
     state.playersGroup.addPlayer(player);
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should return error result when we execute the command and the current player does not have the card", () => {
@@ -38,9 +38,9 @@ describe("PlayCardCommand", () => {
     player.hand.addCard(card);
     state.turn.setPlayerTurn(player);
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should return error result when we execute the command and the card discarded is invalid", () => {
@@ -55,9 +55,9 @@ describe("PlayCardCommand", () => {
     player.hand.addCard(handCardBlueFour);
     state.turn.setPlayerTurn(player);
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should discard current player card when we execute the command", () => {

@@ -7,9 +7,9 @@ describe("FinalizeTurnCommand", () => {
     const command = new FinalizeTurnCommand();
     const state = new GameState();
 
-    const result = command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(result.success).toBeFalsy();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
   it("should set first player as current player when we start the game", () => {
