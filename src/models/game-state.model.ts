@@ -64,7 +64,7 @@ export class GameState {
     const avaibleCards = this.deck.cards.length + this.stack.cards.length;
 
     while (quantity > avaibleCards) {
-      console.error("No se puede tirar más cartas que las jugables");
+      console.error("No se puede dar más cartas que las jugables");
 
       return;
     }
