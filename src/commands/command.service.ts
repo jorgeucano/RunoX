@@ -1,4 +1,4 @@
-import { GameInvoker as CommandsInvoker } from "./game-invoker";
+import { CommandsInvoker } from "./commands-invoker";
 import { GameState } from "../models/game-state.model";
 import { Player } from "../models/player.model";
 import { BuildDeckCommand } from "./build-deck.command";

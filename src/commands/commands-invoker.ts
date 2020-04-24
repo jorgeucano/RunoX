@@ -1,7 +1,7 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 
-export class GameInvoker {
+export class CommandsInvoker {
   private readonly commands: GameCommand[];
 
   constructor(commands: GameCommand[]) {
