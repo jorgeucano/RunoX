@@ -78,7 +78,6 @@ const fromKeyboardMapToTrue = (code: string) => fromKeyboard().pipe(
   );
   const fromKeybordClickMap = (code: string, id: string, fn: ()=> any) => 
   merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
-  const k = fromKeyboard().subscribe(console.log)
 
 const buttons$ = merge(
   // 83 es la tecla s y 68 la tecla d.
