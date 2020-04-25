@@ -48,6 +48,27 @@ export class PlayCardCommand extends GameCommand {
       `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
     );
 
+    if (
+      state.turn.player?.hand.cards.length === 0 &&
+      state.unoYellers[state.turn.player?.id]
+    ) {
+      alert(
+        `El jugador ${
+          state.turn.player.name
+        } gano! Su puntaje es: ${state.getScore()}`
+      );
+
+      // TODO: ver como finalizar el juego
+      throw new Error("El juego termino!");
+    }
+
+    if (
+      state.turn.player?.hand.cards.length === 1 &&
+      !state.unoYellers[state.turn.player?.id]
+    ) {
+      state.giveCards(2, state.turn.player);
+    }
+
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
       // Es importante el orden en que se aplica los efectos.
       // Primero se aplica +4 y luego saltea turno.

@@ -65,6 +65,10 @@ export class GameEngine {
     this.commandService.takeCard(this.state);
   }
 
+  uno(yeller?: Player) {
+    this.commandService.yellUno(this.state, yeller);
+  }
+
   private setSubscriptions() {
     this.subscribeToAfterTakeCard();
   }

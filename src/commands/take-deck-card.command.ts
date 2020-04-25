@@ -9,15 +9,19 @@ export class TakeDeckCardCommand extends GameCommand {
   execute(state: GameState) {
     const card = state.deck.takeCard() as Card;
 
-    state.turn.player?.hand.addCard(card);
+    const currentPlayer = state.turn.player as Player;
+
+    currentPlayer.hand.addCard(card);
 
     console.log(
-      `El jugador ${state.turn.player?.id} ha agregado a su mano la carta ${card.id}`
+      `El jugador ${currentPlayer.id} ha agregado a su mano la carta ${card.id}`
     );
 
     this.events.dispatchAfterTakeCard(
-      new AfterTakeCardEvent(card, state.turn.player as Player)
+      new AfterTakeCardEvent(card, currentPlayer)
     );
+
+    state.unoYellers[currentPlayer.id] = false;
   }
 
   validate(state: GameState) {

@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
-import { fromEvent, merge, combineLatest } from "rxjs";
-import { map, filter, pluck, mapTo, tap, first } from "rxjs/operators";
+import { fromEvent, merge } from "rxjs";
+import { map, filter } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 
@@ -70,20 +70,14 @@ const getElement = (id: string): HTMLElement => document.getElementById(id);
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
-const fromKeyboard = () => fromEvent(document, "keyup");
-const fromKeyboardMapToTrue = (code: string) => fromKeyboard().pipe(
-  pluck("code"),
-  filter(c => c === code),
-  mapTo(true)
-  );
-  const fromKeybordClickMap = (code: string, id: string, fn: ()=> any) => 
-  merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
-
 const buttons$ = merge(
-  // 83 es la tecla s y 68 la tecla d.
-  fromKeybordClickMap("KeyS", "button-take", () => game.takeCard()),
+  fromClickMap("button-take", () => game.takeCard()),
+  fromClickMap("button-play", () =>
+    // @ts-ignore
+    game.playCard(game.playerTurn?.id, selectedCardId)
+  ),
   // @ts-ignore
-  fromKeybordClickMap("KeyD", "button-play", () => game.playCard(game.playerTurn?.id, selectedCardId)),
+  fromClickMap("button-uno", () => game.uno(game.playerTurn))
 );
 
 buttons$.subscribe();

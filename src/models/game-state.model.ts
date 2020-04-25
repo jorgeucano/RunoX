@@ -16,8 +16,8 @@ export class GameState {
   readonly turn: Turn;
 
   gameDirection: GameDirection;
-
   cardsToGive: number;
+  unoYellers: { [id: string]: boolean };
 
   constructor() {
     this.deck = new Deck();
@@ -26,6 +26,7 @@ export class GameState {
     this.turn = new Turn();
     this.gameDirection = GameDirection.CLOCKWISE;
     this.cardsToGive = 0;
+    this.unoYellers = {};
   }
 
   get nextPlayerToPlay() {
@@ -106,5 +107,13 @@ export class GameState {
     this.stack.addCard(cardOnTopTheStack);
 
     this.deck.shuffle();
+  }
+
+  getScore() {
+    return this.playersGroup.players.reduce((score, player) => {
+      score += player.hand.score;
+
+      return score;
+    }, 0);
   }
 }

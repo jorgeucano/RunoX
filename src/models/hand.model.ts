@@ -10,10 +10,10 @@ export class Hand {
   }
 
   get score() {
-    return this.cards.reduce((amount, card) => {
-      amount += card.score;
+    return this.cards.reduce((score, card) => {
+      score += card.score;
 
-      return amount;
+      return score;
     }, 0);
   }
 
