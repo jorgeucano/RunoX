@@ -54,8 +54,12 @@ game.events.afterPlayCard.subscribe(() => {
   drawStack();
 });
 
-game.events.afterTakeCard.subscribe(() => {
+game.events.afterTakeCards.subscribe(() => {
   drawPlayersCards();
+
+  // TODO: esto es un workaround acoplado al diseño actual
+  // @ts-ignore
+  drawTurn(game.playerTurn);
 });
 
 game.events.beforeTurn.subscribe((data) => {

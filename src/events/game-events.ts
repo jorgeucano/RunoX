@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 import { GameEvent } from "./game-event.enum";
 import { AfterPlayCardEvent } from "./after-play-card.event";
-import { AfterTakeCardEvent } from "./after-take-card.event";
+import { AfterTakeCardsEvent } from "./after-take-cards.event";
 import { BeforeTurnEvent } from "./before-turn.event";
 
 export class GameEvents {
@@ -10,7 +10,7 @@ export class GameEvents {
   private readonly events = {
     [GameEvent.AFTER_GAME_START]: new Subject<void>(),
     [GameEvent.AFTER_PLAY_CARD]: new Subject<AfterPlayCardEvent>(),
-    [GameEvent.AFTER_TAKE_CARD]: new Subject<AfterTakeCardEvent>(),
+    [GameEvent.AFTER_TAKE_CARDS]: new Subject<AfterTakeCardsEvent>(),
     [GameEvent.BEFORE_TURN]: new Subject<BeforeTurnEvent>(),
   };
 
@@ -32,8 +32,8 @@ export class GameEvents {
     return this.events.afterPlayCard.asObservable();
   }
 
-  get afterTakeCard$() {
-    return this.events.afterTakeCard.asObservable();
+  get afterTakeCards$() {
+    return this.events.afterTakeCards.asObservable();
   }
 
   get beforeTurn$() {
@@ -55,8 +55,8 @@ export class GameEvents {
     return this.events.afterPlayCard.next(data);
   }
 
-  dispatchAfterTakeCard(data: AfterTakeCardEvent) {
-    return this.events.afterTakeCard.next(data);
+  dispatchAfterTakeCards(data: AfterTakeCardsEvent) {
+    return this.events.afterTakeCards.next(data);
   }
 
   dispatchBeforeTurn(data: BeforeTurnEvent) {

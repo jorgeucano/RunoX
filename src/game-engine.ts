@@ -32,7 +32,7 @@ export class GameEngine {
     return {
       [GameEvent.AFTER_GAME_START]: this.gameEvents.afterGameStart$,
       [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
-      [GameEvent.AFTER_TAKE_CARD]: this.gameEvents.afterTakeCard$,
+      [GameEvent.AFTER_TAKE_CARDS]: this.gameEvents.afterTakeCards$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
     };
   }
@@ -74,7 +74,7 @@ export class GameEngine {
   }
 
   private subscribeToAfterTakeCard() {
-    this.gameEvents.afterTakeCard$
+    this.gameEvents.afterTakeCards$
       .pipe(filter(() => !this.state.deck.cards.length))
       .subscribe(() => {
         this.state.addStackCardsToDeck();
