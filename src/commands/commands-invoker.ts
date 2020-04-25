@@ -23,6 +23,7 @@ export class CommandsInvoker {
 
           command.execute(currentState);
 
+          // TODO: evaluar si es adecuador agregar el complete()
           subscriber.next();
         });
       } catch (error) {
