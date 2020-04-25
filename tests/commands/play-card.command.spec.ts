@@ -6,14 +6,12 @@ import { Value } from "../../src/models/values.model";
 import { Color } from "../../src/models/color.model";
 
 describe("PlayCardCommand", () => {
-  it("should return error result when we execute the command and the player is not playing", () => {
+  it("should throw error result when we execute the command and the player is not playing", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const command = new PlayCardCommand(player.id, "card1");
 
-    const commandValidation = command.validate(state);
-
-    expect(commandValidation.isValid).toBeFalsy();
+    expect(() => command.validate(state)).toThrowError();
   });
 
   it("should return error result when we execute the command and there is not a current player", () => {

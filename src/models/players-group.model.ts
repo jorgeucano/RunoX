@@ -19,11 +19,9 @@ export class PlayersGroup {
     const player = this.players.find((player) => player.id === playerId);
 
     if (!player) {
-      console.error(
+      throw new Error(
         `El jugador con id ${playerId} no esta en el grupo de jugadores`
       );
-
-      return;
     }
 
     return player;

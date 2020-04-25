@@ -70,9 +70,7 @@ export class GameState {
       this.deck.cards.length + (this.stack.cards.length - 1);
 
     while (quantity > availableCards) {
-      console.error("No se puede dar más cartas que las jugables");
-
-      return;
+      throw new Error("No se puede dar más cartas que las jugables");
     }
 
     if (quantity > this.deck.cards.length) {
@@ -91,7 +89,9 @@ export class GameState {
       new AfterTakeCardsEvent(newCards, toPlayer)
     );
 
-    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
+    console.log(
+      `Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`
+    );
   }
 
   addStackCardsToDeck() {
@@ -104,9 +104,7 @@ export class GameState {
     const cardOnTopTheStack = this.stack.cardOnTop;
 
     if (!cardOnTopTheStack) {
-      console.error("No se pudo obtener la carta de la cima del stack");
-
-      return;
+      throw new Error("No se pudo obtener la carta de la cima del stack");
     }
 
     this.stack.empty();

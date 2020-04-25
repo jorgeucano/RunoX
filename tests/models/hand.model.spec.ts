@@ -31,18 +31,15 @@ describe("Hand", () => {
     expect(hand.cards.length).toBe(2);
   });
 
-  it("should log error if the card we are trying to remove is not present", () => {
-    const spy = spyOn(global.console, "error").and.callThrough();
-
+  it("should throw error if the card we are trying to remove is not present", () => {
     const hand = new Hand();
     const cards = [new Card(Value.PLUS_FOUR), new Card(Value.WILDCARD)];
 
     hand.addCards(cards);
 
-    hand.removeCard(new Card(Value.ONE, Color.BLUE));
-
-    expect(spy).toBeCalled();
-    expect(hand.cards.length).toBe(2);
+    expect(() =>
+      hand.removeCard(new Card(Value.ONE, Color.BLUE))
+    ).toThrowError();
   });
 
   it("should remove a card from the hand when we invoke removeCard with a valid cardId", () => {
