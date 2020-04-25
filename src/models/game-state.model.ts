@@ -94,10 +94,6 @@ export class GameState {
     console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
   }
 
-  skipNextTurn() {
-    this.turn.setPlayerTurn(this.nextPlayerToPlay);
-  }
-
   addStackCardsToDeck() {
     const newDeckCards = this.stack.cards.filter(
       (card) => card.id === this.stack.cardOnTop?.id
@@ -120,13 +116,16 @@ export class GameState {
     this.deck.shuffle();
   }
 
-  getScore() {
-    return this.playersGroup.players
-      .filter((player) => player.id !== this.turn.player?.id)
-      .reduce((score, player) => {
-        score += player.hand.score;
+  checkForPlayersWhoShouldHaveYelledUno() {
+    const playersWhoShouldHaveYelled = this.playersGroup.players.filter(
+      (player) =>
+        player.id !== this.turn.player?.id &&
+        player.hand.cards.length === 1 &&
+        !this.unoYellers[player.id]
+    );
 
-        return score;
-      }, 0);
+    playersWhoShouldHaveYelled.forEach((player) => {
+      this.giveCards(2, player);
+    });
   }
 }

@@ -10,6 +10,7 @@ export class TakeDeckCardCommand extends GameCommand {
     state.giveCards(1, currentPlayer);
 
     state.unoYellers[currentPlayer.id] = false;
+    state.checkForPlayersWhoShouldHaveYelledUno();
   }
 
   validate(state: GameState) {

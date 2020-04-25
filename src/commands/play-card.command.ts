@@ -53,23 +53,25 @@ export class PlayCardCommand extends GameCommand {
       state.turn.player?.hand.cards.length === 0 &&
       state.unoYellers[state.turn.player?.id]
     ) {
-      this.events.dispatchGameEnd(
-        new GameEndEvent(state.turn.player, state.getScore())
-      );
+      const score = state.playersGroup.players
+        .filter((player) => player.id !== state.turn.player?.id)
+        .reduce((score, player) => {
+          score += player.hand.score;
+
+          return score;
+        }, 0);
+
+      this.events.dispatchGameEnd(new GameEndEvent(state.turn.player, score));
     }
 
-    if (
-      state.turn.player?.hand.cards.length === 1 &&
-      !state.unoYellers[state.turn.player?.id]
-    ) {
-      state.giveCards(2, state.turn.player);
-    }
+    state.checkForPlayersWhoShouldHaveYelledUno();
 
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
       // Es importante el orden en que se aplica los efectos.
       // Primero se aplica +4 y luego saltea turno.
       state.giveCards(4, state.nextPlayerToPlay);
-      state.skipNextTurn();
+
+      state.turn.setPlayerTurn(state.nextPlayerToPlay);
     }
 
     if (state.stack.cardOnTop?.value === Value.PLUS_TWO) {
@@ -83,12 +85,12 @@ export class PlayCardCommand extends GameCommand {
         state.giveCards(state.cardsToGive, state.nextPlayerToPlay);
         state.cardsToGive = 0;
 
-        state.skipNextTurn();
+        state.turn.setPlayerTurn(state.nextPlayerToPlay);
       }
     }
 
     if (state.stack.cardOnTop?.value === Value.SKIP) {
-      state.skipNextTurn();
+      state.turn.setPlayerTurn(state.nextPlayerToPlay);
     }
 
     if (state.stack.cardOnTop?.value === Value.REVERSE) {
@@ -96,7 +98,7 @@ export class PlayCardCommand extends GameCommand {
 
       if (state.playersGroup.players.length === 2) {
         // si son dos jugadores entonces funciona como SKIP
-        state.skipNextTurn();
+        state.turn.setPlayerTurn(state.nextPlayerToPlay);
       }
     }
 
