@@ -22,10 +22,10 @@ export class CommandsInvoker {
           }
 
           command.execute(currentState);
-
-          // TODO: evaluar si es adecuador agregar el complete()
-          subscriber.next();
         });
+
+        subscriber.next();
+        subscriber.complete();
       } catch (error) {
         subscriber.error(error);
       }
