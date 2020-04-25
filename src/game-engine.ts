@@ -16,8 +16,6 @@ export class GameEngine {
     this.state = new GameState();
     this.commandService = new CommandService();
     this.gameEvents = GameEvents.getInstance();
-
-    this.setSubscriptions();
   }
 
   static getInstance(): GameEngine {
@@ -51,34 +49,22 @@ export class GameEngine {
   }
 
   start() {
-    this.commandService.startGame(this.state);
+    return this.commandService.startGame(this.state);
   }
 
   join(players: Player[]) {
-    this.commandService.addPlayers(this.state, players);
+    return this.commandService.addPlayers(this.state, players);
   }
 
   playCard(playerId: string, cardId: string) {
-    this.commandService.playCard(this.state, playerId, cardId);
+    return this.commandService.playCard(this.state, playerId, cardId);
   }
 
   takeCard() {
-    this.commandService.takeCard(this.state);
+    return this.commandService.takeCard(this.state);
   }
 
   uno(yeller?: Player) {
-    this.commandService.yellUno(this.state, yeller);
-  }
-
-  private setSubscriptions() {
-    this.subscribeToAfterTakeCard();
-  }
-
-  private subscribeToAfterTakeCard() {
-    this.gameEvents.afterTakeCards$
-      .pipe(filter(() => !this.state.deck.cards.length))
-      .subscribe(() => {
-        this.state.addStackCardsToDeck();
-      });
+    return this.commandService.yellUno(this.state, yeller);
   }
 }
