@@ -6,6 +6,7 @@ import { CommandValidation } from "./command-result";
 import { AfterPlayCardEvent } from "../events/after-play-card.event";
 import { Player } from "../models/player.model";
 import { Card } from "../models/card.model";
+import { GameEndEvent } from "../events/game-end.event";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -52,14 +53,9 @@ export class PlayCardCommand extends GameCommand {
       state.turn.player?.hand.cards.length === 0 &&
       state.unoYellers[state.turn.player?.id]
     ) {
-      alert(
-        `El jugador ${
-          state.turn.player.name
-        } gano! Su puntaje es: ${state.getScore()}`
+      this.events.dispatchGameEnd(
+        new GameEndEvent(state.turn.player, state.getScore())
       );
-
-      // TODO: ver como finalizar el juego
-      throw new Error("El juego termino!");
     }
 
     if (

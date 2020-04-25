@@ -66,6 +66,12 @@ game.events.beforeTurn.subscribe((data) => {
   drawTurn(data.player);
 });
 
+game.events.gameEnd.subscribe((data) => {
+  alert(`El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`);
+
+  window.location.reload();
+});
+
 game.start();
 
 // @ts-ignore

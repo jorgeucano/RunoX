@@ -34,6 +34,7 @@ export class GameEngine {
       [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
       [GameEvent.AFTER_TAKE_CARDS]: this.gameEvents.afterTakeCards$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
+      [GameEvent.GAME_END]: this.gameEvents.gameEnd$,
     };
   }
 

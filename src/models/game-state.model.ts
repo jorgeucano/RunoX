@@ -121,10 +121,12 @@ export class GameState {
   }
 
   getScore() {
-    return this.playersGroup.players.reduce((score, player) => {
-      score += player.hand.score;
+    return this.playersGroup.players
+      .filter((player) => player.id !== this.turn.player?.id)
+      .reduce((score, player) => {
+        score += player.hand.score;
 
-      return score;
-    }, 0);
+        return score;
+      }, 0);
   }
 }
