@@ -19,7 +19,7 @@ export class Card {
     this.color = color;
   }
 
-  get score() {
+  get score(): number {
     switch (this.value) {
       case Value.PLUS_TWO:
       case Value.SKIP:
