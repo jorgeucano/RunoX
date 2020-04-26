@@ -1,12 +1,17 @@
-.player {
+.player { 
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
-.player .player-select {
-    background: rgba(2, 2, 2, 0.60);
+.player .player-cards {
+    display: grid;
+    grid-template-columns: repeat(8, 86px);
+    column-gap: 24px;
+    row-gap: 20px;
+    width: 100%;
 }
 
-.player:not(.player-select) {
+/* .player:not(.player-select) {
     display: none;
-}
+} */

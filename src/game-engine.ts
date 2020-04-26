@@ -138,7 +138,7 @@ export class GameEngine {
       alert(commandResult.error);
 
       return;
-    }
+    }  
   }
 
   private setSubscriptions() {

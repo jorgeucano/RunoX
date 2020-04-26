@@ -9,25 +9,68 @@
 #top {
     background-color: rgba(0, 0, 0, .60);
     box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
-    color: #bebebe;
+    color: #ffffff;
     display: flex;
+    font-size: 12px;
+    font-weight: bold;
     margin-bottom: 1rem;
     padding: 1rem;
+    height: 100px;
+}
+
+#top #deck {
+    height: 160px;
+    position: relative;
+    width: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#top #deck img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 110px;
+}
+
+#top #deck button {
+    width: 120px;
+    z-index: 100;
 }
 
 #top #turn {
     margin-left: auto;
 }
 
-#top #stack {
+#top #stack-container #stack {
+    align-items: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 160px;
 }
 
-#players{
-    display: grid;
+#top #stack-container #stack-title {
+    text-align: center;
+}
+
+#top #stack-container #stack .carta {
+    top: 10px;
+    margin-bottom: -28px;
+    position: absolute;
+}
+
+#players {
+    display: flex;
     height: 100%;
     justify-content: center;
     position: relative;
-    width: 100%;
+    margin-top: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
 }

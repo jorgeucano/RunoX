@@ -1,15 +1,18 @@
 import "./styles/styles.css";
 
-import { fromEvent, merge } from "rxjs";
+import { fromEvent, merge, pipe } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
+import { CardComponent } from './components/card/card.component';
+import { isBuffer } from "util";
 
 const game = GameEngine.getInstance();
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
+
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
@@ -39,18 +42,19 @@ game.join([
 
 game.events.afterGameStart.subscribe(() => {
   drawPlayersCards();
-
   drawStack();
-
   // @ts-ignore
   drawTurn(game.playerTurn);
 });
 
+game.events.beforeTurn.subscribe((data) => {
+  drawTurn(data.player);
+});
+
 game.events.afterPlayCard.subscribe(() => {
+  debugger
   selectedCardId = "";
-
   drawPlayersCards();
-
   drawStack();
 });
 
@@ -58,27 +62,39 @@ game.events.afterTakeCard.subscribe(() => {
   drawPlayersCards();
 });
 
-game.events.beforeTurn.subscribe((data) => {
-  drawTurn(data.player);
-});
-
 game.start();
 
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
+
 // @ts-ignore
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 const buttons$ = merge(
   fromClickMap("button-take", () => game.takeCard()),
-  fromClickMap("button-play", () =>
+  /* fromClickMap("button-play", () =>
     // @ts-ignore
     game.playCard(game.playerTurn?.id, selectedCardId)
-  )
+  ) */
 );
 
 buttons$.subscribe();
+
+const getPlayButtons = (): HTMLCollectionOf<Element> => document.getElementsByClassName('button-play-card')
+const playButtons = Array.from(getPlayButtons()).map(element => {
+  return fromEvent(element, "click").pipe(
+    map(element => {
+      // @ts-ignore
+      game.playCard(game.playerTurn?.id, element.target.dataset.card)
+    })
+  )
+})
+
+playButtons.forEach(element => {
+  element.subscribe()
+});
+
 
 /** Dibuja a los jugadores con su respectiva mano
  * TODO: separar
@@ -89,27 +105,22 @@ function drawPlayersCards() {
   }
 
   game.players.forEach((player) => {
+    if (game.playerTurn?.id === player.id) {
+      const playerDiv = document.createElement("div");
+      playerDiv.setAttribute("id", player.id);
+      playerDiv.setAttribute("class", "player");
+  
+      const playerCards = document.createElement("div");
+      playerCards.setAttribute("class", "player-cards");
+      player.hand.cards.forEach((card) => {
+        const _card = new CardComponent(card.id, card.sprite);
+        playerCards.appendChild(_card.element);
+      });
+      playerDiv.appendChild(playerCards);
 
-    const playerDiv = document.createElement("div");
-    playerDiv.setAttribute("id", player.id);
-    playerDiv.setAttribute("class", "player");
-
-    const playerTitleDiv = document.createElement("div");
-    playerTitleDiv.append(`Mano de ${player.name}:`);
-    playerDiv.appendChild(playerTitleDiv);
-
-    const playerCards = document.createElement("div");
-    player.hand.cards.forEach((card) => {
-      const _hand = document.createElement("div");
-      _hand.setAttribute("id", `${card.id}`);
-      _hand.setAttribute("class", `carta ${card.sprite}`);
-      playerCards.appendChild(_hand);
-    });
-
-    playerDiv.appendChild(playerCards);
-
-    _players?.appendChild(playerDiv);
-    setPlayerClicks(player.id);
+      _players?.appendChild(playerDiv);
+      setPlayerClicks(game.playerTurn?.id);
+    }
   });
 }
 
@@ -121,25 +132,24 @@ function drawStack() {
   if (!game.stackCard) {
     return;
   }
-
-  while (_stack?.lastElementChild) {
-    _stack?.removeChild(_stack?.lastElementChild);
+  
+  if (!_stack) {
+    console.error('No se encontró el elemento #stack')
+    return;
   }
 
-  const stackTitleDiv = document.createElement("div");
-
-  stackTitleDiv.append(`La carta en la cima del stack es:`);
-
   const stackCardDiv = document.createElement("div");
-
   stackCardDiv.setAttribute("class", `carta ${game.stackCard.sprite}`);
+  
+  var rotacion = Math.floor(Math.random() * 20) + 10;
+  rotacion *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
 
-  stackTitleDiv.appendChild(stackCardDiv);
-
-  _stack?.appendChild(stackTitleDiv);
+  stackCardDiv.style.transform = `rotate(${rotacion}deg)`;
+  _stack.appendChild(stackCardDiv);
 }
 
 function setPlayerClicks(id: string) {
+  console.log("setPlayerClicks", id)
   const _player = document.getElementById(id);
 
   // @ts-ignore
@@ -155,15 +165,18 @@ function setPlayerClicks(id: string) {
     )
     .subscribe((cardId: string) => {
       /*
-       primero queremos iterar la mano para remover la clase carta-select
+       primero queremos iterar la mano para remover la clase carta-selected
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
+      
+      console.log('carta click!')
+
       try {
-        _player?.querySelectorAll(".carta-select").forEach((el) => {
-          el.classList.remove("carta-select");
+        _player?.querySelectorAll(".carta-selected").forEach((el) => {
+          el.classList.remove("carta-selected");
         });
 
-        document.getElementById(cardId)?.classList.add("carta-select");
+        document.getElementById(cardId)?.classList.add("carta-selected");
 
         selectedCardId = cardId;
       } catch (e) {}
@@ -185,8 +198,6 @@ function drawTurn(player: Player) {
 
   document.getElementById(player.id)?.classList.add("player-select");
   document.getElementById(player.id)?.classList.add("player-select-button");
-
   turnDiv.append(`Es el turno de: ${player.name}`);
-
   _turn?.appendChild(turnDiv);
 }
