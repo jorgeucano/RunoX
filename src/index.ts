@@ -6,27 +6,29 @@ import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from './components/card/card.component';
 import { isBuffer } from "util";
+import { Avatar } from "./components/avatar/avatar.component";
 
 const game = GameEngine.getInstance();
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
+const _avatars = document.getElementById("avatars");
 
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
 
-game.join([
+const _playersList: Player[] = [
   new Player(
     "jorge1234",
     "Jorge",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    "https://avatars0.githubusercontent.com/u/5982204?s=400&v=4"
   ),
   new Player(
     "calel1234",
     "Calel",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    "https://image.shutterstock.com/image-vector/default-avatar-profile-icon-grey-260nw-518740741.jpg"
   ),
   new Player(
     "Facu1234",
@@ -38,7 +40,9 @@ game.join([
     "Nicolas",
     "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
   ),
-]);
+]
+
+game.join(_playersList);
 
 game.events.afterGameStart.subscribe(() => {
   drawPlayersCards();
@@ -52,7 +56,6 @@ game.events.beforeTurn.subscribe((data) => {
 });
 
 game.events.afterPlayCard.subscribe(() => {
-  debugger
   selectedCardId = "";
   drawPlayersCards();
   drawStack();
@@ -110,6 +113,11 @@ function drawPlayersCards() {
       playerDiv.setAttribute("id", player.id);
       playerDiv.setAttribute("class", "player");
   
+      const playerTitle = document.createElement("div");
+      playerTitle.setAttribute("class", "player-title");
+      playerTitle.append(`Player: ${player.name}`)
+      playerDiv.appendChild(playerTitle);
+
       const playerCards = document.createElement("div");
       playerCards.setAttribute("class", "player-cards");
       player.hand.cards.forEach((card) => {
@@ -119,7 +127,7 @@ function drawPlayersCards() {
       playerDiv.appendChild(playerCards);
 
       _players?.appendChild(playerDiv);
-      setPlayerClicks(game.playerTurn?.id);
+      setPlayerClicks(game.playerTurn.id);
     }
   });
 }
@@ -185,11 +193,21 @@ function setPlayerClicks(id: string) {
 
 /** Dibuja el nombre del current player */
 function drawTurn(player: Player) {
+  console.log('drawTurn', player.id)
+
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
 
+  const playersAvatars = document.createElement("div");
+  playersAvatars.setAttribute('id', 'avatars')
+  game.players.forEach(_player => {
+    const avatar = new Avatar(_player, _player.hand.cards.length, _player.id === player.id);
+    playersAvatars.appendChild(avatar.element);
+  })
+
   const turnDiv = document.createElement("div");
+  turnDiv.appendChild(playersAvatars);
 
   _players?.querySelectorAll(".player-select").forEach((el) => {
     el.classList.remove("player-select");
@@ -198,6 +216,6 @@ function drawTurn(player: Player) {
 
   document.getElementById(player.id)?.classList.add("player-select");
   document.getElementById(player.id)?.classList.add("player-select-button");
-  turnDiv.append(`Es el turno de: ${player.name}`);
+  //turnDiv.append(`Es el turno de: ${player.name}`);
   _turn?.appendChild(turnDiv);
 }

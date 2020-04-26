@@ -42,7 +42,7 @@
 }
 
 #top #turn {
-    margin-left: auto;
+    flex: 1;
 }
 
 #top #stack-container #stack {
@@ -55,6 +55,7 @@
 }
 
 #top #stack-container #stack-title {
+    font-size: 10px;
     text-align: center;
 }
 
@@ -69,7 +70,7 @@
     height: 100%;
     justify-content: center;
     position: relative;
-    margin-top: 120px;
+    margin-top: 80px;
     margin-left: auto;
     margin-right: auto;
     width: 80%;

@@ -4,9 +4,18 @@
     width: 100%;
 }
 
+.player .player-title {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(0, 0, 0, .60);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
 .player .player-cards {
     display: grid;
-    grid-template-columns: repeat(8, 86px);
+    grid-template-columns: repeat(7, 86px);
     column-gap: 24px;
     row-gap: 20px;
     width: 100%;
