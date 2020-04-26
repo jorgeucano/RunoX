@@ -2,7 +2,6 @@ import { GameState } from "./models/game-state.model";
 import { Player } from "./models/player.model";
 import { GameEvents } from "./events/game-events";
 import { GameEvent } from "./events/game-event.enum";
-import { filter } from "rxjs/operators";
 import { CommandService } from "./commands/command.service";
 
 export class GameEngine {
@@ -31,6 +30,7 @@ export class GameEngine {
       [GameEvent.AFTER_GAME_START]: this.gameEvents.afterGameStart$,
       [GameEvent.AFTER_PLAY_CARD]: this.gameEvents.afterPlayCard$,
       [GameEvent.AFTER_TAKE_CARDS]: this.gameEvents.afterTakeCards$,
+      [GameEvent.AFTER_YELL_UNO]: this.gameEvents.afterYellUno$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
       [GameEvent.GAME_END]: this.gameEvents.gameEnd$,
     };

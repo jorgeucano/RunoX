@@ -65,7 +65,7 @@ export class PlayCardCommand extends GameCommand {
       this.events.dispatchGameEnd(new GameEndEvent(state.turn.player, score));
     }
 
-    state.checkForPlayersWhoShouldHaveYelledUno();
+    this.checkForPlayersWhoShouldHaveYelledUno(state);
 
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
       // Es importante el orden en que se aplica los efectos.
@@ -87,7 +87,10 @@ export class PlayCardCommand extends GameCommand {
       );
 
       if (!nextPlayerHasPlusTwo) {
-        const newCards = state.giveCards(state.cardsToGive, state.nextPlayerToPlay);
+        const newCards = state.giveCards(
+          state.cardsToGive,
+          state.nextPlayerToPlay
+        );
 
         this.events.dispatchAfterTakeCards(
           new AfterTakeCardsEvent(newCards, state.nextPlayerToPlay)
@@ -115,6 +118,23 @@ export class PlayCardCommand extends GameCommand {
     this.events.dispatchAfterPlayCard(
       new AfterPlayCardEvent(cardToPlay, player)
     );
+  }
+
+  private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
+    const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
+      (player) =>
+        player.id !== state.turn.player?.id &&
+        player.hand.cards.length === 1 &&
+        !state.unoYellers[player.id]
+    );
+
+    playersWhoShouldHaveYelled.forEach((player) => {
+      const newCards = state.giveCards(2, player);
+
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, player)
+      );
+    });
   }
 
   validate(state: GameState) {

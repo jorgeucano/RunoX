@@ -109,22 +109,4 @@ export class GameState {
 
     this.deck.shuffle();
   }
-
-  checkForPlayersWhoShouldHaveYelledUno() {
-    const playersWhoShouldHaveYelled = this.playersGroup.players.filter(
-      (player) =>
-        player.id !== this.turn.player?.id &&
-        player.hand.cards.length === 1 &&
-        !this.unoYellers[player.id]
-    );
-
-    playersWhoShouldHaveYelled.forEach((player) => {
-      const newCards = this.giveCards(2, player);
-
-      // TODO: ver como evitar lanzar el evento desde el state
-      this.events.dispatchAfterTakeCards(
-        new AfterTakeCardsEvent(newCards, player)
-      );
-    });
-  }
 }

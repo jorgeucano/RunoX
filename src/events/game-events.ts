@@ -4,6 +4,7 @@ import { AfterPlayCardEvent } from "./after-play-card.event";
 import { AfterTakeCardsEvent } from "./after-take-cards.event";
 import { BeforeTurnEvent } from "./before-turn.event";
 import { GameEndEvent } from "./game-end.event";
+import { AfterYellUnoEvent } from "./after-yell-uno.event";
 
 export class GameEvents {
   private static instance: GameEvents;
@@ -12,6 +13,7 @@ export class GameEvents {
     [GameEvent.AFTER_GAME_START]: new Subject<void>(),
     [GameEvent.AFTER_PLAY_CARD]: new Subject<AfterPlayCardEvent>(),
     [GameEvent.AFTER_TAKE_CARDS]: new Subject<AfterTakeCardsEvent>(),
+    [GameEvent.AFTER_YELL_UNO]: new Subject<AfterYellUnoEvent>(),
     [GameEvent.BEFORE_TURN]: new Subject<BeforeTurnEvent>(),
     [GameEvent.GAME_END]: new Subject<GameEndEvent>(),
   };
@@ -38,6 +40,10 @@ export class GameEvents {
     return this.events.afterTakeCards.asObservable();
   }
 
+  get afterYellUno$() {
+    return this.events.afterYellUno.asObservable();
+  }
+
   get beforeTurn$() {
     return this.events.beforeTurn.asObservable();
   }
@@ -56,6 +62,10 @@ export class GameEvents {
 
   dispatchAfterTakeCards(data: AfterTakeCardsEvent) {
     return this.events.afterTakeCards.next(data);
+  }
+
+  dispatchAfterYellUno(data: AfterYellUnoEvent) {
+    return this.events.afterYellUno.next(data);
   }
 
   dispatchBeforeTurn(data: BeforeTurnEvent) {

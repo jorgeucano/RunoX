@@ -15,7 +15,25 @@ export class TakeDeckCardCommand extends GameCommand {
     );
 
     state.unoYellers[currentPlayer.id] = false;
-    state.checkForPlayersWhoShouldHaveYelledUno();
+
+    this.checkForPlayersWhoShouldHaveYelledUno(state);
+  }
+
+  private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
+    const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
+      (player) =>
+        player.id !== state.turn.player?.id &&
+        player.hand.cards.length === 1 &&
+        !state.unoYellers[player.id]
+    );
+
+    playersWhoShouldHaveYelled.forEach((player) => {
+      const newCards = state.giveCards(2, player);
+
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, player)
+      );
+    });
   }
 
   validate(state: GameState) {
