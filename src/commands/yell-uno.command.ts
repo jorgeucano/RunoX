@@ -2,6 +2,7 @@ import { GameCommand } from "./game.command";
 import { Player } from "../models/player.model";
 import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
+import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
 export class YellUnoCommand extends GameCommand {
   private readonly yeller?: Player;
@@ -26,7 +27,11 @@ export class YellUnoCommand extends GameCommand {
       // entonces debemos validar que no haya mentido
 
       if (yeller.hand.cards.length > 2) {
-        state.giveCards(2, yeller);
+        const newCards = state.giveCards(2, yeller);
+
+        this.events.dispatchAfterTakeCards(
+          new AfterTakeCardsEvent(newCards, yeller)
+        );
       }
     }
   }

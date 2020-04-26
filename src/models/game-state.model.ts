@@ -85,13 +85,9 @@ export class GameState {
 
     toPlayer.hand.addCards(newCards);
 
-    this.events.dispatchAfterTakeCards(
-      new AfterTakeCardsEvent(newCards, toPlayer)
-    );
+    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
 
-    console.log(
-      `Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`
-    );
+    return newCards;
   }
 
   addStackCardsToDeck() {
@@ -123,7 +119,12 @@ export class GameState {
     );
 
     playersWhoShouldHaveYelled.forEach((player) => {
-      this.giveCards(2, player);
+      const newCards = this.giveCards(2, player);
+
+      // TODO: ver como evitar lanzar el evento desde el state
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, player)
+      );
     });
   }
 }

@@ -7,6 +7,7 @@ import { AfterPlayCardEvent } from "../events/after-play-card.event";
 import { Player } from "../models/player.model";
 import { Card } from "../models/card.model";
 import { GameEndEvent } from "../events/game-end.event";
+import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
@@ -69,7 +70,11 @@ export class PlayCardCommand extends GameCommand {
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
       // Es importante el orden en que se aplica los efectos.
       // Primero se aplica +4 y luego saltea turno.
-      state.giveCards(4, state.nextPlayerToPlay);
+      const newCards = state.giveCards(4, state.nextPlayerToPlay);
+
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, state.nextPlayerToPlay)
+      );
 
       state.turn.setPlayerTurn(state.nextPlayerToPlay);
     }
@@ -82,7 +87,12 @@ export class PlayCardCommand extends GameCommand {
       );
 
       if (!nextPlayerHasPlusTwo) {
-        state.giveCards(state.cardsToGive, state.nextPlayerToPlay);
+        const newCards = state.giveCards(state.cardsToGive, state.nextPlayerToPlay);
+
+        this.events.dispatchAfterTakeCards(
+          new AfterTakeCardsEvent(newCards, state.nextPlayerToPlay)
+        );
+
         state.cardsToGive = 0;
 
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
