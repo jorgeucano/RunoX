@@ -11,12 +11,11 @@ import './card.styles.css';
 export class CardComponent extends GameObject { 
   constructor(
     cardId: string,
-    sprite: string,
-    isSelected: boolean = false
+    sprite: string
   ) {
     const props: GameObjectProp[] = [
-      {name: 'id', value: cardId},
-      { name: 'class', value: `carta ${sprite} ${isSelected ? 'carta-selected' : ''}`},
+      { name: 'id', value: cardId },
+      { name: 'class', value: `carta ${sprite}`},
     ]
     
     const overlay = document.createElement("div");

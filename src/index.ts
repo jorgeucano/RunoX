@@ -67,6 +67,20 @@ game.events.afterTakeCard.subscribe(() => {
 
 game.start();
 
+/**
+ * Observamos el click de todos los botones "JUGAR CARTA"
+ * @TODO Seguro hay una manera más eficiente de hacerlo ...
+ **/
+/* const getPlayButtons = (): NodeListOf<Element> => document.querySelectorAll('.button-play-card')
+const playButtons = Array.from(getPlayButtons()).map(element => {
+  return fromEvent(element, "click").pipe(
+    map(element => {
+      // @ts-ignore
+      game.playCard(game.playerTurn?.id, element.target.dataset.card)
+    })
+  )
+}) */
+
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
 
@@ -76,27 +90,13 @@ const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 const buttons$ = merge(
   fromClickMap("button-take", () => game.takeCard()),
+  // ...playButtons
   /* fromClickMap("button-play", () =>
     // @ts-ignore
     game.playCard(game.playerTurn?.id, selectedCardId)
   ) */
 );
-
 buttons$.subscribe();
-
-const getPlayButtons = (): HTMLCollectionOf<Element> => document.getElementsByClassName('button-play-card')
-const playButtons = Array.from(getPlayButtons()).map(element => {
-  return fromEvent(element, "click").pipe(
-    map(element => {
-      // @ts-ignore
-      game.playCard(game.playerTurn?.id, element.target.dataset.card)
-    })
-  )
-})
-
-playButtons.forEach(element => {
-  element.subscribe()
-});
 
 
 /** Dibuja a los jugadores con su respectiva mano
@@ -106,29 +106,28 @@ function drawPlayersCards() {
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
-
   game.players.forEach((player) => {
-    if (game.playerTurn?.id === player.id) {
-      const playerDiv = document.createElement("div");
-      playerDiv.setAttribute("id", player.id);
-      playerDiv.setAttribute("class", "player");
+    const playerDiv = document.createElement("div");
+    playerDiv.setAttribute("id", player.id);
+    playerDiv.setAttribute("class", "player");
+    
+    /*
+    const playerTitle = document.createElement("div");
+    playerTitle.setAttribute("class", "player-title");
+    playerTitle.append(`Player: ${player.name}`)
+    playerDiv.appendChild(playerTitle); 
+    */
   
-      const playerTitle = document.createElement("div");
-      playerTitle.setAttribute("class", "player-title");
-      playerTitle.append(`Player: ${player.name}`)
-      playerDiv.appendChild(playerTitle);
-
-      const playerCards = document.createElement("div");
-      playerCards.setAttribute("class", "player-cards");
-      player.hand.cards.forEach((card) => {
-        const _card = new CardComponent(card.id, card.sprite);
-        playerCards.appendChild(_card.element);
-      });
-      playerDiv.appendChild(playerCards);
-
-      _players?.appendChild(playerDiv);
-      setPlayerClicks(game.playerTurn.id);
-    }
+    const playerCards = document.createElement("div");
+    playerCards.setAttribute("class", "player-cards");
+    player.hand.cards.forEach((card) => {
+      const _card = new CardComponent(card.id, card.sprite);
+      playerCards.appendChild(_card.element);
+    });
+    playerDiv.appendChild(playerCards);
+    
+    _players?.appendChild(playerDiv);
+    setPlayerClicks(player.id);
   });
 }
 
@@ -157,7 +156,6 @@ function drawStack() {
 }
 
 function setPlayerClicks(id: string) {
-  console.log("setPlayerClicks", id)
   const _player = document.getElementById(id);
 
   // @ts-ignore
@@ -184,10 +182,21 @@ function setPlayerClicks(id: string) {
           el.classList.remove("carta-selected");
         });
 
-        document.getElementById(cardId)?.classList.add("carta-selected");
+        const selectedCard = document.getElementById(cardId)
+        selectedCard?.classList.add("carta-selected");
+        const buttonPlay = selectedCard?.querySelector('.button-play-card');
+        
+        /**
+         * @TODO Revisar esto por si los leaks
+         */
+        //@ts-ignore
+        fromEvent(buttonPlay, 'click').subscribe(() => {
+          //@ts-ignore
+          game.playCard(game.playerTurn?.id, cardId)
+        })
 
         selectedCardId = cardId;
-      } catch (e) {}
+      } catch (e) { }
     });
 }
 

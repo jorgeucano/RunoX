@@ -7,7 +7,7 @@
 }
 
 #top {
-    background-color: rgba(0, 0, 0, .60);
+    background-color: #1A1712;
     box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
     color: #ffffff;
     display: flex;
@@ -15,7 +15,7 @@
     font-weight: bold;
     margin-bottom: 1rem;
     padding: 1rem;
-    height: 100px;
+    height: 65px;
 }
 
 #top #deck {
@@ -70,7 +70,7 @@
     height: 100%;
     justify-content: center;
     position: relative;
-    margin-top: 80px;
+    margin-top: 120px;
     margin-left: auto;
     margin-right: auto;
     width: 80%;

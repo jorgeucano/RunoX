@@ -15,12 +15,15 @@
 
 .player .player-cards {
     display: grid;
-    grid-template-columns: repeat(7, 86px);
+    grid-template-columns: repeat(7, 1fr);
     column-gap: 24px;
     row-gap: 20px;
     width: 100%;
 }
+.player .player-cards .carta {
+    align-self: center;
+}
 
-/* .player:not(.player-select) {
+.player:not(.player-select) {
     display: none;
-} */
+}
