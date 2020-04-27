@@ -3,7 +3,7 @@ import { GameState } from "../models/game-state.model";
 import { Card } from "../models/card.model";
 import { COLORS } from "../models/color.model";
 import { Value, VALUES } from "../models/values.model";
-import { CommandResult } from "./command-result";
+import { CommandValidation } from "./command-result";
 
 export class BuildDeckCommand extends GameCommand {
   execute(state: GameState) {
@@ -28,7 +28,9 @@ export class BuildDeckCommand extends GameCommand {
     state.deck.shuffle();
 
     console.log("Se ha creado el deck");
+  }
 
-    return new CommandResult(true);
+  validate(state: GameState) {
+    return new CommandValidation(true);
   }
 }

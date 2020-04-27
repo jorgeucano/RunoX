@@ -1,8 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500&display=swap');
+@import "https://fonts.googleapis.com/css?family=Montserrat:400,500&display=swap";
 
 * {
   box-sizing: border-box;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 400;
   user-select: none !important;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 input, textarea {
@@ -10,11 +15,33 @@ input, textarea {
 }
 
 body {
-  font-family: 'Rubik', sans-serif;
   height: 100vh;
   overflow: hidden;
 }
 
+button {
+  background-color: var(--main-red-color);
+  border: 3px solid white;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: bold;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: .4rem;
+  letter-spacing: 1px;
+  transition: transform .12s ease-in-out;
+  text-transform: uppercase;
+}
+
+button:active {
+  transform: scale(.92);
+}
+
+button:focus {
+  outline:0;
+}
+
 @import "game-board.css";
 @import "player.css";
-@import "cards.css";

@@ -1,16 +1,43 @@
-
 .carta {
   background-image: url('/assets/images/cartas-uno.png');
   box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
+  cursor: pointer;
   display: inline-block;
   height: 134px;
   margin: 5px;
+  position:relative;
   transition: .2s ease-in-out all;
   width: 86px;
 }
 
+.carta:hover {
+  transform: scale(1.26);
+}
+
 .carta .overlay {
-  display: none;
+  align-items: center;
+  background: rgba(161, 28, 33, .60);
+  border: 4px solid white;
+  border-radius: 9px;
+  bottom: 0;
+  display: flex;
+  opacity: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 150px;
+  transition: all .23s ease-in-out;
+  justify-content: center;
+}
+
+.carta-selected {
+  transform: scale(1.26);
+  z-index: 100;
+}
+
+.carta-selected .overlay { 
+  top: 0;
+  opacity: 1;
 }
 
 /* Rojo */
@@ -73,13 +100,7 @@
 .reversa--azul { background-position: -853px -668px ;}
 .mas-dos--azul { background-position: -940px -668px ;}
 
-
 /* Comodines */
 .comodin { background-position: -171px -668px; }
 .mas-cuatro { background-position: -342px -668px; }
 .desconocida { background-position: -769px -802px; }
-
-.carta-select {
-  border: 3px solid var(--main-red-color);
-  border-radius: 13px;
-}

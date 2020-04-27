@@ -16,7 +16,12 @@ export class Stack {
   }
 
   addCard(card: Card | undefined) {
-    if (!card) return;
+    if (!card) {
+      throw new Error(
+        "La carta ha llegado nula al intentar agregarla al stack"
+      );
+    }
+
     this.cards.push(card);
   }
 

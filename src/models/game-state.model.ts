@@ -5,27 +5,31 @@ import { Stack } from "./stack.model";
 import { GameDirection } from "./game-direction.model";
 import { Card } from "./card.model";
 import { Player } from "./player.model";
+import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
+import { GameEvents } from "../events/game-events";
 
 /** Clase que representa el estado del juego */
 export class GameState {
   readonly deck: Deck;
   readonly stack: Stack;
-
   readonly playersGroup: PlayersGroup;
-
   readonly turn: Turn;
+  readonly events: GameEvents;
 
   gameDirection: GameDirection;
-
   cardsToGive: number;
+  unoYellers: { [id: string]: boolean };
 
   constructor() {
     this.deck = new Deck();
     this.stack = new Stack();
     this.playersGroup = new PlayersGroup();
     this.turn = new Turn();
+    this.events = GameEvents.getInstance();
+
     this.gameDirection = GameDirection.CLOCKWISE;
     this.cardsToGive = 0;
+    this.unoYellers = {};
   }
 
   get nextPlayerToPlay() {
@@ -61,29 +65,29 @@ export class GameState {
   }
 
   giveCards(quantity: number, toPlayer: Player) {
-    const avaibleCards = this.deck.cards.length + this.stack.cards.length;
+    // numero de cartas disponibles entre mazo y pila
+    const availableCards =
+      this.deck.cards.length + (this.stack.cards.length - 1);
 
-    while (quantity > avaibleCards) {
-      console.error("No se puede dar más cartas que las jugables");
-
-      return;
+    while (quantity > availableCards) {
+      throw new Error("No se puede dar más cartas que las jugables");
     }
 
     if (quantity > this.deck.cards.length) {
       this.addStackCardsToDeck();
     }
 
-    for (let index = 0; index < quantity; index++) {
-      const newCard = this.deck.takeCard();
+    let newCards: Card[] = [];
 
-      toPlayer.hand.addCard(newCard as Card);
+    for (let index = 0; index < quantity; index++) {
+      newCards = [...newCards, this.deck.takeCard() as Card];
     }
 
-    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
-  }
+    toPlayer.hand.addCards(newCards);
 
-  skipNextTurn() {
-    this.turn.setPlayerTurn(this.nextPlayerToPlay);
+    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
+
+    return newCards;
   }
 
   addStackCardsToDeck() {
@@ -96,9 +100,7 @@ export class GameState {
     const cardOnTopTheStack = this.stack.cardOnTop;
 
     if (!cardOnTopTheStack) {
-      console.error("No se pudo obtener la carta de la cima del stack");
-
-      return;
+      throw new Error("No se pudo obtener la carta de la cima del stack");
     }
 
     this.stack.empty();

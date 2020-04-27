@@ -1,10 +1,27 @@
-.player {
+.player { 
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
-.player .player-select {
-    background: rgba(2, 2, 2, 0.60);
+.player .player-title {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(0, 0, 0, .60);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.player .player-cards {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    column-gap: 24px;
+    row-gap: 20px;
+    width: 100%;
+}
+.player .player-cards .carta {
+    align-self: center;
 }
 
 .player:not(.player-select) {

@@ -60,13 +60,9 @@ describe("Deck", () => {
     expect(tackedCard?.id).toEqual(card1.id);
   });
 
-  it("should log error when we try to take a card from an empty deck", () => {
+  it("should throw error when we try to take a card from an empty deck", () => {
     const deck = new Deck();
-    const spy = spyOn(deck, "takeCard").and.callThrough();
-
-    const tackedCard = deck.takeCard();
-
-    expect(spy).toHaveBeenCalled();
-    expect(tackedCard).not.toBeDefined();
+    
+    expect(() => deck.takeCard()).toThrowError();
   });
 });
