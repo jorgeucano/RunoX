@@ -6,17 +6,16 @@ import { Color } from "../../src/models/color.model";
 import { Player } from "../../src/models/player.model";
 
 describe("StartGameCommand", () => {
-  it("should log an error when when we execute the command and there are not players playing", () => {
+  it("should return error when when we execute the command and there are not players playing", () => {
     const command = new StartGameCommand();
     const state = new GameState();
-    const spy = spyOn(global.console, "error").and.callThrough();
 
-    command.execute(state);
+    const commandValidation = command.validate(state);
 
-    expect(spy).toBeCalled();
+    expect(commandValidation.isValid).toBeFalsy();
   });
 
-  it("should deal the cards to the players, set current and add a card to the stack player when the command is executed", () => {
+  it("should draw the cards to the players, set current and add a card to the stack player when the command is executed", () => {
     const command = new StartGameCommand();
     const state = new GameState();
     const card = new Card(Value.ONE, Color.BLUE);

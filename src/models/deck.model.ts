@@ -31,9 +31,7 @@ export class Deck {
 
   takeCard() {
     if (!this.cards.length) {
-      console.error("No hay cartas disponibles en el mazo");
-
-      return;
+      throw new Error("No hay cartas disponibles en el mazo");
     }
 
     return this.cards.shift();

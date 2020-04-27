@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
-import { fromEvent, merge, pipe } from "rxjs";
-import { map, filter } from "rxjs/operators";
+import { fromEvent, merge } from "rxjs";
+import { map, filter, pluck, mapTo } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from './components/card/card.component';
@@ -19,30 +19,35 @@ const _avatars = document.getElementById("avatars");
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
 
-const _playersList: Player[] = [
-  new Player(
-    "jorge1234",
-    "Jorge",
-    "https://avatars0.githubusercontent.com/u/5982204?s=400&v=4"
-  ),
-  new Player(
-    "calel1234",
-    "Calel",
-    "https://image.shutterstock.com/image-vector/default-avatar-profile-icon-grey-260nw-518740741.jpg"
-  ),
-  new Player(
-    "Facu1234",
-    "Facu",
-    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
-  ),
-  new Player(
-    "nikomendo",
-    "Nicolas",
-    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
-  ),
-]
-
-game.join(_playersList);
+game
+  .join([
+    new Player(
+      "jorge1234",
+      "Jorge",
+      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    ),
+    new Player(
+      "calel1234",
+      "Calel",
+      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    ),
+    new Player(
+      "Facu1234",
+      "Facu",
+      "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
+    ),
+    new Player(
+      "nikomendo",
+      "Nicolas",
+      "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
+    ),
+  ])
+  .subscribe(
+    () => {},
+    (error: string) => {
+      alert(error);
+    }
+  );
 
 game.events.afterGameStart.subscribe(() => {
   drawPlayersCards();
@@ -61,11 +66,32 @@ game.events.afterPlayCard.subscribe(() => {
   drawStack();
 });
 
-game.events.afterTakeCard.subscribe(() => {
+game.events.afterTakeCards.subscribe(() => {
   drawPlayersCards();
+
+  // TODO: esto es un workaround acoplado al diseño actual
+  // @ts-ignore
+  drawTurn(game.playerTurn);
 });
 
-game.start();
+game.events.beforeTurn.subscribe((data) => {
+  drawTurn(data.player);
+});
+
+game.events.gameEnd.subscribe((data) => {
+  alert(
+    `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
+  );
+
+  window.location.reload();
+});
+
+game.start().subscribe(
+  () => {},
+  (error: string) => {
+    alert(error);
+  }
+);
 
 /**
  * Observamos el click de todos los botones "JUGAR CARTA"
@@ -88,13 +114,45 @@ const getElement = (id: string): HTMLElement => document.getElementById(id);
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
+const fromKeyboard = () => fromEvent(document, "keyup");
+const fromKeyboardMapToTrue = (code: string) =>
+  fromKeyboard().pipe(
+    pluck("code"),
+    filter((c) => c === code),
+    mapTo(true)
+  );
+const fromKeybordClickMap = (code: string, id: string, fn: () => any) =>
+  merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
+
 const buttons$ = merge(
   fromClickMap("button-take", () => game.takeCard()),
-  // ...playButtons
-  /* fromClickMap("button-play", () =>
+  // 83 es la tecla s y 68 la tecla d.
+  fromKeybordClickMap("KeyS", "button-take", () =>
+    game.takeCard().subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  ),
+  fromKeybordClickMap("KeyD", "button-play", () =>
     // @ts-ignore
-    game.playCard(game.playerTurn?.id, selectedCardId)
-  ) */
+    game.playCard(game.playerTurn?.id, selectedCardId).subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  ),
+  fromClickMap("button-uno", () =>
+    // @ts-ignore
+    game.uno(game.playerTurn).subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  )
 );
 buttons$.subscribe();
 
