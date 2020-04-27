@@ -241,6 +241,11 @@ function setPlayerClicks(id: string) {
         fromEvent(buttonPlay, "click").subscribe(() => {
           const card = game.playerTurn?.hand.cards.find((c) => c.id === cardId);
 
+          // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
+          if (!card) {
+            return;
+          }
+
           if (
             card?.value === Value.WILDCARD ||
             card?.value === Value.PLUS_FOUR
