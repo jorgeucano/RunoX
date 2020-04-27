@@ -3,6 +3,7 @@ import { Player } from "./models/player.model";
 import { GameEvents } from "./events/game-events";
 import { GameEvent } from "./events/game-event.enum";
 import { CommandService } from "./commands/command.service";
+import { Card } from "./models/card.model";
 
 export class GameEngine {
   private static instance: GameEngine;
@@ -56,8 +57,8 @@ export class GameEngine {
     return this.commandService.addPlayers(this.state, players);
   }
 
-  playCard(playerId: string, cardId: string) {
-    return this.commandService.playCard(this.state, playerId, cardId);
+  playCard(playerId: string, card: Card) {
+    return this.commandService.playCard(this.state, playerId, card);
   }
 
   takeCard() {
