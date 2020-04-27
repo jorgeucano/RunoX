@@ -11,44 +11,21 @@ import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
-  private readonly cardId: string;
+  private readonly card: Card;
 
-  constructor(playerId: string, cardId: string) {
+  constructor(playerId: string, card: Card) {
     super();
 
     this.playerId = playerId;
-    this.cardId = cardId;
+    this.card = card;
   }
 
   execute(state: GameState) {
     const player = state.playersGroup.getPlayerById(this.playerId) as Player;
 
-    const cardToPlay = player.hand.cards.find(
-      (handCard) => handCard.id === this.cardId
-    ) as Card;
+    state.turn.player?.hand.removeCard(this.card);
 
-    if (
-      cardToPlay?.value === Value.WILDCARD ||
-      cardToPlay?.value === Value.PLUS_FOUR
-    ) {
-      let newColor;
-      // TODO: Cambiar el metodo de entrada del color
-      while (!isValidColor(newColor as Color)) {
-        newColor = prompt(
-          "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
-        );
-      }
-
-      cardToPlay.setColor(newColor as Color);
-    }
-
-    state.turn.player?.hand.removeCard(cardToPlay);
-
-    state.stack.addCard(cardToPlay);
-
-    console.log(
-      `El jugador ${state.turn.player?.id} ha tirado la carta ${this.cardId} al stack`
-    );
+    state.stack.addCard(this.card);
 
     if (
       state.turn.player?.hand.cards.length === 0 &&
@@ -116,7 +93,11 @@ export class PlayCardCommand extends GameCommand {
     }
 
     this.events.dispatchAfterPlayCard(
-      new AfterPlayCardEvent(cardToPlay, player)
+      new AfterPlayCardEvent(this.card, player)
+    );
+
+    console.log(
+      `El jugador ${state.turn.player?.id} ha tirado la carta ${this.card.value} ${this.card.color} al stack`
     );
   }
 
@@ -155,20 +136,38 @@ export class PlayCardCommand extends GameCommand {
       return new CommandValidation(false, "No es el turno del jugador");
     }
 
-    const cardToPlay = player.hand.cards.find(
-      (handCard) => handCard.id === this.cardId
-    );
-
-    if (!cardToPlay) {
+    if (!this.card) {
       return new CommandValidation(
         false,
         "No se ha encontrado la carta de la mano del jugador"
       );
     }
 
+    const playerHasSelectedCard = player.hand.cards.some(
+      (card) => card.id === this.card.id
+    );
+
+    if (!playerHasSelectedCard) {
+      return new CommandValidation(
+        false,
+        "El jugador no posee la carta seleccionada"
+      );
+    }
+
+    if (
+      (this.card?.value === Value.WILDCARD ||
+        this.card?.value === Value.PLUS_FOUR) &&
+      !this.card.color
+    ) {
+      return new CommandValidation(
+        false,
+        "No se especifico el color de la carta"
+      );
+    }
+
     if (
       state.stack.cardOnTop?.value === Value.PLUS_TWO &&
-      cardToPlay.value !== Value.PLUS_TWO &&
+      this.card.value !== Value.PLUS_TWO &&
       state.cardsToGive > 0
     ) {
       return new CommandValidation(false, "La carta que quiere tirar no es +2");
@@ -176,7 +175,7 @@ export class PlayCardCommand extends GameCommand {
 
     if (
       state.stack.cardOnTop &&
-      !cardToPlay?.isPlayable(state.stack.cardOnTop)
+      !this.card?.isPlayable(state.stack.cardOnTop)
     ) {
       return new CommandValidation(
         false,

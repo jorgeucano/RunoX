@@ -4,9 +4,11 @@ import { fromEvent, merge } from "rxjs";
 import { map, filter, pluck, mapTo } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
-import { CardComponent } from './components/card/card.component';
+import { CardComponent } from "./components/card/card.component";
 import { isBuffer } from "util";
 import { Avatar } from "./components/avatar/avatar.component";
+import { Value } from "./models/values.model";
+import { isValidColor, Color } from "./models/color.model";
 
 const game = GameEngine.getInstance();
 
@@ -14,7 +16,6 @@ const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
 const _avatars = document.getElementById("avatars");
-
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
@@ -146,7 +147,6 @@ const buttons$ = merge(
 );
 buttons$.subscribe();
 
-
 /** Dibuja a los jugadores con su respectiva mano
  * TODO: separar
  */
@@ -158,14 +158,14 @@ function drawPlayersCards() {
     const playerDiv = document.createElement("div");
     playerDiv.setAttribute("id", player.id);
     playerDiv.setAttribute("class", "player");
-    
+
     /*
     const playerTitle = document.createElement("div");
     playerTitle.setAttribute("class", "player-title");
     playerTitle.append(`Player: ${player.name}`)
     playerDiv.appendChild(playerTitle); 
     */
-  
+
     const playerCards = document.createElement("div");
     playerCards.setAttribute("class", "player-cards");
     player.hand.cards.forEach((card) => {
@@ -173,7 +173,7 @@ function drawPlayersCards() {
       playerCards.appendChild(_card.element);
     });
     playerDiv.appendChild(playerCards);
-    
+
     _players?.appendChild(playerDiv);
     setPlayerClicks(player.id);
   });
@@ -187,15 +187,15 @@ function drawStack() {
   if (!game.stackCard) {
     return;
   }
-  
+
   if (!_stack) {
-    console.error('No se encontró el elemento #stack')
+    console.error("No se encontró el elemento #stack");
     return;
   }
 
   const stackCardDiv = document.createElement("div");
   stackCardDiv.setAttribute("class", `carta ${game.stackCard.sprite}`);
-  
+
   var rotacion = Math.floor(Math.random() * 20) + 10;
   rotacion *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
 
@@ -222,51 +222,77 @@ function setPlayerClicks(id: string) {
        primero queremos iterar la mano para remover la clase carta-selected
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
-      
-      console.log('carta click!')
+
+      console.log("carta click!");
 
       try {
         _player?.querySelectorAll(".carta-selected").forEach((el) => {
           el.classList.remove("carta-selected");
         });
 
-        const selectedCard = document.getElementById(cardId)
+        const selectedCard = document.getElementById(cardId);
         selectedCard?.classList.add("carta-selected");
-        const buttonPlay = selectedCard?.querySelector('.button-play-card');
-        
+        const buttonPlay = selectedCard?.querySelector(".button-play-card");
+
         /**
          * @TODO Revisar esto por si los leaks
          */
         //@ts-ignore
-        fromEvent(buttonPlay, 'click').subscribe(() => {
+        fromEvent(buttonPlay, "click").subscribe(() => {
+          const card = game.playerTurn?.hand.cards.find((c) => c.id === cardId);
+
+          // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
+          if (!card) {
+            return;
+          }
+
+          if (
+            card?.value === Value.WILDCARD ||
+            card?.value === Value.PLUS_FOUR
+          ) {
+            let newColor;
+            // TODO: Cambiar el metodo de entrada del color
+            while (!isValidColor(newColor as Color)) {
+              newColor = prompt(
+                "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
+              );
+            }
+
+            card.setColor(newColor as Color);
+          }
+
           //@ts-ignore
-          game.playCard(game.playerTurn?.id, cardId).subscribe(
+          game.playCard(game.playerTurn?.id, card).subscribe(
             () => {},
             (error: string) => {
               alert(error);
             }
           );
-        })
+        });
 
         selectedCardId = cardId;
-      } catch (e) { }
+      } catch (e) {}
     });
 }
 
 /** Dibuja el nombre del current player */
 function drawTurn(player: Player) {
-  console.log('drawTurn', player.id)
+  console.log("drawTurn", player.id);
 
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
 
   const playersAvatars = document.createElement("div");
-  playersAvatars.setAttribute('id', 'avatars')
-  game.players.forEach(_player => {
-    const avatar = new Avatar(_player, _player.hand.cards.length, _player.id === player.id);
+  playersAvatars.setAttribute("id", "avatars");
+  game.players.forEach((_player) => {
+    const avatar = new Avatar(
+      _player,
+      _player.hand.cards.length,
+      _player.id === player.id
+    );
     playersAvatars.appendChild(avatar.element);
-  })
+  });
 
   const turnDiv = document.createElement("div");
   turnDiv.appendChild(playersAvatars);
