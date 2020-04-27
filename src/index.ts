@@ -24,12 +24,12 @@ game
     new Player(
       "jorge1234",
       "Jorge",
-      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+      "https://avatars0.githubusercontent.com/u/5982204?s=400&v=4"
     ),
     new Player(
       "calel1234",
       "Calel",
-      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+      "https://image.shutterstock.com/image-vector/default-avatar-profile-icon-grey-260nw-518740741.jpg"
     ),
     new Player(
       "Facu1234",
@@ -70,12 +70,11 @@ game.events.afterTakeCards.subscribe(() => {
   drawPlayersCards();
 
   // TODO: esto es un workaround acoplado al diseño actual
+  // Cuando el jugador grita UNO! y no tiene 1 carta entonces se le suman 2
+  // como el dibujado se hace en el beforeTurn entonces necesitamos volver
+  // a dibujar el turno del jugador aqui
   // @ts-ignore
   drawTurn(game.playerTurn);
-});
-
-game.events.beforeTurn.subscribe((data) => {
-  drawTurn(data.player);
 });
 
 game.events.gameEnd.subscribe((data) => {
@@ -129,15 +128,6 @@ const buttons$ = merge(
   // 83 es la tecla s y 68 la tecla d.
   fromKeybordClickMap("KeyS", "button-take", () =>
     game.takeCard().subscribe(
-      () => {},
-      (error: string) => {
-        alert(error);
-      }
-    )
-  ),
-  fromKeybordClickMap("KeyD", "button-play", () =>
-    // @ts-ignore
-    game.playCard(game.playerTurn?.id, selectedCardId).subscribe(
       () => {},
       (error: string) => {
         alert(error);
@@ -250,7 +240,12 @@ function setPlayerClicks(id: string) {
         //@ts-ignore
         fromEvent(buttonPlay, 'click').subscribe(() => {
           //@ts-ignore
-          game.playCard(game.playerTurn?.id, cardId)
+          game.playCard(game.playerTurn?.id, cardId).subscribe(
+            () => {},
+            (error: string) => {
+              alert(error);
+            }
+          );
         })
 
         selectedCardId = cardId;
