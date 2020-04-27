@@ -8,6 +8,7 @@ import { PlayCardCommand } from "./play-card.command";
 import { TakeDeckCardCommand } from "./take-deck-card.command";
 import { FinalizeTurnCommand } from "./finalize-turn.command";
 import { YellUnoCommand } from "./yell-uno.command";
+import { Card } from "../models/card.model";
 
 export class CommandService {
   startGame(currentState: GameState) {
@@ -25,9 +26,9 @@ export class CommandService {
     return invoker.invoke(currentState);
   }
 
-  playCard(currentState: GameState, playerId: string, cardId: string) {
+  playCard(currentState: GameState, playerId: string, card: Card) {
     const invoker = new CommandsInvoker([
-      new PlayCardCommand(playerId, cardId),
+      new PlayCardCommand(playerId, card),
       new FinalizeTurnCommand(),
     ]);
 

@@ -9,7 +9,10 @@ describe("PlayCardCommand", () => {
   it("should throw error result when we execute the command and the player is not playing", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
-    const command = new PlayCardCommand(player.id, "card1");
+    const command = new PlayCardCommand(
+      player.id,
+      new Card(Value.REVERSE, Color.BLUE)
+    );
 
     expect(() => command.validate(state)).toThrowError();
   });
@@ -17,7 +20,10 @@ describe("PlayCardCommand", () => {
   it("should return error result when we execute the command and there is not a current player", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
-    const command = new PlayCardCommand(player.id, "card1");
+    const command = new PlayCardCommand(
+      player.id,
+      new Card(Value.REVERSE, Color.BLUE)
+    );
 
     state.playersGroup.addPlayer(player);
 
@@ -30,7 +36,7 @@ describe("PlayCardCommand", () => {
     const state = new GameState();
     const player = new Player("p1", "player 1", "avatar");
     const card = new Card(Value.PLUS_FOUR);
-    const command = new PlayCardCommand(player.id, "card2");
+    const command = new PlayCardCommand(player.id, card);
 
     state.playersGroup.addPlayer(player);
     player.hand.addCard(card);
@@ -46,7 +52,7 @@ describe("PlayCardCommand", () => {
     const player = new Player("p1", "player 1", "avatar");
     const stackCardRedTwo = new Card(Value.TWO, Color.RED);
     const handCardBlueFour = new Card(Value.FOUR, Color.BLUE);
-    const command = new PlayCardCommand(player.id, "cardBlueFour");
+    const command = new PlayCardCommand(player.id, handCardBlueFour);
 
     state.playersGroup.addPlayer(player);
     state.stack.addCard(stackCardRedTwo);
@@ -75,7 +81,7 @@ describe("PlayCardCommand", () => {
     // @ts-ignore
     const spy = spyOn(state.turn.player.hand, "removeCard").and.callThrough();
 
-    const command = new PlayCardCommand(player.id, handCardRedFour.id);
+    const command = new PlayCardCommand(player.id, handCardRedFour);
     command.execute(state);
 
     expect(spy).toBeCalled();
@@ -99,7 +105,7 @@ describe("PlayCardCommand", () => {
     const handCardReverseRed = new Card(Value.REVERSE, Color.RED);
     player3.hand.addCard(handCardReverseRed);
 
-    const command = new PlayCardCommand(player3.id, handCardReverseRed.id);
+    const command = new PlayCardCommand(player3.id, handCardReverseRed);
 
     command.execute(state);
 
