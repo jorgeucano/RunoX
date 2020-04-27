@@ -30,16 +30,12 @@ describe("PlayersGroup", () => {
     expect(playersGroup.players.length).toBe(2);
   });
 
-  it("should log error when we try to get an invalid player", () => {
+  it("should throw error when we try to get an invalid player", () => {
     const playersGroup = new PlayersGroup();
-    const spy = spyOn(global.console, "error").and.callThrough();
 
     playersGroup.addPlayer(new Player("p1", "player 1", "avatar"));
 
-    const player = playersGroup.getPlayerById("1234");
-
-    expect(spy).toHaveBeenCalled();
-    expect(player).not.toBeDefined();
+    expect(() => playersGroup.getPlayerById("1234")).toThrowError();
   });
 
   it("should get player by id when getPlayerById method is called", () => {

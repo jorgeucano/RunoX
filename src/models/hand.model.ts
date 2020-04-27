@@ -10,10 +10,10 @@ export class Hand {
   }
 
   get score() {
-    return this.cards.reduce((amount, card) => {
-      amount += card.score;
+    return this.cards.reduce((score, card) => {
+      score += card.score;
 
-      return amount;
+      return score;
     }, 0);
   }
 
@@ -27,17 +27,14 @@ export class Hand {
 
   removeCard(card: Card | undefined) {
     if (card === undefined) {
-      console.error(`La mano del jugador no posee cartas`);
-      return;
+      throw new Error(`La mano del jugador no posee cartas`);
     }
     const cardIndex = this.cards.findIndex(
       (handCard) => handCard.id === card.id
     );
 
     if (cardIndex === -1) {
-      console.error(`La mano del jugador no posee la carta: ${card.id}`);
-
-      return;
+      throw new Error(`La mano del jugador no posee la carta: ${card.id}`);
     }
 
     this.cards.splice(cardIndex, 1);

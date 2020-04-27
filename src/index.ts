@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
-import { fromEvent, merge, combineLatest } from "rxjs";
-import { map, filter, pluck, mapTo, tap, first } from "rxjs/operators";
+import { fromEvent, merge } from "rxjs";
+import { map, filter, pluck, mapTo } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 
@@ -14,28 +14,35 @@ const _turn = document.getElementById("turn");
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
 
-game.join([
-  new Player(
-    "jorge1234",
-    "Jorge",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
-  ),
-  new Player(
-    "calel1234",
-    "Calel",
-    "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
-  ),
-  new Player(
-    "Facu1234",
-    "Facu",
-    "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
-  ),
-  new Player(
-    "nikomendo",
-    "Nicolas",
-    "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
-  ),
-]);
+game
+  .join([
+    new Player(
+      "jorge1234",
+      "Jorge",
+      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    ),
+    new Player(
+      "calel1234",
+      "Calel",
+      "https://pbs.twimg.com/profile_images/1229508740510109697/Ww22knVc_400x400.jpg"
+    ),
+    new Player(
+      "Facu1234",
+      "Facu",
+      "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
+    ),
+    new Player(
+      "nikomendo",
+      "Nicolas",
+      "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
+    ),
+  ])
+  .subscribe(
+    () => {},
+    (error: string) => {
+      alert(error);
+    }
+  );
 
 game.events.afterGameStart.subscribe(() => {
   drawPlayersCards();
@@ -54,15 +61,32 @@ game.events.afterPlayCard.subscribe(() => {
   drawStack();
 });
 
-game.events.afterTakeCard.subscribe(() => {
+game.events.afterTakeCards.subscribe(() => {
   drawPlayersCards();
+
+  // TODO: esto es un workaround acoplado al diseño actual
+  // @ts-ignore
+  drawTurn(game.playerTurn);
 });
 
 game.events.beforeTurn.subscribe((data) => {
   drawTurn(data.player);
 });
 
-game.start();
+game.events.gameEnd.subscribe((data) => {
+  alert(
+    `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
+  );
+
+  window.location.reload();
+});
+
+game.start().subscribe(
+  () => {},
+  (error: string) => {
+    alert(error);
+  }
+);
 
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
@@ -71,19 +95,43 @@ const fromClick = (id: string) => fromEvent(getElement(id), "click");
 const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
 const fromKeyboard = () => fromEvent(document, "keyup");
-const fromKeyboardMapToTrue = (code: string) => fromKeyboard().pipe(
-  pluck("code"),
-  filter(c => c === code),
-  mapTo(true)
+const fromKeyboardMapToTrue = (code: string) =>
+  fromKeyboard().pipe(
+    pluck("code"),
+    filter((c) => c === code),
+    mapTo(true)
   );
-  const fromKeybordClickMap = (code: string, id: string, fn: ()=> any) => 
+const fromKeybordClickMap = (code: string, id: string, fn: () => any) =>
   merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
 
 const buttons$ = merge(
   // 83 es la tecla s y 68 la tecla d.
-  fromKeybordClickMap("KeyS", "button-take", () => game.takeCard()),
-  // @ts-ignore
-  fromKeybordClickMap("KeyD", "button-play", () => game.playCard(game.playerTurn?.id, selectedCardId)),
+  fromKeybordClickMap("KeyS", "button-take", () =>
+    game.takeCard().subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  ),
+  fromKeybordClickMap("KeyD", "button-play", () =>
+    // @ts-ignore
+    game.playCard(game.playerTurn?.id, selectedCardId).subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  ),
+  fromClickMap("button-uno", () =>
+    // @ts-ignore
+    game.uno(game.playerTurn).subscribe(
+      () => {},
+      (error: string) => {
+        alert(error);
+      }
+    )
+  )
 );
 
 buttons$.subscribe();
@@ -97,7 +145,6 @@ function drawPlayersCards() {
   }
 
   game.players.forEach((player) => {
-
     const playerDiv = document.createElement("div");
     playerDiv.setAttribute("id", player.id);
     playerDiv.setAttribute("class", "player");

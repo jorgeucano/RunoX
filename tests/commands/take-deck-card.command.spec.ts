@@ -30,17 +30,16 @@ describe("TakeDeckCardCommand", () => {
   it("should add the card taken from the deck", () => {
     const command = new TakeDeckCardCommand();
     const state = new GameState();
-    const card = new Card(Value.PLUS_FOUR);
     const player = new Player("p1", "player 1", "avatar");
 
-    state.deck.addCards([card]);
+    state.deck.addCards([new Card(Value.PLUS_FOUR), new Card(Value.WILDCARD)]);
     state.turn.setPlayerTurn(player);
 
     const takeCardSpy = spyOn(state.deck, "takeCard").and.callThrough();
 
     command.execute(state);
 
-    expect(state.turn.player?.hand.cards.length).toBeGreaterThan(0);
+    expect(player.hand.cards.length).toBeGreaterThan(0);
     expect(takeCardSpy).toBeCalled();
   });
 });

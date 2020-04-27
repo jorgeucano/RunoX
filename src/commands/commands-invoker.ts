@@ -1,5 +1,6 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
+import { Observable } from "rxjs";
 
 export class CommandsInvoker {
   private readonly commands: GameCommand[];
@@ -9,21 +10,27 @@ export class CommandsInvoker {
   }
 
   invoke(currentState: GameState) {
-    this.commands.every((command) => {
-      const commandValidation = command.validate(currentState);
+    const observable = new Observable<void>((subscriber) => {
+      try {
+        this.commands.forEach((command) => {
+          const commandValidation = command.validate(currentState);
 
-      if (!commandValidation.isValid) {
-        console.error(commandValidation.error);
+          if (!commandValidation.isValid) {
+            console.error(commandValidation.error);
 
-        // TODO: esto solo funcionaria en entornos web
-        alert(commandValidation.error);
+            throw new Error(commandValidation.error);
+          }
 
-        return false;
+          command.execute(currentState);
+        });
+
+        subscriber.next();
+        subscriber.complete();
+      } catch (error) {
+        subscriber.error(error);
       }
-
-      command.execute(currentState);
-
-      return true;
     });
+
+    return observable;
   }
 }

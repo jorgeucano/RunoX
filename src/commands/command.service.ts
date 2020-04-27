@@ -7,6 +7,7 @@ import { AddPlayersCommand } from "./add-players.command";
 import { PlayCardCommand } from "./play-card.command";
 import { TakeDeckCardCommand } from "./take-deck-card.command";
 import { FinalizeTurnCommand } from "./finalize-turn.command";
+import { YellUnoCommand } from "./yell-uno.command";
 
 export class CommandService {
   startGame(currentState: GameState) {
@@ -15,13 +16,13 @@ export class CommandService {
       new StartGameCommand(),
     ]);
 
-    invoker.invoke(currentState);
+    return invoker.invoke(currentState);
   }
 
   addPlayers(currentState: GameState, players: Player[]) {
     const invoker = new CommandsInvoker([new AddPlayersCommand(players)]);
 
-    invoker.invoke(currentState);
+    return invoker.invoke(currentState);
   }
 
   playCard(currentState: GameState, playerId: string, cardId: string) {
@@ -30,7 +31,7 @@ export class CommandService {
       new FinalizeTurnCommand(),
     ]);
 
-    invoker.invoke(currentState);
+    return invoker.invoke(currentState);
   }
 
   takeCard(currentState: GameState) {
@@ -39,6 +40,12 @@ export class CommandService {
       new FinalizeTurnCommand(),
     ]);
 
-    invoker.invoke(currentState);
+    return invoker.invoke(currentState);
+  }
+
+  yellUno(currentState: GameState, yeller?: Player) {
+    const invoker = new CommandsInvoker([new YellUnoCommand(yeller)]);
+
+    return invoker.invoke(currentState);
   }
 }

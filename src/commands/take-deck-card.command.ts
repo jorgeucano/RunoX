@@ -1,33 +1,42 @@
 import { GameCommand } from "./game.command";
 import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
-import { AfterTakeCardEvent } from "../events/after-take-card.event";
-import { Card } from "../models/card.model";
 import { Player } from "../models/player.model";
+import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
 export class TakeDeckCardCommand extends GameCommand {
   execute(state: GameState) {
-    const card = state.deck.takeCard() as Card;
+    const currentPlayer = state.turn.player as Player;
 
-    state.turn.player?.hand.addCard(card);
+    const newCard = state.giveCards(1, currentPlayer);
 
-    console.log(
-      `El jugador ${state.turn.player?.id} ha agregado a su mano la carta ${card.id}`
+    this.events.dispatchAfterTakeCards(
+      new AfterTakeCardsEvent(newCard, currentPlayer)
     );
 
-    this.events.dispatchAfterTakeCard(
-      new AfterTakeCardEvent(card, state.turn.player as Player)
+    state.unoYellers[currentPlayer.id] = false;
+
+    this.checkForPlayersWhoShouldHaveYelledUno(state);
+  }
+
+  private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
+    const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
+      (player) =>
+        player.id !== state.turn.player?.id &&
+        player.hand.cards.length === 1 &&
+        !state.unoYellers[player.id]
     );
+
+    playersWhoShouldHaveYelled.forEach((player) => {
+      const newCards = state.giveCards(2, player);
+
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, player)
+      );
+    });
   }
 
   validate(state: GameState) {
-    if (!state.deck.cards.length) {
-      return new CommandValidation(
-        false,
-        "No hay cartas disponibles en el mazo"
-      );
-    }
-
     if (!state.turn.player) {
       return new CommandValidation(false, "No se le asigno turno a un jugador");
     }
