@@ -75,3 +75,15 @@
     margin-right: auto;
     width: 80%;
 }
+
+#button-uno  {
+    border-radius: 50%;
+    border-width: 6px;
+    bottom: 50px;
+    box-shadow: 0 8px 4px rgba(0, 0, 0, .32);
+    font-size: 12px;
+    height: 96px;
+    position: fixed;
+    right: 50px;
+    width: 96px;
+}
