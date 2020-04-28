@@ -3,7 +3,7 @@ import { GameState } from "../models/game-state.model";
 import { Card } from "../models/card.model";
 import { CommandValidation } from "./command-result";
 import { BeforeTurnEvent } from "../events/before-turn.event";
-
+import { firebaseUpdateState } from "../db/firebase";
 export class StartGameCommand extends GameCommand {
   execute(state: GameState) {
     const handsLength = 7;
@@ -30,13 +30,13 @@ export class StartGameCommand extends GameCommand {
 
     const playerTurn = state.playersGroup.players[0];
 
-    console.log(state);
-    debugger;
-
     state.turn.setPlayerTurn(playerTurn);
 
     this.events.dispatchAfterGameStart();
     this.events.dispatchBeforeTurn(new BeforeTurnEvent(playerTurn));
+
+    console.log(state);
+    firebaseUpdateState(state);
   }
 
   validate(state: GameState): CommandValidation {

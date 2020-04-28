@@ -1,5 +1,6 @@
 import { Player } from "../models/player.model";
 import { login, pushUsers, startGame } from "../index";
+import { DocumentSnapshot } from "@google-cloud/firestore";
 // import { DocumentSnapshot } from "@google-cloud/firestore";
 
 export const firebase = require('firebase');
@@ -40,7 +41,7 @@ export const firebaseLogin = () => {
     });
   }
 
-export const checkRoomInFirebase = (_roomName: string, user: Player) => {
+export const checkRoomInFirebase = (_roomName: string, user: Player)=> {
     roomName = _roomName;
     const docRef = db.collection("rooms").doc(roomName);
     const roomRef = db.collection("rooms");
@@ -54,6 +55,10 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
             if (_data.players.find((x: any) => x.id === nu.id)) {
                 console.log('ya existe el user');
             } else {
+                if (_data.players.length > 5) {
+                    alert('La sala esta llena');
+                    return false;
+                }
                 _data.players.push(nu);
             }
             roomRef.doc(roomName).set(_data, {merge: true}).then((doc: any) => {
@@ -73,6 +78,7 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
             });
         }
         roomData$();
+        return true;
     }).catch((error: any) => {
         console.log("Error getting document:", error);
     });
@@ -95,7 +101,8 @@ export const roomData$ = () => {
             // @ts-ignore
             startbutton.style.display = 'none';
             startGame();
-        }
+        }      
+
         // entrega de nueva carta
 
         // +2
@@ -132,4 +139,17 @@ export const sendCard = () => {
     roomRef.doc(roomName).set(_data$, {merge: true}).then((doc: any) => {
          console.log(doc);
     });
+}
+
+export const firebaseUpdateState = (state: any) => {
+    let _state = JSON.parse(JSON.stringify(state));
+    const docRef = db.collection("rooms").doc(roomName);
+    docRef.set(_state, {merge: true})
+        .then((doc: any) => {
+            alert('true');
+        console.log(doc);
+        })
+        .error((err: any) => {
+            console.log(err);
+        });
 }

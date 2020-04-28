@@ -10,6 +10,7 @@ import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
+// @ts-ignore
 import { Sortable } from "@shopify/draggable";
 import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from './db/firebase';
 
@@ -140,10 +141,7 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
-  if (game.playerTurn?.id !== globalPlayer.id){ 
-    console.log('no es tu turno');
-    return; 
-  } else {
+  
     while (_players?.lastElementChild) {
       _players?.removeChild(_players?.lastElementChild);
     }
@@ -179,7 +177,6 @@ function drawPlayersCards() {
     new Sortable(document.querySelectorAll('.player-cards'), {
       draggable: '.carta',
     })
-  }
 }
 
 /** Dibuja el stack
@@ -280,9 +277,7 @@ function setPlayerClicks(id: string) {
 
 /** Dibuja el nombre del current player */
 function drawTurn(player: Player) {
-  if (player.id !== globalPlayer.id) {
-    console.log('no es tu turno');
-  } else {
+ 
     console.log("drawTurn", player.id);
     while (_turn?.lastElementChild) {
       _turn?.removeChild(_turn?.lastElementChild);
@@ -310,7 +305,7 @@ function drawTurn(player: Player) {
     document.getElementById(player.id)?.classList.add("player-select-button");
     //turnDiv.append(`Es el turno de: ${player.name}`);
     _turn?.appendChild(turnDiv);
-  }
+  
 }
 
 export const login = (user: any) => {
@@ -340,21 +335,24 @@ export const startGame = () => {
 const checkRoomExist = (user: Player) => {
   const roomName = getUrlSearch();
   console.log(roomName);
-  checkRoomInFirebase(roomName, user);
-
-  console.log(document.getElementById('button-start'));
+  let havePlace = true;
   // @ts-ignore
-  const startbutton = document.getElementById('button-start');
-  // @ts-ignore
-  fromEvent(startbutton, 'click')
-  .pipe(first())
-  .subscribe(
-    () => {
-      // @ts-ignore
-      startbutton.style.display = 'none';
-      roomStart();
-    }
-  )
+  havePlace = checkRoomInFirebase(roomName, user);
+  if (havePlace) {
+    console.log(document.getElementById('button-start'));
+    // @ts-ignore
+    const startbutton = document.getElementById('button-start');
+    // @ts-ignore
+    fromEvent(startbutton, 'click')
+    .pipe(first())
+    .subscribe(
+      () => {
+        // @ts-ignore
+        startbutton.style.display = 'none';
+        roomStart();
+      }
+    )
+  }
 }
 
 initializeFirebase();
