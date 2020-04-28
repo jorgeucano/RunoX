@@ -14,14 +14,15 @@
 }
 
 .player .player-cards {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    column-gap: 24px;
-    row-gap: 20px;
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
+
 .player .player-cards .carta {
-    align-self: center;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    width: 86px;
 }
 
 .player:not(.player-select) {

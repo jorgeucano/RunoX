@@ -1,9 +1,3 @@
-/*
-const _hand = document.createElement("div");
-_hand.setAttribute("id", `${card.id}`);
-_hand.setAttribute("class", `carta ${card.sprite}`);
-*/
-
 import { GameObject, GameObjectProp } from "../game-object.model";
 
 import './card.styles.css';
@@ -13,6 +7,7 @@ export class CardComponent extends GameObject {
     cardId: string,
     sprite: string
   ) {
+    
     const props: GameObjectProp[] = [
       { name: 'id', value: cardId },
       { name: 'class', value: `carta ${sprite}`},
