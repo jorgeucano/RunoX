@@ -19,7 +19,8 @@ const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
 const _avatars = document.getElementById("avatars");
-let globalPlayer;
+
+let globalPlayer: any;
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
@@ -139,41 +140,46 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
-  while (_players?.lastElementChild) {
-    _players?.removeChild(_players?.lastElementChild);
-  }
-  game.players.forEach((player) => {
-    const playerDiv = document.createElement("div");
-    playerDiv.setAttribute("id", player.id);
-    playerDiv.setAttribute("class", "player");
-
-    /*
-    const playerTitle = document.createElement("div");
-    playerTitle.setAttribute("class", "player-title");
-    playerTitle.append(`Player: ${player.name}`)
-    playerDiv.appendChild(playerTitle); 
-    */
-
-    const playerCards = document.createElement("div");
-    playerCards.setAttribute("class", "player-cards");
-    player.hand.cards.forEach((card) => {
-      const _card = new CardComponent(card.id, card.sprite);
-      playerCards.appendChild(_card.element);
+  if (game.playerTurn?.id !== globalPlayer.id){ 
+    console.log('no es tu turno');
+    return; 
+  } else {
+    while (_players?.lastElementChild) {
+      _players?.removeChild(_players?.lastElementChild);
+    }
+    game.players.forEach((player) => {
+      const playerDiv = document.createElement("div");
+      playerDiv.setAttribute("id", player.id);
+      playerDiv.setAttribute("class", "player");
+  
+      /*
+      const playerTitle = document.createElement("div");
+      playerTitle.setAttribute("class", "player-title");
+      playerTitle.append(`Player: ${player.name}`)
+      playerDiv.appendChild(playerTitle); 
+      */
+  
+      const playerCards = document.createElement("div");
+      playerCards.setAttribute("class", "player-cards");
+      player.hand.cards.forEach((card) => {
+        const _card = new CardComponent(card.id, card.sprite);
+        playerCards.appendChild(_card.element);
+      });
+      playerDiv.appendChild(playerCards);
+  
+      _players?.appendChild(playerDiv);
+      setPlayerClicks(player.id);
     });
-    playerDiv.appendChild(playerCards);
-
-    _players?.appendChild(playerDiv);
-    setPlayerClicks(player.id);
-  });
-
-  /** 
-   * Añadimos opción de reordenar las cartas.
-   * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
-   * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
-   **/
-  new Sortable(document.querySelectorAll('.player-cards'), {
-    draggable: '.carta',
-  })
+  
+    /** 
+     * Añadimos opción de reordenar las cartas.
+     * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
+     * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
+     **/
+    new Sortable(document.querySelectorAll('.player-cards'), {
+      draggable: '.carta',
+    })
+  }
 }
 
 /** Dibuja el stack
@@ -274,35 +280,37 @@ function setPlayerClicks(id: string) {
 
 /** Dibuja el nombre del current player */
 function drawTurn(player: Player) {
-  console.log("drawTurn", player.id);
-
-  while (_turn?.lastElementChild) {
-    _turn?.removeChild(_turn?.lastElementChild);
+  if (player.id !== globalPlayer.id) {
+    console.log('no es tu turno');
+  } else {
+    console.log("drawTurn", player.id);
+    while (_turn?.lastElementChild) {
+      _turn?.removeChild(_turn?.lastElementChild);
+    }
+    const playersAvatars = document.createElement("div");
+    playersAvatars.setAttribute("id", "avatars");
+    game.players.forEach((_player) => {
+      const avatar = new Avatar(
+        _player,
+        _player.hand.cards.length,
+        _player.id === player.id
+      );
+      playersAvatars.appendChild(avatar.element);
+    });
+  
+    const turnDiv = document.createElement("div");
+    turnDiv.appendChild(playersAvatars);
+  
+    _players?.querySelectorAll(".player-select").forEach((el) => {
+      el.classList.remove("player-select");
+      el.classList.remove("player-select-button");
+    });
+  
+    document.getElementById(player.id)?.classList.add("player-select");
+    document.getElementById(player.id)?.classList.add("player-select-button");
+    //turnDiv.append(`Es el turno de: ${player.name}`);
+    _turn?.appendChild(turnDiv);
   }
-
-  const playersAvatars = document.createElement("div");
-  playersAvatars.setAttribute("id", "avatars");
-  game.players.forEach((_player) => {
-    const avatar = new Avatar(
-      _player,
-      _player.hand.cards.length,
-      _player.id === player.id
-    );
-    playersAvatars.appendChild(avatar.element);
-  });
-
-  const turnDiv = document.createElement("div");
-  turnDiv.appendChild(playersAvatars);
-
-  _players?.querySelectorAll(".player-select").forEach((el) => {
-    el.classList.remove("player-select");
-    el.classList.remove("player-select-button");
-  });
-
-  document.getElementById(player.id)?.classList.add("player-select");
-  document.getElementById(player.id)?.classList.add("player-select-button");
-  //turnDiv.append(`Es el turno de: ${player.name}`);
-  _turn?.appendChild(turnDiv);
 }
 
 export const login = (user: any) => {
@@ -313,7 +321,6 @@ export const login = (user: any) => {
     name: user.displayName,
     pic: user.photoURL
   }
-  // setGame();
 }
 
 export const pushUsers = (players: Array<any>) => {

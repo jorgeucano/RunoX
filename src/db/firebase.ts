@@ -84,7 +84,6 @@ export const roomData$ = () => {
         includeMetadataChanges: true
     }, (doc: any) => {
         _data$ = doc.data();
-        console.log(`observable data ${JSON.stringify(doc.data())}`);
         // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
 
         // agregar a los jugadores
@@ -105,7 +104,9 @@ export const roomData$ = () => {
 
         // cambio de color 
 
-        // etc
+        // jugador dice uno
+
+        // termina el juego
     });
 }
 
@@ -114,6 +115,16 @@ export const roomData$ = () => {
  * las manos, el stack y algunas cosas mas ... pero siempre deberiamos trabajar sobre el mismo mazo
  */
 export const roomStart = () => {
+    const docRef = db.collection("rooms").doc(roomName);
+    const roomRef = db.collection("rooms");
+    console.log(_data$);
+    _data$.start = true;
+    roomRef.doc(roomName).set(_data$, {merge: true}).then((doc: any) => {
+         console.log(doc);
+    });
+}
+
+export const sendCard = () => {
     const docRef = db.collection("rooms").doc(roomName);
     const roomRef = db.collection("rooms");
     console.log(_data$);

@@ -30,6 +30,9 @@ export class StartGameCommand extends GameCommand {
 
     const playerTurn = state.playersGroup.players[0];
 
+    console.log(state);
+    debugger;
+
     state.turn.setPlayerTurn(playerTurn);
 
     this.events.dispatchAfterGameStart();
