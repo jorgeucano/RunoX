@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
 import { fromEvent, merge } from "rxjs";
-import { map, filter, pluck, mapTo } from "rxjs/operators";
+import { map, filter, pluck, mapTo, first } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from "./components/card/card.component";
@@ -10,10 +10,9 @@ import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
-import { initializeFirebase, firebaseLogin, checkRoomInFirebase } from './db/firebase';
-
-// @ts-ignore
 import { Sortable } from "@shopify/draggable";
+import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from './db/firebase';
+
 
 const game = GameEngine.getInstance();
 
@@ -24,32 +23,12 @@ const _avatars = document.getElementById("avatars");
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
-const users: Array<Player> = [];
+let users: Array<Player> = [];
 
 const setGame = () => {
   game
     .join([
-      users[0],
-      new Player(
-        "jorge1234",
-        "Jorge",
-        "https://avatars0.githubusercontent.com/u/5982204?s=400&v=4"
-      ),
-      new Player(
-        "calel1234",
-        "Calel",
-        "https://image.shutterstock.com/image-vector/default-avatar-profile-icon-grey-260nw-518740741.jpg"
-      ),
-      new Player(
-        "Facu1234",
-        "Facu",
-        "https://pbs.twimg.com/profile_images/1196581886916747264/PaMavazA_400x400.jpg"
-      ),
-      new Player(
-        "nikomendo",
-        "Nicolas",
-        "https://pbs.twimg.com/profile_images/1106827262907899904/S1BXkb04_400x400.jpg"
-      ),
+      ...users
     ])
     .subscribe(
       () => {},
@@ -329,6 +308,20 @@ function drawTurn(player: Player) {
 export const login = (user: any) => {
   checkRoomExist(new Player(user.email, user.displayName, user.photoURL));
   users.push(new Player(user.email, user.displayName, user.photoURL));
+  // setGame();
+}
+
+export const pushUsers = (players: Array<any>) => {
+  if (players.length > 0) {
+    users = [];
+    players.forEach(user => users.push(new Player(user.id, user.name, user.pic)));
+    console.log('players', users);
+  }
+}
+
+
+
+export const startGame = () => {
   setGame();
 }
 
@@ -336,6 +329,20 @@ const checkRoomExist = (user: Player) => {
   const roomName = getUrlSearch();
   console.log(roomName);
   checkRoomInFirebase(roomName, user);
+
+  console.log(document.getElementById('button-start'));
+  // @ts-ignore
+  const startbutton = document.getElementById('button-start');
+  // @ts-ignore
+  fromEvent(startbutton, 'click')
+  .pipe(first())
+  .subscribe(
+    () => {
+      // @ts-ignore
+      startbutton.style.display = 'none';
+      roomStart();
+    }
+  )
 }
 
 initializeFirebase();
