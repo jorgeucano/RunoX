@@ -9,6 +9,7 @@ import { isBuffer } from "util";
 import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
+import { getUrlSearch } from "./utils/utils";
 
 const game = GameEngine.getInstance();
 
@@ -339,17 +340,12 @@ const firebaseLogin = () => {
   var provider = new firebase.auth.GoogleAuthProvider();
 
   firebase.auth().signInWithPopup(provider).then((result: any) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
     var token = result.credential.accessToken;
-    // The signed-in user info.
-    var user = result.user;
-    console.log(user);
-    // user.email
-    // user.displayName
-    // user.photoURL
-    
-    users.push(new Player(user.email, user.displayName, user.photoURL));
+    var user = result.user;  
 
+    checkRoomExist(new Player(user.email, user.displayName, user.photoURL));
+
+    users.push(new Player(user.email, user.displayName, user.photoURL));
     setGame();
   }).catch((error: any) => {
     // Handle Errors here.
@@ -362,6 +358,39 @@ const firebaseLogin = () => {
     // ...
   });
 }
+
+
+
+const checkRoomExist = (user: Player) => {
+  var db = firebase.firestore();
+  const roomName = getUrlSearch();
+  console.log(roomName);
+  const docRef = db.collection("rooms").doc(roomName);
+  const roomRef = db.collection("rooms");
+  docRef.get().then((doc:any) => {
+      if (doc.exists) {
+          // si existe agrego el usuario
+          console.log(doc);
+      } else {
+          // si la sala no existe, la creo y lo pongo como encargado de la sala
+          console.log("No such document!");
+          const doc = Object.assign({}, {
+            players: [user],
+            date: firebase.firestore.Timestamp.fromDate(new Date()),
+            start: false,
+            stack: [],
+            winner: ''
+          });
+          roomRef.doc(roomName).set(doc).then((doc: any) => {
+            console.log(doc);
+          });
+      }
+  }).catch((error: any) => {
+      console.log("Error getting document:", error);
+  });
+
+}
+
 
 
 // inicializamos firebase 
