@@ -1,6 +1,4 @@
 .player { 
-    display: flex;
-    flex-direction: column;
     width: 100%;
 }
 
@@ -17,12 +15,6 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-}
-
-.player .player-cards .carta {
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-    width: 86px;
 }
 
 .player:not(.player-select) {

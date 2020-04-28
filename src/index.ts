@@ -10,9 +10,9 @@ import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
-import { Sortable } from "@shopify/draggable";
 import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from './db/firebase';
-
+// @ts-ignore
+import { Sortable } from "@shopify/draggable";
 
 const game = GameEngine.getInstance();
 
@@ -173,6 +173,7 @@ function drawPlayersCards() {
    **/
   new Sortable(document.querySelectorAll('.player-cards'), {
     draggable: '.carta',
+    delay: 200
   })
 }
 
