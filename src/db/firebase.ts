@@ -50,7 +50,7 @@ export const checkRoomInFirebase = (roomName: string, user: Player) => {
             if (_data.players.find((x: any) => x.id === nu.id)) {
                 console.log('ya existe el user');
             } else {
-                _data.players.push(nu)
+                _data.players.push(nu);
             }
             console.log('data para enviar', _data);
             roomRef.doc(roomName).set(_data, {merge: true}).then((doc: any) => {
@@ -70,7 +70,41 @@ export const checkRoomInFirebase = (roomName: string, user: Player) => {
                 console.log(doc);
             });
         }
+        roomData$(roomName);
     }).catch((error: any) => {
         console.log("Error getting document:", error);
+    });
+}
+
+export const roomData$ = (roomName: string) => {
+    const docRef = db.collection("rooms").doc(roomName);
+    docRef.onSnapshot({
+        includeMetadataChanges: true
+    }, (doc: any) => {
+        console.log(`observable data ${JSON.stringify(doc.data())}`);
+        // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
+
+        // agregar a los jugadores
+
+        // empezar la partida
+
+        // entrega de nueva carta
+
+        // +2
+
+        // +4
+
+        // cambio de color 
+
+        // etc
+    });
+}
+
+export const roomUpdate = (roomName: string, update: any) => {
+    const docRef = db.collection("rooms").doc(roomName);
+    const roomRef = db.collection("rooms");
+    const _data = {};
+    roomRef.doc(roomName).set(_data, {merge: true}).then((doc: any) => {
+        console.log(doc);
     });
 }
