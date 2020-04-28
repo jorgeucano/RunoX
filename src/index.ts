@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
 import { fromEvent, merge } from "rxjs";
-import { map, filter, pluck, mapTo } from "rxjs/operators";
+import { map, filter, pluck, mapTo, first } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from "./components/card/card.component";
@@ -10,7 +10,7 @@ import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
-import {initializeFirebase, firebaseLogin, checkRoomInFirebase} from './db/firebase';
+import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from './db/firebase';
 
 const game = GameEngine.getInstance();
 
@@ -308,6 +308,8 @@ export const pushUsers = (players: Array<any>) => {
   }
 }
 
+
+
 export const startGame = () => {
   setGame();
 }
@@ -316,6 +318,20 @@ const checkRoomExist = (user: Player) => {
   const roomName = getUrlSearch();
   console.log(roomName);
   checkRoomInFirebase(roomName, user);
+
+  console.log(document.getElementById('button-start'));
+  // @ts-ignore
+  const startbutton = document.getElementById('button-start');
+  // @ts-ignore
+  fromEvent(startbutton, 'click')
+  .pipe(first())
+  .subscribe(
+    () => {
+      // @ts-ignore
+      startbutton.style.display = 'none';
+      roomStart();
+    }
+  )
 }
 
 initializeFirebase();

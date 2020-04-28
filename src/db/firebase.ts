@@ -5,6 +5,8 @@ import { login, pushUsers, startGame } from "../index";
 export const firebase = require('firebase');
 export var db: any;
 let gameStart = false;
+let roomName = '';
+let _data$: any;
 export const initializeFirebase = () => {
    // TODO: Replace the following with your app's Firebase project configuration
     const firebaseConfig = {
@@ -38,7 +40,8 @@ export const firebaseLogin = () => {
     });
   }
 
-export const checkRoomInFirebase = (roomName: string, user: Player) => {
+export const checkRoomInFirebase = (_roomName: string, user: Player) => {
+    roomName = _roomName;
     const docRef = db.collection("rooms").doc(roomName);
     const roomRef = db.collection("rooms");
     docRef.get().then((doc:any) => {
@@ -53,13 +56,11 @@ export const checkRoomInFirebase = (roomName: string, user: Player) => {
             } else {
                 _data.players.push(nu);
             }
-            console.log('data para enviar', _data);
             roomRef.doc(roomName).set(_data, {merge: true}).then((doc: any) => {
                 console.log(doc);
             });
         } else {
             // si la sala no existe, la creo y lo pongo como encargado de la sala
-            console.log("No such document!");
             const doc = Object.assign({}, {
                 players: [nu],
                 start: false,
@@ -71,26 +72,29 @@ export const checkRoomInFirebase = (roomName: string, user: Player) => {
                 console.log(doc);
             });
         }
-        roomData$(roomName);
+        roomData$();
     }).catch((error: any) => {
         console.log("Error getting document:", error);
     });
 }
 
-export const roomData$ = (roomName: string) => {
+export const roomData$ = () => {
     const docRef = db.collection("rooms").doc(roomName);
     docRef.onSnapshot({
         includeMetadataChanges: true
     }, (doc: any) => {
-        const _data = doc.data();
+        _data$ = doc.data();
         console.log(`observable data ${JSON.stringify(doc.data())}`);
         // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
 
         // agregar a los jugadores
-        pushUsers(_data.players);
+        pushUsers(_data$.players);
         // empezar la partida
-        if (_data.start && !gameStart) {
+        if (_data$.start && !gameStart) {
             gameStart = true;
+            const startbutton = document.getElementById('button-start');
+            // @ts-ignore
+            startbutton.style.display = 'none';
             startGame();
         }
         // entrega de nueva carta
@@ -105,11 +109,16 @@ export const roomData$ = (roomName: string) => {
     });
 }
 
-export const roomUpdate = (roomName: string, update: any) => {
+/**
+ * cosas que necesitamos updetear
+ * las manos, el stack y algunas cosas mas ... pero siempre deberiamos trabajar sobre el mismo mazo
+ */
+export const roomStart = () => {
     const docRef = db.collection("rooms").doc(roomName);
     const roomRef = db.collection("rooms");
-    const _data = {};
-    roomRef.doc(roomName).set(_data, {merge: true}).then((doc: any) => {
-        console.log(doc);
+    console.log(_data$);
+    _data$.start = true;
+    roomRef.doc(roomName).set(_data$, {merge: true}).then((doc: any) => {
+         console.log(doc);
     });
 }
