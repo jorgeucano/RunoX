@@ -15,11 +15,11 @@ import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from 
 
 
 const game = GameEngine.getInstance();
-
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
 const _avatars = document.getElementById("avatars");
+let globalPlayer;
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
@@ -308,6 +308,11 @@ function drawTurn(player: Player) {
 export const login = (user: any) => {
   checkRoomExist(new Player(user.email, user.displayName, user.photoURL));
   users.push(new Player(user.email, user.displayName, user.photoURL));
+  globalPlayer = {
+    id: user.email,
+    name: user.displayName,
+    pic: user.photoURL
+  }
   // setGame();
 }
 
