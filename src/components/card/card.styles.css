@@ -4,14 +4,27 @@
   cursor: pointer;
   display: inline-block;
   height: 134px;
-  margin: 5px;
+  margin: 0 .6rem 1rem .6rem;
   position:relative;
   transition: .2s ease-in-out all;
   width: 86px;
+  outline: none;
+}
+
+.carta.draggable--over {
+  background: rgba(0, 0, 0, .62);
+  border: .2rem solid #1a1712;
+  border-radius: 9px;
+  box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
+}
+
+.carta.draggable--over .overlay {
+  display: none;
 }
 
 .carta.draggable-mirror {
   transition: none;
+  margin-right: 100px;
 }
 
 .carta:hover {

@@ -16,9 +16,8 @@ export class CommandService {
       new BuildDeckCommand(),
       new StartGameCommand(),
     ]);
-    const hands = invoker.invoke(currentState);
-    console.log(hands);
-    return hands;
+    
+    return invoker.invoke(currentState);
   }
 
   addPlayers(currentState: GameState, players: Player[]) {
