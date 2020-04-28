@@ -1,9 +1,10 @@
 import { Player } from "../models/player.model";
-import { login } from "../index";
-import { DocumentSnapshot } from "@google-cloud/firestore";
+import { login, pushUsers, startGame } from "../index";
+// import { DocumentSnapshot } from "@google-cloud/firestore";
 
 export const firebase = require('firebase');
 export var db: any;
+let gameStart = false;
 export const initializeFirebase = () => {
    // TODO: Replace the following with your app's Firebase project configuration
     const firebaseConfig = {
@@ -81,13 +82,17 @@ export const roomData$ = (roomName: string) => {
     docRef.onSnapshot({
         includeMetadataChanges: true
     }, (doc: any) => {
+        const _data = doc.data();
         console.log(`observable data ${JSON.stringify(doc.data())}`);
         // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
 
         // agregar a los jugadores
-
+        pushUsers(_data.players);
         // empezar la partida
-
+        if (_data.start && !gameStart) {
+            gameStart = true;
+            startGame();
+        }
         // entrega de nueva carta
 
         // +2
