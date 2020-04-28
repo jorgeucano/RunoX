@@ -10,7 +10,10 @@ import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
-import {initializeFirebase, firebaseLogin, checkRoomInFirebase} from './db/firebase';
+import { initializeFirebase, firebaseLogin, checkRoomInFirebase } from './db/firebase';
+
+// @ts-ignore
+import { Sortable } from "@shopify/draggable";
 
 const game = GameEngine.getInstance();
 
@@ -183,6 +186,15 @@ function drawPlayersCards() {
     _players?.appendChild(playerDiv);
     setPlayerClicks(player.id);
   });
+
+  /** 
+   * Añadimos opción de reordenar las cartas.
+   * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
+   * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
+   **/
+  new Sortable(document.querySelectorAll('.player-cards'), {
+    draggable: '.carta',
+  })
 }
 
 /** Dibuja el stack
