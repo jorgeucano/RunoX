@@ -316,12 +316,16 @@ export const login = (user: any) => {
   };
 };
 
-export const pushUsers = (players: Array<any>) => {
+export const setUsers = (players: Array<any>) => {
   if (players.length > 0) {
     users = [];
-    players.forEach(user =>
-      users.push(new Player(user.id, user.name, user.pic))
-    );
+    players.forEach(user => {
+      if (!user.hand.cards.length) {
+        users.push(new Player(user.id, user.name, user.pic));
+      } else {
+        users.push(user);
+      }
+    });
     console.log("players", users);
   }
 };
