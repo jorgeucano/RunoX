@@ -22,7 +22,7 @@
     height: 160px;
     position: relative;
     width: 110px;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
 }
@@ -45,6 +45,9 @@
     flex: 1;
 }
 
+#top #stack-container {
+    display: none;
+}
 #top #stack-container #stack {
     align-items: center;
     display: flex;
@@ -81,6 +84,7 @@
     border-width: 6px;
     bottom: 50px;
     box-shadow: 0 8px 4px rgba(0, 0, 0, .32);
+    display: none;
     font-size: 12px;
     height: 96px;
     position: fixed;

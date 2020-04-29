@@ -1,6 +1,7 @@
-import { Player } from "../models/player.model";
-import { login, setUsers, startGame, drawStack } from "../index";
+// import { Player } from "../models/player.model";
+import { login, setUsers, startGame, drawStack, drawTurn } from "../index";
 import { GameEngine } from "../game-engine";
+import { Player } from "../models/player.model";
 
 // @ts-ignore
 export const firebase = window.firebase;
@@ -130,16 +131,28 @@ export const roomData$ = () => {
       // empezar la partida
       if (_data$.start && !gameStart) {
         gameStart = true;
-        const startbutton = document.getElementById("button-start");
+        const deck = document.getElementById('deck');
+        const stack = document.getElementById('stack-container');
+        const runoxbutton = document.getElementById('button-uno')
+        const startbutton = document.getElementById('button-start')
+
+        // @ts-ignore
+        deck.style.display = "flex";
+        // @ts-ignore
+        stack.style.display = "flex";
+        // @ts-ignore
+        runoxbutton.style.display = "none";
         // @ts-ignore
         startbutton.style.display = "none";
+
         startGame();
       }
       // Aqui re-populamos el estado del juego con lo que hay en firebase
       game.gameState.populateData(_data$);
-
+      
       // agregar a los jugadores
-      drawStack();
+      const _players = game.gameState.playersGroup.players
+      if (_players.length) drawTurn(_players[0])
 
       // entrega de nueva carta
 
