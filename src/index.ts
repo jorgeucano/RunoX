@@ -11,7 +11,7 @@ import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
 // @ts-ignore
-import { Sortable } from "@shopify/draggable";
+import { Sortable } from '@shopify/draggable'
 import {
   initializeFirebase,
   firebaseLogin,
@@ -342,13 +342,11 @@ const checkRoomExist = (user: Player) => {
   console.log(roomName);
 
   checkRoomInFirebase(roomName, user).then(() => {
-    // @ts-ignore
+    const chat = document.getElementById('chat')
     const deck = document.getElementById('deck')
-    // @ts-ignore
     const stack = document.getElementById('stack')
-    // @ts-ignore
+    const playersTitle = document.getElementById('players-title')
     const runoxbutton = document.getElementById('button-uno')
-    // @ts-ignore
     const startbutton = document.getElementById('button-start')
 
     // @ts-ignore
@@ -356,9 +354,13 @@ const checkRoomExist = (user: Player) => {
       .pipe(first())
       .subscribe(() => {
         // @ts-ignore
+        chat.style.display = "flex";
+        // @ts-ignore
         deck.style.display = "flex";
         // @ts-ignore
         stack.style.display = "flex";
+        // @ts-ignore
+        playersTitle.style.display = "block";
         // @ts-ignore
         runoxbutton.style.display = "block";
         // @ts-ignore

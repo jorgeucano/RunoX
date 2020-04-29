@@ -1,11 +1,15 @@
 #avatars {
+  color: white;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   padding-left: 1rem;
   padding-right: 1rem;
-  width: 100%;
+  overflow: hidden;
+  overflow-x: auto;
+  margin: -66px 160px 0px 160px;
 }
 
 .avatar  {

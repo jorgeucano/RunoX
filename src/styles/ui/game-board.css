@@ -1,9 +1,41 @@
+#container {
+    background: url('/assets/images/bg-main.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    height: 100%;
+}
+
+#chat {
+    background-color: rgba(0,0,0,.60);
+    display: none;
+    height: 100%;
+    max-width: 340px;
+    width: 35vw;
+}
+
+#chat-top {
+    background-color: #1A1712;
+    box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
+    color: #ffffff;
+    display: flex;
+    flex: 1;
+    font-size: 12px;
+    font-weight: bold;
+    height: 65px;
+}
+
+#chat .chat-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 #root {
-  background: url('/assets/images/bg-main.jpg') no-repeat center center;
-  background-size: cover;
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 #top {
@@ -11,20 +43,22 @@
     box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
     color: #ffffff;
     display: flex;
+    justify-content: space-between;
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 1rem;
-    padding: 1rem;
+    padding: 1rem 2rem;
     height: 65px;
 }
 
 #top #deck {
+    align-items: center;
     height: 160px;
     position: relative;
     width: 110px;
     display: none;
     justify-content: center;
-    align-items: center;
+    margin-right: 20px;
 }
 
 #top #deck img {
@@ -33,16 +67,12 @@
     bottom: 0;
     right: 0;
     left: 0;
-    width: 110px;
+    height: 160px;
 }
 
 #top #deck button {
     width: 120px;
     z-index: 100;
-}
-
-#top #turn {
-    flex: 1;
 }
 
 #top #stack-container {
@@ -55,7 +85,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    width: 160px;
+    width: 140px;
 }
 
 #top #stack-container #stack-title {
@@ -70,14 +100,20 @@
 }
 
 #players {
+    overflow-y: auto;
     display: flex;
     height: 100%;
     justify-content: center;
     position: relative;
-    margin-top: 120px;
+    padding-top: 56px;
     margin-left: auto;
     margin-right: auto;
     width: 80%;
+}
+
+#players-title {
+    margin-top: 3rem;
+    display: none;
 }
 
 #button-uno  {
@@ -91,6 +127,7 @@
     position: fixed;
     right: 50px;
     width: 96px;
+    z-index: 100;
 }
 
 #button-start  {

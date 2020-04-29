@@ -131,17 +131,21 @@ export const roomData$ = () => {
       // empezar la partida
       if (_data$.start && !gameStart) {
         gameStart = true
+        const chat = document.getElementById('chat')
         const deck = document.getElementById('deck')
         const stack = document.getElementById('stack-container')
+        const playersTitle = document.getElementById('players-title')
         const runoxbutton = document.getElementById('button-uno')
-        const startbutton = document.getElementById(
-          'button-start'
-        )
+        const startbutton = document.getElementById('button-start')
 
+        // @ts-ignore
+        chat.style.display = 'flex'
         // @ts-ignore
         deck.style.display = 'flex'
         // @ts-ignore
         stack.style.display = 'flex'
+        // @ts-ignore
+        playersTitle.style.display = "block";
         // @ts-ignore
         runoxbutton.style.display = 'block'
         // @ts-ignore
