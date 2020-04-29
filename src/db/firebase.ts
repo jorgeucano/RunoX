@@ -69,15 +69,14 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
 
         if (doc.exists) {
           const _data = doc.data();
-          console.log("exist doc", doc.data());
-          if (_data.players.find((x: any) => x.id === nu.id)) {
+          if (_data.playersGroup.find((x: any) => x.id === nu.id)) {
             console.log("ya existe el user");
           } else {
-            if (_data.players.length > 5) {
+            if (_data.playersGroup.length > 5) {
               alert("La sala esta llena");
               return reject();
             }
-            _data.players.push(nu);
+            _data.playersGroup.push(nu);
           }
           roomRef
             .doc(roomName)
@@ -90,7 +89,7 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
           const doc = Object.assign(
             {},
             {
-              players: [nu],
+              playersGroup: [nu],
               start: false,
               stack: [],
               winner: ""
@@ -126,8 +125,9 @@ export const roomData$ = () => {
       // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
       // osea que en todos deberia ejecutarse el startGame command || O NO?
 
-      setUsers(_data$.players);
-
+      // agregar a los jugadores
+      setUsers(_data$.playersGroup);
+      
       // empezar la partida
       if (_data$.start && !gameStart) {
         gameStart = true;
