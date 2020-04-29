@@ -69,14 +69,14 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
         if (doc.exists) {
           console.log("exist doc", doc.data());
           const _data = doc.data();
-          if (_data.players.find((x: any) => x.id === nu.id)) {
+          if (_data.playersGroup.find((x: any) => x.id === nu.id)) {
             console.log("ya existe el user");
           } else {
-            if (_data.players.length > 5) {
+            if (_data.playersGroup.length > 5) {
               alert("La sala esta llena");
               return reject();
             }
-            _data.players.push(nu);
+            _data.playersGroup.push(nu);
           }
           roomRef
             .doc(roomName)
@@ -89,7 +89,7 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
           const doc = Object.assign(
             {},
             {
-              players: [nu],
+              playersGroup: [nu],
               start: false,
               stack: [],
               winner: ""
@@ -124,7 +124,7 @@ export const roomData$ = () => {
       // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
 
       // agregar a los jugadores
-      pushUsers(_data$.players);
+      pushUsers(_data$.playersGroup);
       // empezar la partida
       if (_data$.start && !gameStart) {
         gameStart = true;
@@ -186,7 +186,7 @@ export const firebaseUpdateState = (state: any) => {
   let _state = JSON.parse(JSON.stringify(state.parseState()));
   const docRef = db.collection("rooms").doc(roomName);
   docRef
-    .set({ state: _state }, { merge: true })
+    .set({ ..._state }, { merge: true })
     .then((doc: any) => {
       console.log(doc);
     })
