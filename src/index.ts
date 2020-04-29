@@ -12,8 +12,12 @@ import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
 // @ts-ignore
 import { Sortable } from "@shopify/draggable";
-import {initializeFirebase, firebaseLogin, checkRoomInFirebase, roomStart} from './db/firebase';
-
+import {
+  initializeFirebase,
+  firebaseLogin,
+  checkRoomInFirebase,
+  roomStart
+} from "./db/firebase";
 
 const game = GameEngine.getInstance();
 const _players = document.getElementById("players");
@@ -28,16 +32,12 @@ let selectedCardId = "";
 let users: Array<Player> = [];
 
 const setGame = () => {
-  game
-    .join([
-      ...users
-    ])
-    .subscribe(
-      () => {},
-      (error: string) => {
-        alert(error);
-      }
-    );
+  game.join([...users]).subscribe(
+    () => {},
+    (error: string) => {
+      alert(error);
+    }
+  );
 
   game.events.afterGameStart.subscribe(() => {
     drawPlayersCards();
@@ -46,7 +46,7 @@ const setGame = () => {
     drawTurn(game.playerTurn);
   });
 
-  game.events.beforeTurn.subscribe((data) => {
+  game.events.beforeTurn.subscribe(data => {
     drawTurn(data.player);
   });
 
@@ -67,7 +67,7 @@ const setGame = () => {
     drawTurn(game.playerTurn);
   });
 
-  game.events.gameEnd.subscribe((data) => {
+  game.events.gameEnd.subscribe(data => {
     alert(
       `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
     );
@@ -81,7 +81,7 @@ const setGame = () => {
       alert(error);
     }
   );
-}
+};
 
 /**
  * Observamos el click de todos los botones "JUGAR CARTA"
@@ -108,7 +108,7 @@ const fromKeyboard = () => fromEvent(document, "keyup");
 const fromKeyboardMapToTrue = (code: string) =>
   fromKeyboard().pipe(
     pluck("code"),
-    filter((c) => c === code),
+    filter(c => c === code),
     mapTo(true)
   );
 const fromKeybordClickMap = (code: string, id: string, fn: () => any) =>
@@ -141,42 +141,41 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
-  
-    while (_players?.lastElementChild) {
-      _players?.removeChild(_players?.lastElementChild);
-    }
-    game.players.forEach((player) => {
-      const playerDiv = document.createElement("div");
-      playerDiv.setAttribute("id", player.id);
-      playerDiv.setAttribute("class", "player");
-  
-      /*
+  while (_players?.lastElementChild) {
+    _players?.removeChild(_players?.lastElementChild);
+  }
+  game.players.forEach(player => {
+    const playerDiv = document.createElement("div");
+    playerDiv.setAttribute("id", player.id);
+    playerDiv.setAttribute("class", "player");
+
+    /*
       const playerTitle = document.createElement("div");
       playerTitle.setAttribute("class", "player-title");
       playerTitle.append(`Player: ${player.name}`)
       playerDiv.appendChild(playerTitle); 
       */
-  
-      const playerCards = document.createElement("div");
-      playerCards.setAttribute("class", "player-cards");
-      player.hand.cards.forEach((card) => {
-        const _card = new CardComponent(card.id, card.sprite);
-        playerCards.appendChild(_card.element);
-      });
-      playerDiv.appendChild(playerCards);
-  
-      _players?.appendChild(playerDiv);
-      setPlayerClicks(player.id);
+
+    const playerCards = document.createElement("div");
+    playerCards.setAttribute("class", "player-cards");
+    player.hand.cards.forEach(card => {
+      const _card = new CardComponent(card.id, card.sprite);
+      playerCards.appendChild(_card.element);
     });
-  
-    /** 
-     * Añadimos opción de reordenar las cartas.
-     * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
-     * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
-     **/
-    new Sortable(document.querySelectorAll('.player-cards'), {
-      draggable: '.carta',
-    })
+    playerDiv.appendChild(playerCards);
+
+    _players?.appendChild(playerDiv);
+    setPlayerClicks(player.id);
+  });
+
+  /**
+   * Añadimos opción de reordenar las cartas.
+   * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
+   * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
+   **/
+  new Sortable(document.querySelectorAll(".player-cards"), {
+    draggable: ".carta"
+  });
 }
 
 /** Dibuja el stack
@@ -210,9 +209,9 @@ function setPlayerClicks(id: string) {
   fromEvent(_player, "click")
     .pipe(
       // @ts-ignore
-      filter((event) => event.target.classList.contains("carta")),
+      filter(event => event.target.classList.contains("carta")),
       filter(() => id === game.playerTurn?.id),
-      map((event) => {
+      map(event => {
         // @ts-ignore
         return event.target.id;
       })
@@ -226,7 +225,7 @@ function setPlayerClicks(id: string) {
       console.log("carta click!");
 
       try {
-        _player?.querySelectorAll(".carta-selected").forEach((el) => {
+        _player?.querySelectorAll(".carta-selected").forEach(el => {
           el.classList.remove("carta-selected");
         });
 
@@ -239,7 +238,7 @@ function setPlayerClicks(id: string) {
          */
         //@ts-ignore
         fromEvent(buttonPlay, "click").subscribe(() => {
-          const card = game.playerTurn?.hand.cards.find((c) => c.id === cardId);
+          const card = game.playerTurn?.hand.cards.find(c => c.id === cardId);
 
           // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
           if (!card) {
@@ -277,82 +276,77 @@ function setPlayerClicks(id: string) {
 
 /** Dibuja el nombre del current player */
 function drawTurn(player: Player) {
- 
-    console.log("drawTurn", player.id);
-    while (_turn?.lastElementChild) {
-      _turn?.removeChild(_turn?.lastElementChild);
-    }
-    const playersAvatars = document.createElement("div");
-    playersAvatars.setAttribute("id", "avatars");
-    game.players.forEach((_player) => {
-      const avatar = new Avatar(
-        _player,
-        _player.hand.cards.length,
-        _player.id === player.id
-      );
-      playersAvatars.appendChild(avatar.element);
-    });
-  
-    const turnDiv = document.createElement("div");
-    turnDiv.appendChild(playersAvatars);
-  
-    _players?.querySelectorAll(".player-select").forEach((el) => {
-      el.classList.remove("player-select");
-      el.classList.remove("player-select-button");
-    });
-  
-    document.getElementById(player.id)?.classList.add("player-select");
-    document.getElementById(player.id)?.classList.add("player-select-button");
-    //turnDiv.append(`Es el turno de: ${player.name}`);
-    _turn?.appendChild(turnDiv);
-  
+  console.log("drawTurn", player.id);
+  while (_turn?.lastElementChild) {
+    _turn?.removeChild(_turn?.lastElementChild);
+  }
+  const playersAvatars = document.createElement("div");
+  playersAvatars.setAttribute("id", "avatars");
+  game.players.forEach(_player => {
+    const avatar = new Avatar(
+      _player,
+      _player.hand.cards.length,
+      _player.id === player.id
+    );
+    playersAvatars.appendChild(avatar.element);
+  });
+
+  const turnDiv = document.createElement("div");
+  turnDiv.appendChild(playersAvatars);
+
+  _players?.querySelectorAll(".player-select").forEach(el => {
+    el.classList.remove("player-select");
+    el.classList.remove("player-select-button");
+  });
+
+  document.getElementById(player.id)?.classList.add("player-select");
+  document.getElementById(player.id)?.classList.add("player-select-button");
+  //turnDiv.append(`Es el turno de: ${player.name}`);
+  _turn?.appendChild(turnDiv);
 }
 
 export const login = (user: any) => {
-  checkRoomExist(new Player(user.email, user.displayName, user.photoURL));
-  users.push(new Player(user.email, user.displayName, user.photoURL));
+  const player = new Player(user.email, user.displayName, user.photoURL);
+  checkRoomExist(player);
+  users.push(player);
   globalPlayer = {
     id: user.email,
     name: user.displayName,
     pic: user.photoURL
-  }
-}
+  };
+};
 
 export const pushUsers = (players: Array<any>) => {
   if (players.length > 0) {
     users = [];
-    players.forEach(user => users.push(new Player(user.id, user.name, user.pic)));
-    console.log('players', users);
+    players.forEach(user =>
+      users.push(new Player(user.id, user.name, user.pic))
+    );
+    console.log("players", users);
   }
-}
-
-
+};
 
 export const startGame = () => {
   setGame();
-}
+};
 
 const checkRoomExist = (user: Player) => {
   const roomName = getUrlSearch();
   console.log(roomName);
-  let havePlace = true;
-  // @ts-ignore
-  havePlace = checkRoomInFirebase(roomName, user);
-  if (havePlace) {
-    console.log(document.getElementById('button-start'));
-    // @ts-ignore
-    const startbutton = document.getElementById('button-start');
-    // @ts-ignore
-    fromEvent(startbutton, 'click')
-    .pipe(first())
-    .subscribe(
-      () => {
-        // @ts-ignore
-        startbutton.style.display = 'none';
-        roomStart();
-      }
-    )
-  }
-}
 
-initializeFirebase();
+  checkRoomInFirebase(roomName, user).then(() => {
+    console.log(document.getElementById("button-start"));
+    // @ts-ignore
+    const startbutton = document.getElementById("button-start");
+    // @ts-ignore
+    fromEvent(startbutton, "click")
+      .pipe(first())
+      .subscribe(() => {
+        // @ts-ignore
+        startbutton.style.display = "none";
+        roomStart();
+      });
+  });
+};
+
+initializeFirebase(game);

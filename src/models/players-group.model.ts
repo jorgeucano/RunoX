@@ -1,7 +1,7 @@
 import { Player } from "./player.model";
 
 export class PlayersGroup {
-  readonly players: Player[];
+  players: Player[];
 
   constructor() {
     this.players = [];
@@ -16,7 +16,7 @@ export class PlayersGroup {
   }
 
   getPlayerById(playerId: string) {
-    const player = this.players.find((player) => player.id === playerId);
+    const player = this.players.find(player => player.id === playerId);
 
     if (!player) {
       throw new Error(

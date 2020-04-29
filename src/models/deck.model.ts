@@ -1,7 +1,7 @@
 import { Card } from "./card.model";
 
 export class Deck {
-  readonly cards: Card[];
+  cards: Card[];
 
   constructor() {
     this.cards = [];

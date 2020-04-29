@@ -14,4 +14,12 @@ export class Player {
 
     this.hand = new Hand();
   }
+
+  parseObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      pic: this.pic
+    };
+  }
 }

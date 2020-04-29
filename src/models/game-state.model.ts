@@ -39,7 +39,7 @@ export class GameState {
     }
 
     let currentPlayerIndex = this.playersGroup.players.findIndex(
-      (player) => player.id === this.turn.player?.id
+      player => player.id === this.turn.player?.id
     );
 
     const nextPlayerIndex = currentPlayerIndex + 1;
@@ -92,7 +92,7 @@ export class GameState {
 
   addStackCardsToDeck() {
     const newDeckCards = this.stack.cards.filter(
-      (card) => card.id === this.stack.cardOnTop?.id
+      card => card.id === this.stack.cardOnTop?.id
     );
 
     this.deck.addCards(newDeckCards);
@@ -108,5 +108,45 @@ export class GameState {
     this.stack.addCard(cardOnTopTheStack);
 
     this.deck.shuffle();
+  }
+
+  parseObjects(array: any[]) {
+    return array.map(element => {
+      return element.parseObject();
+    });
+  }
+
+  parseState() {
+    const state = {
+      deck: {
+        cards: this.parseObjects(this.deck.cards)
+      },
+      stack: {
+        cards: this.parseObjects(this.stack.cards)
+      },
+      playersGroup: this.parseObjects(this.playersGroup.players),
+      turn: this.turn.player?.parseObject()
+    };
+    return state;
+  }
+
+  populateData({ state }: { state: any }) {
+    this.deck.cards = state.deck.cards.map((card: any) => {
+      return new Card(card.value, card.color);
+    });
+
+    this.stack.cards = state.stack.cards.map((card: any) => {
+      return new Card(card.value, card.color);
+    });
+
+    this.playersGroup.players = state.playersGroup.map((player: any) => {
+      return new Player(player.id, player.name, player.pic);
+    });
+
+    this.turn.player = new Player(
+      state.turn.id,
+      state.turn.name,
+      state.turn.pic
+    );
   }
 }

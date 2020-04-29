@@ -85,4 +85,13 @@ export class Card {
 
     return otherCard.value === this.value || otherCard.color === this.color;
   }
+
+  parseObject() {
+    return {
+      id: this.id,
+      sprite: this.sprite,
+      value: this.value,
+      color: this.color
+    };
+  }
 }
