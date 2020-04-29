@@ -33,7 +33,7 @@ export class GameEngine {
       [GameEvent.AFTER_TAKE_CARDS]: this.gameEvents.afterTakeCards$,
       [GameEvent.AFTER_YELL_UNO]: this.gameEvents.afterYellUno$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
-      [GameEvent.GAME_END]: this.gameEvents.gameEnd$,
+      [GameEvent.GAME_END]: this.gameEvents.gameEnd$
     };
   }
 
@@ -47,6 +47,10 @@ export class GameEngine {
 
   get stackCard() {
     return this.state.stack.cardOnTop;
+  }
+
+  get gameState() {
+    return this.state;
   }
 
   start() {
