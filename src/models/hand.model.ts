@@ -3,7 +3,7 @@ import { Value } from "./values.model";
 import { Color } from "./color.model";
 
 export class Hand {
-  readonly cards: Card[];
+  cards: Card[];
 
   constructor() {
     this.cards = [];
@@ -29,9 +29,7 @@ export class Hand {
     if (card === undefined) {
       throw new Error(`La mano del jugador no posee cartas`);
     }
-    const cardIndex = this.cards.findIndex(
-      (handCard) => handCard.id === card.id
-    );
+    const cardIndex = this.cards.findIndex(handCard => handCard.id === card.id);
 
     if (cardIndex === -1) {
       throw new Error(`La mano del jugador no posee la carta: ${card.id}`);
@@ -44,11 +42,11 @@ export class Hand {
 
   hasCard(value: Value, color?: Color) {
     if (!color) {
-      return this.cards.some((handCard) => handCard.value === value);
+      return this.cards.some(handCard => handCard.value === value);
     }
 
     return this.cards.some(
-      (handCard) => handCard.value === value && handCard.color === color
+      handCard => handCard.value === value && handCard.color === color
     );
   }
 }

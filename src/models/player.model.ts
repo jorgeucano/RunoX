@@ -15,11 +15,20 @@ export class Player {
     this.hand = new Hand();
   }
 
+  parseObjects(array: any[]) {
+    return array.map(element => {
+      return element.parseObject();
+    });
+  }
+
   parseObject() {
     return {
       id: this.id,
       name: this.name,
-      pic: this.pic
+      pic: this.pic,
+      hand: {
+        cards: this.parseObjects(this.hand.cards)
+      }
     };
   }
 }

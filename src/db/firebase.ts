@@ -1,5 +1,5 @@
 import { Player } from "../models/player.model";
-import { login, pushUsers, startGame } from "../index";
+import { login, setUsers, startGame, drawStack } from "../index";
 import { GameEngine } from "../game-engine";
 
 // @ts-ignore
@@ -64,10 +64,10 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
       .get()
       .then((doc: any) => {
         //stupid firebase, el object.assign es porque FIREBASE NOS OBLIGA
-        let nu: any = Object.assign({}, user);
-        nu.hand = Object.assign({}, user.hand);
+        let nu = user.parseObject();
+        console.log("NEW USER", nu);
+
         if (doc.exists) {
-          console.log("exist doc", doc.data());
           const _data = doc.data();
           if (_data.playersGroup.find((x: any) => x.id === nu.id)) {
             console.log("ya existe el user");
@@ -122,9 +122,12 @@ export const roomData$ = () => {
     (doc: any) => {
       _data$ = doc.data();
       // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
+      // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
+      // osea que en todos deberia ejecutarse el startGame command || O NO?
 
       // agregar a los jugadores
-      pushUsers(_data$.playersGroup);
+      setUsers(_data$.playersGroup);
+      
       // empezar la partida
       if (_data$.start && !gameStart) {
         gameStart = true;
@@ -132,9 +135,12 @@ export const roomData$ = () => {
         // @ts-ignore
         startbutton.style.display = "none";
         startGame();
-        console.log(doc.data());
-        game.gameState.populateData(doc.data());
       }
+      // Aqui re-populamos el estado del juego con lo que hay en firebase
+      game.gameState.populateData(_data$);
+
+      // agregar a los jugadores
+      drawStack();
 
       // entrega de nueva carta
 
@@ -186,7 +192,7 @@ export const firebaseUpdateState = (state: any) => {
   let _state = JSON.parse(JSON.stringify(state.parseState()));
   const docRef = db.collection("rooms").doc(roomName);
   docRef
-    .set({ ..._state }, { merge: true })
+    .set(_state, { merge: true })
     .then((doc: any) => {
       console.log(doc);
     })

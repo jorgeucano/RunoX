@@ -125,12 +125,21 @@ export class GameState {
         cards: this.parseObjects(this.stack.cards)
       },
       playersGroup: this.parseObjects(this.playersGroup.players),
-      turn: this.turn.player?.parseObject()
+      turn: {
+        player: this.turn.player
+          ? {
+              ...this.turn.player.parseObject(),
+              hand: {
+                cards: this.parseObjects(this.turn.player.hand.cards)
+              }
+            }
+          : null
+      }
     };
     return state;
   }
 
-  populateData({ state }: { state: any }) {
+  populateData(state: any) {
     this.deck.cards = state.deck.cards.map((card: any) => {
       return new Card(card.value, card.color);
     });
@@ -140,7 +149,9 @@ export class GameState {
     });
 
     this.playersGroup.players = state.playersGroup.map((player: any) => {
-      return new Player(player.id, player.name, player.pic);
+      const pl = new Player(player.id, player.name, player.pic);
+      pl.hand.cards = player.hand.cards;
+      return pl;
     });
 
     this.turn.player = new Player(
@@ -148,5 +159,8 @@ export class GameState {
       state.turn.name,
       state.turn.pic
     );
+    this.turn.player.hand.cards = state.turn.player.hand.cards;
+
+    console.log(this.playersGroup);
   }
 }
