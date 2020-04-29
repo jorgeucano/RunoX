@@ -120,56 +120,56 @@ export const roomData$ = () => {
       includeMetadataChanges: true
     },
     (doc: any) => {
-                    _data$ = doc.data()
-                    // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
-                    // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
-                    // osea que en todos deberia ejecutarse el startGame command || O NO?
+      _data$ = doc.data()
+      // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
+      // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
+      // osea que en todos deberia ejecutarse el startGame command || O NO?
 
-                    // agregar a los jugadores
-                    setUsers(_data$.playersGroup)
+      // agregar a los jugadores
+      setUsers(_data$.playersGroup)
 
-                    // empezar la partida
-                    if (_data$.start && !gameStart) {
-                      gameStart = true
-                      const deck = document.getElementById('deck')
-                      const stack = document.getElementById('stack-container')
-                      const runoxbutton = document.getElementById('button-uno')
-                      const startbutton = document.getElementById(
-                        'button-start'
-                      )
+      // empezar la partida
+      if (_data$.start && !gameStart) {
+        gameStart = true
+        const deck = document.getElementById('deck')
+        const stack = document.getElementById('stack-container')
+        const runoxbutton = document.getElementById('button-uno')
+        const startbutton = document.getElementById(
+          'button-start'
+        )
 
-                      // @ts-ignore
-                      deck.style.display = 'flex'
-                      // @ts-ignore
-                      stack.style.display = 'flex'
-                      // @ts-ignore
-                      runoxbutton.style.display = 'none'
-                      // @ts-ignore
-                      startbutton.style.display = 'none'
+        // @ts-ignore
+        deck.style.display = 'flex'
+        // @ts-ignore
+        stack.style.display = 'flex'
+        // @ts-ignore
+        runoxbutton.style.display = 'none'
+        // @ts-ignore
+        startbutton.style.display = 'none'
 
-                      startGame()
-                    }
-                    // Aqui re-populamos el estado del juego con lo que hay en firebase
-                    game.gameState.populateData(_data$)
+        startGame()
+      }
+      // Aqui re-populamos el estado del juego con lo que hay en firebase
+      game.gameState.populateData(_data$)
 
-                    // agregar a los jugadores
-                    const _players = game.gameState.playersGroup.players
-                    // TODO Hay que cambiar _players[0] por el player actual
-                    // game.PlayerTurn viene con los datos a null
-                    if (_players.length) drawTurn(_players[0])
+      // agregar a los jugadores
+      const _players = game.gameState.playersGroup.players
+      // TODO Hay que cambiar _players[0] por el player actual
+      // game.PlayerTurn viene con los datos a null
+      if (_players.length) drawTurn(_players[0])
 
-                    // entrega de nueva carta
+      // entrega de nueva carta
 
-                    // +2
+      // +2
 
-                    // +4
+      // +4
 
-                    // cambio de color
+      // cambio de color
 
-                    // jugador dice uno
+      // jugador dice uno
 
-                    // termina el juego
-                  }
+      // termina el juego
+    }
   );
 };
 
@@ -201,9 +201,9 @@ export const sendCard = () => {
 };
 
 export const firebaseUpdateState = (state: any) => {
-  // FIXME: hay algun valor del parsing que se va como undefined y da error, por eso el JSON.stringify aqui.
-  // debugger;
-  let _state = JSON.parse(JSON.stringify(state.parseState()));
+  let _state = state.parseState();
+  _state = JSON.parse(JSON.stringify(_state));
+  console.log(_state);
   // debugger;
   const docRef = db.collection("rooms").doc(roomName);
   docRef

@@ -172,7 +172,6 @@ export class PlayCardCommand extends GameCommand {
     ) {
       return new CommandValidation(false, "La carta que quiere tirar no es +2");
     }
-
     if (
       state.stack.cardOnTop &&
       !this.card?.isPlayable(state.stack.cardOnTop)

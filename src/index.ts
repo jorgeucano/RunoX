@@ -42,7 +42,6 @@ const setGame = () => {
   game.events.afterGameStart.subscribe(() => {
     drawPlayersCards();
     drawStack();
-    // debugger;
     // @ts-ignore
     drawTurn(game.playerTurn);
   });
@@ -142,7 +141,6 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
-  // debugger;
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
@@ -207,6 +205,10 @@ function setPlayerClicks(id: string) {
       // @ts-ignore
       filter(event => event.target.classList.contains("carta")),
       // no funciona porque playerTurn es undefined
+      tap((event) => {
+        console.log(game);
+        // debugger;
+      }),
       filter(() => id === game.playerTurn?.id),
       map(event => {
         // @ts-ignore
@@ -219,7 +221,7 @@ function setPlayerClicks(id: string) {
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
 
-      console.log("carta click!");
+      console.log("carta click!", cardId);
 
       try {
         _player?.querySelectorAll(".carta-selected").forEach(el => {
@@ -258,7 +260,7 @@ function setPlayerClicks(id: string) {
           }
 
           //@ts-ignore
-          game.playCard(game.playerTurn?.id, card).subscribe(
+          game.playCard(game.playerTurn.id, card).subscribe(
             () => {},
             (error: string) => {
               alert(error);
