@@ -7,6 +7,7 @@ import { Card } from "./card.model";
 import { Player } from "./player.model";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 import { GameEvents } from "../events/game-events";
+import { Hand } from "./hand.model";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -140,27 +141,32 @@ export class GameState {
   }
 
   populateData(state: any) {
-    this.deck.cards = state.deck.cards.map((card: any) => {
-      return new Card(card.value, card.color);
-    });
+    try {
+      this.deck.cards = state.deck.cards.map((card: any) => {
+        return new Card(card.value, card.color);
+      });
+  
+      this.stack.cards = state.stack.cards.map((card: any) => {
+        return new Card(card.value, card.color);
+      });
+      this.playersGroup.players = state.playersGroup.map((player: any) => {
+        const pl = new Player(player.id, player.name, player.pic);
 
-    this.stack.cards = state.stack.cards.map((card: any) => {
-      return new Card(card.value, card.color);
-    });
-
-    this.playersGroup.players = state.playersGroup.map((player: any) => {
-      const pl = new Player(player.id, player.name, player.pic);
-      pl.hand.cards = player.hand.cards;
-      return pl;
-    });
-
-    this.turn.player = new Player(
-      state.turn.id,
-      state.turn.name,
-      state.turn.pic
-    );
-    this.turn.player.hand.cards = state.turn.player.hand.cards;
-
-    console.log(this.playersGroup);
+        pl.hand.cards = player.hand.cards;
+        return pl;
+      });
+  
+      this.turn.player = new Player(
+        state.turn.id,
+        state.turn.name,
+        state.turn.pic
+      );
+      
+      this.turn.player.hand.addCards(state.turn.player.hand.cards);
+  
+      console.log(this.playersGroup);
+    } catch (e) {
+      console.log('todavia no esta listo');
+    }
   }
 }

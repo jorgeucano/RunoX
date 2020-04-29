@@ -9,9 +9,15 @@ export class StartGameCommand extends GameCommand {
     const handsLength = 7;
 
     state.playersGroup.players.forEach((player, index) => {
-      player.hand.addCards(
-        state.deck.cards.splice(index * handsLength, handsLength)
-      );
+      // por algun motivo esto explota ya que hand es un array no un objeto completo
+      try {
+        
+        player.hand.addCards(
+          state.deck.cards.splice(index * handsLength, handsLength)
+        );
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     let firstStackCard = state.deck.takeCard() as Card;

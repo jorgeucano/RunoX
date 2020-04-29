@@ -63,7 +63,6 @@ export const checkRoomInFirebase = (_roomName: string, user: Player) => {
     docRef
       .get()
       .then((doc: any) => {
-        //stupid firebase, el object.assign es porque FIREBASE NOS OBLIGA
         let nu = user.parseObject();
         console.log("NEW USER", nu);
 
