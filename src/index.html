@@ -8,24 +8,34 @@
 </head>
 
 <body>
-  <div id="root">
-    <div id="top">
-      <div>
-        <div id="deck">
-          <img src="/assets/images/deck.png" alt="">
-          <button id="button-take">TOMAR CARTA</button>
-        </div>
-        <button id="button-uno">RUNOX!</button>
-        <button id="button-start">Start Game!</button>
-      </div>
-      <div id="turn"></div>
-      <div id="stack-container">
-        <div id="stack-title">STACK</div>
-        <div id="stack"></div>
+  <div id="container">
+    <div id="chat">
+      <div id="chat-top">
+        <h1 class="chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
       </div>
     </div>
-    <div id="players"></div>  
+    <div id="root">
+      <div id="top">
+        <div>
+          <div id="deck">
+            <img src="/assets/images/deck.png" alt="">
+            <button id="button-take">TOMAR CARTA</button>
+          </div>
+          <button id="button-uno">RUNOX!</button>
+          <button id="button-start">Start Game!</button>
+        </div>
+        <div id="stack-container">
+          <div id="stack"></div>
+        </div>
+      </div>
+      <div id="turn"></div>
+      <div id="players-title" class="title">
+        TU MANO ACTUAL
+      </div>
+      <div id="players"></div>  
+    </div>
   </div>
+
   <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>

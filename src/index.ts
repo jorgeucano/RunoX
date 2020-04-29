@@ -11,7 +11,7 @@ import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
 // @ts-ignore
-import { Sortable } from "@shopify/draggable";
+import { Sortable } from '@shopify/draggable'
 import {
   initializeFirebase,
   firebaseLogin,
@@ -42,7 +42,6 @@ const setGame = () => {
   game.events.afterGameStart.subscribe(() => {
     drawPlayersCards();
     drawStack();
-    // // debugger;
     // @ts-ignore
     drawTurn(game.playerTurn);
   });
@@ -142,7 +141,6 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
-  // // debugger;
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
@@ -150,13 +148,6 @@ function drawPlayersCards() {
     const playerDiv = document.createElement("div");
     playerDiv.setAttribute("id", player.id);
     playerDiv.setAttribute("class", "player");
-
-    /*
-      const playerTitle = document.createElement("div");
-      playerTitle.setAttribute("class", "player-title");
-      playerTitle.append(`Player: ${player.name}`)
-      playerDiv.appendChild(playerTitle); 
-      */
 
     const playerCards = document.createElement("div");
     playerCards.setAttribute("class", "player-cards");
@@ -176,7 +167,8 @@ function drawPlayersCards() {
    * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
    **/
   new Sortable(document.querySelectorAll(".player-cards"), {
-    draggable: ".carta"
+    draggable: ".carta",
+    delay: 300
   });
 }
 
@@ -281,19 +273,20 @@ function setPlayerClicks(id: string) {
     });
 }
 
-/** Dibuja el nombre del current player */
-function drawTurn(player: Player) {
-  console.log("drawTurn", player.id);
+/** Dibuja los jugadores y la información del turno */
+export function drawTurn(player?: Player) {
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
   const playersAvatars = document.createElement("div");
   playersAvatars.setAttribute("id", "avatars");
-  game.players.forEach(_player => {
+
+  const players = game.players.length > 0 ? game.players : users
+  players.forEach(_player => {
     const avatar = new Avatar(
       _player,
       _player.hand.cards.length,
-      _player.id === player.id
+      player && _player.id === player.id
     );
     playersAvatars.appendChild(avatar.element);
   });
@@ -306,9 +299,11 @@ function drawTurn(player: Player) {
     el.classList.remove("player-select-button");
   });
 
-  document.getElementById(player.id)?.classList.add("player-select");
-  document.getElementById(player.id)?.classList.add("player-select-button");
-  //turnDiv.append(`Es el turno de: ${player.name}`);
+  if (player) {  
+    document.getElementById(player.id)?.classList.add("player-select");
+    document.getElementById(player.id)?.classList.add("player-select-button");
+  }
+
   _turn?.appendChild(turnDiv);
 }
 
@@ -334,6 +329,7 @@ export const setUsers = (players: Array<any>) => {
       }
     });
     console.log("players", users);
+    drawTurn();
   }
 };
 
@@ -346,13 +342,27 @@ const checkRoomExist = (user: Player) => {
   console.log(roomName);
 
   checkRoomInFirebase(roomName, user).then(() => {
-    console.log(document.getElementById("button-start"));
-    // @ts-ignore
-    const startbutton = document.getElementById("button-start");
+    const chat = document.getElementById('chat')
+    const deck = document.getElementById('deck')
+    const stack = document.getElementById('stack')
+    const playersTitle = document.getElementById('players-title')
+    const runoxbutton = document.getElementById('button-uno')
+    const startbutton = document.getElementById('button-start')
+
     // @ts-ignore
     fromEvent(startbutton, "click")
       .pipe(first())
       .subscribe(() => {
+        // @ts-ignore
+        chat.style.display = "flex";
+        // @ts-ignore
+        deck.style.display = "flex";
+        // @ts-ignore
+        stack.style.display = "flex";
+        // @ts-ignore
+        playersTitle.style.display = "block";
+        // @ts-ignore
+        runoxbutton.style.display = "block";
         // @ts-ignore
         startbutton.style.display = "none";
         roomStart();

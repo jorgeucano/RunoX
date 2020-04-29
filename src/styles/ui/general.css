@@ -1,10 +1,11 @@
-@import "https://fonts.googleapis.com/css?family=Montserrat:400,500&display=swap";
+@import "https://fonts.googleapis.com/css?family=Montserrat:200,400,500&display=swap";
 
 * {
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif !important;
   font-weight: 400;
   user-select: none !important;
+  outline: none !important;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,6 +42,16 @@ button:active {
 
 button:focus {
   outline:0;
+}
+
+.title {
+    background-color: rgba(0,0,0,.80);
+    color: #bebebe;
+    font-size: 12px;
+    font-weight: 500;
+    padding: .37rem;
+    text-align: center;
+    letter-spacing: .12rem;
 }
 
 @import "game-board.css";
