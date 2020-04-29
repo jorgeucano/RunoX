@@ -1,6 +1,7 @@
-import { Player } from "../models/player.model";
-import { login, setUsers, startGame, drawStack } from "../index";
+// import { Player } from "../models/player.model";
+import { login, setUsers, startGame, drawTurn, drawStack } from "../index";
 import { GameEngine } from "../game-engine";
+import { Player } from "../models/player.model";
 
 // @ts-ignore
 export const firebase = window.firebase;
@@ -49,7 +50,7 @@ export const firebaseLogin = () => {
         var errorMessage = error.message;
         var email = error.email;
         var credential = error.credential;
-        console.log(error);
+        console.log(`singIn error: ${error}`);
         // alert(errorMessage);
       });
   }
@@ -119,40 +120,56 @@ export const roomData$ = () => {
       includeMetadataChanges: true
     },
     (doc: any) => {
-      _data$ = doc.data();
-      // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
-      // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
-      // osea que en todos deberia ejecutarse el startGame command || O NO?
+                    _data$ = doc.data()
+                    // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
+                    // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
+                    // osea que en todos deberia ejecutarse el startGame command || O NO?
 
-      // agregar a los jugadores
-      setUsers(_data$.playersGroup);
-      
-      // empezar la partida
-      if (_data$.start && !gameStart) {
-        gameStart = true;
-        const startbutton = document.getElementById("button-start");
-        // @ts-ignore
-        startbutton.style.display = "none";
-        startGame();
-      }
-      // Aqui re-populamos el estado del juego con lo que hay en firebase
-      game.gameState.populateData(_data$);
+                    // agregar a los jugadores
+                    setUsers(_data$.playersGroup)
 
-      // agregar a los jugadores
-      drawStack();
+                    // empezar la partida
+                    if (_data$.start && !gameStart) {
+                      gameStart = true
+                      const deck = document.getElementById('deck')
+                      const stack = document.getElementById('stack-container')
+                      const runoxbutton = document.getElementById('button-uno')
+                      const startbutton = document.getElementById(
+                        'button-start'
+                      )
 
-      // entrega de nueva carta
+                      // @ts-ignore
+                      deck.style.display = 'flex'
+                      // @ts-ignore
+                      stack.style.display = 'flex'
+                      // @ts-ignore
+                      runoxbutton.style.display = 'none'
+                      // @ts-ignore
+                      startbutton.style.display = 'none'
 
-      // +2
+                      startGame()
+                    }
+                    // Aqui re-populamos el estado del juego con lo que hay en firebase
+                    game.gameState.populateData(_data$)
 
-      // +4
+                    // agregar a los jugadores
+                    const _players = game.gameState.playersGroup.players
+                    // TODO Hay que cambiar _players[0] por el player actual
+                    // game.PlayerTurn viene con los datos a null
+                    if (_players.length) drawTurn(_players[0])
 
-      // cambio de color
+                    // entrega de nueva carta
 
-      // jugador dice uno
+                    // +2
 
-      // termina el juego
-    }
+                    // +4
+
+                    // cambio de color
+
+                    // jugador dice uno
+
+                    // termina el juego
+                  }
   );
 };
 
@@ -161,9 +178,7 @@ export const roomData$ = () => {
  * las manos, el stack y algunas cosas mas ... pero siempre deberiamos trabajar sobre el mismo mazo
  */
 export const roomStart = () => {
-  const docRef = db.collection("rooms").doc(roomName);
   const roomRef = db.collection("rooms");
-  console.log(_data$);
   _data$.start = true;
   roomRef
     .doc(roomName)
@@ -174,7 +189,6 @@ export const roomStart = () => {
 };
 
 export const sendCard = () => {
-  const docRef = db.collection("rooms").doc(roomName);
   const roomRef = db.collection("rooms");
   console.log(_data$);
   _data$.start = true;
@@ -188,7 +202,9 @@ export const sendCard = () => {
 
 export const firebaseUpdateState = (state: any) => {
   // FIXME: hay algun valor del parsing que se va como undefined y da error, por eso el JSON.stringify aqui.
+  // debugger;
   let _state = JSON.parse(JSON.stringify(state.parseState()));
+  // debugger;
   const docRef = db.collection("rooms").doc(roomName);
   docRef
     .set(_state, { merge: true })

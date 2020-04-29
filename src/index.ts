@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
 import { fromEvent, merge } from "rxjs";
-import { map, filter, pluck, mapTo, first } from "rxjs/operators";
+import { map, filter, pluck, mapTo, first, tap } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from "./components/card/card.component";
@@ -42,6 +42,7 @@ const setGame = () => {
   game.events.afterGameStart.subscribe(() => {
     drawPlayersCards();
     drawStack();
+    // debugger;
     // @ts-ignore
     drawTurn(game.playerTurn);
   });
@@ -141,6 +142,7 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
+  // debugger;
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
@@ -148,13 +150,6 @@ function drawPlayersCards() {
     const playerDiv = document.createElement("div");
     playerDiv.setAttribute("id", player.id);
     playerDiv.setAttribute("class", "player");
-
-    /*
-      const playerTitle = document.createElement("div");
-      playerTitle.setAttribute("class", "player-title");
-      playerTitle.append(`Player: ${player.name}`)
-      playerDiv.appendChild(playerTitle); 
-      */
 
     const playerCards = document.createElement("div");
     playerCards.setAttribute("class", "player-cards");
@@ -174,7 +169,8 @@ function drawPlayersCards() {
    * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
    **/
   new Sortable(document.querySelectorAll(".player-cards"), {
-    draggable: ".carta"
+    draggable: ".carta",
+    delay: 300
   });
 }
 
@@ -210,6 +206,7 @@ function setPlayerClicks(id: string) {
     .pipe(
       // @ts-ignore
       filter(event => event.target.classList.contains("carta")),
+      // no funciona porque playerTurn es undefined
       filter(() => id === game.playerTurn?.id),
       map(event => {
         // @ts-ignore
@@ -274,19 +271,20 @@ function setPlayerClicks(id: string) {
     });
 }
 
-/** Dibuja el nombre del current player */
-function drawTurn(player: Player) {
-  console.log("drawTurn", player.id);
+/** Dibuja los jugadores y la información del turno */
+export function drawTurn(player?: Player) {
   while (_turn?.lastElementChild) {
     _turn?.removeChild(_turn?.lastElementChild);
   }
   const playersAvatars = document.createElement("div");
   playersAvatars.setAttribute("id", "avatars");
-  game.players.forEach(_player => {
+
+  const players = game.players.length > 0 ? game.players : users
+  players.forEach(_player => {
     const avatar = new Avatar(
       _player,
       _player.hand.cards.length,
-      _player.id === player.id
+      player && _player.id === player.id
     );
     playersAvatars.appendChild(avatar.element);
   });
@@ -299,9 +297,11 @@ function drawTurn(player: Player) {
     el.classList.remove("player-select-button");
   });
 
-  document.getElementById(player.id)?.classList.add("player-select");
-  document.getElementById(player.id)?.classList.add("player-select-button");
-  //turnDiv.append(`Es el turno de: ${player.name}`);
+  if (player) {  
+    document.getElementById(player.id)?.classList.add("player-select");
+    document.getElementById(player.id)?.classList.add("player-select-button");
+  }
+
   _turn?.appendChild(turnDiv);
 }
 
@@ -327,6 +327,7 @@ export const setUsers = (players: Array<any>) => {
       }
     });
     console.log("players", users);
+    drawTurn();
   }
 };
 
@@ -339,13 +340,25 @@ const checkRoomExist = (user: Player) => {
   console.log(roomName);
 
   checkRoomInFirebase(roomName, user).then(() => {
-    console.log(document.getElementById("button-start"));
     // @ts-ignore
-    const startbutton = document.getElementById("button-start");
+    const deck = document.getElementById('deck')
+    // @ts-ignore
+    const stack = document.getElementById('stack')
+    // @ts-ignore
+    const runoxbutton = document.getElementById('button-uno')
+    // @ts-ignore
+    const startbutton = document.getElementById('button-start')
+
     // @ts-ignore
     fromEvent(startbutton, "click")
       .pipe(first())
       .subscribe(() => {
+        // @ts-ignore
+        deck.style.display = "flex";
+        // @ts-ignore
+        stack.style.display = "flex";
+        // @ts-ignore
+        runoxbutton.style.display = "none";
         // @ts-ignore
         startbutton.style.display = "none";
         roomStart();
