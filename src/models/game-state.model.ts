@@ -85,6 +85,7 @@ export class GameState {
     }
 
     toPlayer.hand.addCards(newCards);
+    this.playersGroup.getPlayerById(toPlayer.id).hand.addCards(newCards);
 
     console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
 
@@ -145,7 +146,7 @@ export class GameState {
       this.deck.cards = state.deck.cards.map((card: any) => {
         return new Card(card.value, card.color);
       });
-  
+
       this.stack.cards = state.stack.cards.map((card: any) => {
         return new Card(card.value, card.color);
       });
@@ -161,12 +162,12 @@ export class GameState {
         state.turn.player.name,
         state.turn.player.pic
       );
-      
+
       this.turn.player.hand.addCards(state.turn.player.hand.cards);
-  
+
       console.log(this.playersGroup);
     } catch (e) {
-      console.log('todavia no esta listo');
+      console.log("todavia no esta listo");
     }
   }
 }

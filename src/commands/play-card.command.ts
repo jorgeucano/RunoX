@@ -17,13 +17,15 @@ export class PlayCardCommand extends GameCommand {
     super();
 
     this.playerId = playerId;
-    this.card = card;
+    // @ts-ignore
+    this.card = card instanceof Card ? card : new Card(card.value, card.color);
   }
 
   execute(state: GameState) {
     const player = state.playersGroup.getPlayerById(this.playerId) as Player;
 
     state.turn.player?.hand.removeCard(this.card);
+    player.hand.removeCard(this.card);
 
     state.stack.addCard(this.card);
 
@@ -32,7 +34,7 @@ export class PlayCardCommand extends GameCommand {
       state.unoYellers[state.turn.player?.id]
     ) {
       const score = state.playersGroup.players
-        .filter((player) => player.id !== state.turn.player?.id)
+        .filter(player => player.id !== state.turn.player?.id)
         .reduce((score, player) => {
           score += player.hand.score;
 
@@ -103,13 +105,13 @@ export class PlayCardCommand extends GameCommand {
 
   private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
     const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
-      (player) =>
+      player =>
         player.id !== state.turn.player?.id &&
         player.hand.cards.length === 1 &&
         !state.unoYellers[player.id]
     );
 
-    playersWhoShouldHaveYelled.forEach((player) => {
+    playersWhoShouldHaveYelled.forEach(player => {
       const newCards = state.giveCards(2, player);
 
       this.events.dispatchAfterTakeCards(
@@ -143,8 +145,11 @@ export class PlayCardCommand extends GameCommand {
       );
     }
 
+    // FIXME:? check por sprite en lugar de id porque las cartas que se generan en la mano tienen
+    // IDs diferentes al deck por ser arrays diferentes, quizas un posible refactor a que las manos
+    // solo tengan referencias a las cartas del deck en lugar de cartas en si.
     const playerHasSelectedCard = player.hand.cards.some(
-      (card) => card.id === this.card.id
+      card => card.sprite === this.card.sprite
     );
 
     if (!playerHasSelectedCard) {

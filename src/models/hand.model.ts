@@ -29,7 +29,10 @@ export class Hand {
     if (card === undefined) {
       throw new Error(`La mano del jugador no posee cartas`);
     }
-    const cardIndex = this.cards.findIndex(handCard => handCard.id === card.id);
+    // Check FIXME en play-card.command.ts
+    const cardIndex = this.cards.findIndex(
+      handCard => handCard.sprite === card.sprite
+    );
 
     if (cardIndex === -1) {
       throw new Error(`La mano del jugador no posee la carta: ${card.id}`);
