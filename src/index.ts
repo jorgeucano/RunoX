@@ -182,7 +182,7 @@ function drawPlayersCards() {
  * TODO: serparar
  * TODO: observar los cambios de gameState.stack.cardOnTop
  */
-function drawStack() {
+export function drawStack() {
   if (!game.stackCard) {
     return;
   }

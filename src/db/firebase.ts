@@ -1,5 +1,5 @@
 import { Player } from "../models/player.model";
-import { login, pushUsers, startGame } from "../index";
+import { login, pushUsers, startGame, drawStack } from "../index";
 import { GameEngine } from "../game-engine";
 
 // @ts-ignore
@@ -132,9 +132,10 @@ export const roomData$ = () => {
         // @ts-ignore
         startbutton.style.display = "none";
         startGame();
-        console.log(doc.data());
-        game.gameState.populateData(doc.data());
       }
+      // TODO: El gameState ya esta sincronizado entre todos, pero falta popular esa informacion en el DOM.
+      game.gameState.populateData(_data$);
+      drawStack();
 
       // entrega de nueva carta
 

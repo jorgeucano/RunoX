@@ -125,7 +125,16 @@ export class GameState {
         cards: this.parseObjects(this.stack.cards)
       },
       playersGroup: this.parseObjects(this.playersGroup.players),
-      turn: this.turn.player?.parseObject()
+      turn: {
+        player: this.turn.player
+          ? {
+              ...this.turn.player.parseObject(),
+              hand: {
+                cards: this.parseObjects(this.turn.player.hand.cards)
+              }
+            }
+          : null
+      }
     };
     return state;
   }
@@ -143,10 +152,15 @@ export class GameState {
       return new Player(player.id, player.name, player.pic);
     });
 
+    this.playersGroup.players = state.playersGroup.map((player: any) => {
+      return new Player(player.id, player.name, player.pic);
+    });
+
     this.turn.player = new Player(
       state.turn.id,
       state.turn.name,
       state.turn.pic
     );
+    this.turn.player.hand.cards = state.turn.player.hand.cards;
   }
 }
