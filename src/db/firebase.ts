@@ -49,7 +49,7 @@ export const firebaseLogin = () => {
         var errorMessage = error.message;
         var email = error.email;
         var credential = error.credential;
-        console.log(error);
+        console.log(`singIn error: ${error}`);
         // alert(errorMessage);
       });
   }
@@ -139,7 +139,7 @@ export const roomData$ = () => {
       game.gameState.populateData(_data$);
 
       // agregar a los jugadores
-      drawStack();
+      // drawStack();
 
       // entrega de nueva carta
 
@@ -161,9 +161,7 @@ export const roomData$ = () => {
  * las manos, el stack y algunas cosas mas ... pero siempre deberiamos trabajar sobre el mismo mazo
  */
 export const roomStart = () => {
-  const docRef = db.collection("rooms").doc(roomName);
   const roomRef = db.collection("rooms");
-  console.log(_data$);
   _data$.start = true;
   roomRef
     .doc(roomName)
@@ -174,7 +172,6 @@ export const roomStart = () => {
 };
 
 export const sendCard = () => {
-  const docRef = db.collection("rooms").doc(roomName);
   const roomRef = db.collection("rooms");
   console.log(_data$);
   _data$.start = true;
@@ -188,7 +185,9 @@ export const sendCard = () => {
 
 export const firebaseUpdateState = (state: any) => {
   // FIXME: hay algun valor del parsing que se va como undefined y da error, por eso el JSON.stringify aqui.
+  // debugger;
   let _state = JSON.parse(JSON.stringify(state.parseState()));
+  // debugger;
   const docRef = db.collection("rooms").doc(roomName);
   docRef
     .set(_state, { merge: true })

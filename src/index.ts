@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
 import { fromEvent, merge } from "rxjs";
-import { map, filter, pluck, mapTo, first } from "rxjs/operators";
+import { map, filter, pluck, mapTo, first, tap } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from "./components/card/card.component";
@@ -42,6 +42,7 @@ const setGame = () => {
   game.events.afterGameStart.subscribe(() => {
     drawPlayersCards();
     drawStack();
+    // debugger;
     // @ts-ignore
     drawTurn(game.playerTurn);
   });
@@ -141,6 +142,7 @@ buttons$.subscribe();
  * TODO: separar
  */
 function drawPlayersCards() {
+  // debugger;
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
@@ -210,6 +212,7 @@ function setPlayerClicks(id: string) {
     .pipe(
       // @ts-ignore
       filter(event => event.target.classList.contains("carta")),
+      // no funciona porque playerTurn es undefined
       filter(() => id === game.playerTurn?.id),
       map(event => {
         // @ts-ignore
