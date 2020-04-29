@@ -137,21 +137,6 @@ export const roomData$ = () => {
       }
       // Aqui re-populamos el estado del juego con lo que hay en firebase
       game.gameState.populateData(_data$);
-
-      // agregar a los jugadores
-      // drawStack();
-
-      // entrega de nueva carta
-
-      // +2
-
-      // +4
-
-      // cambio de color
-
-      // jugador dice uno
-
-      // termina el juego
     }
   );
 };
@@ -184,9 +169,9 @@ export const sendCard = () => {
 };
 
 export const firebaseUpdateState = (state: any) => {
-  // FIXME: hay algun valor del parsing que se va como undefined y da error, por eso el JSON.stringify aqui.
-  // debugger;
-  let _state = JSON.parse(JSON.stringify(state.parseState()));
+  let _state = state.parseState();
+  _state = JSON.parse(JSON.stringify(_state));
+  console.log(_state);
   // debugger;
   const docRef = db.collection("rooms").doc(roomName);
   docRef

@@ -125,13 +125,13 @@ export class GameState {
       stack: {
         cards: this.parseObjects(this.stack.cards)
       },
-      playersGroup: this.parseObjects(this.playersGroup.players),
+      playersGroup: this.playersGroup.players,
       turn: {
         player: this.turn.player
           ? {
-              ...this.turn.player.parseObject(),
+              ...this.turn.player,
               hand: {
-                cards: this.parseObjects(this.turn.player.hand.cards)
+                cards: this.turn.player.hand.cards
               }
             }
           : null
@@ -155,11 +155,11 @@ export class GameState {
         pl.hand.cards = player.hand.cards;
         return pl;
       });
-  
+      // debugger;
       this.turn.player = new Player(
-        state.turn.id,
-        state.turn.name,
-        state.turn.pic
+        state.turn.player.id,
+        state.turn.player.name,
+        state.turn.player.pic
       );
       
       this.turn.player.hand.addCards(state.turn.player.hand.cards);
