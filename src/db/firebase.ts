@@ -143,7 +143,7 @@ export const roomData$ = () => {
         // @ts-ignore
         stack.style.display = 'flex'
         // @ts-ignore
-        runoxbutton.style.display = 'none'
+        runoxbutton.style.display = 'block'
         // @ts-ignore
         startbutton.style.display = 'none'
 

@@ -360,7 +360,7 @@ const checkRoomExist = (user: Player) => {
         // @ts-ignore
         stack.style.display = "flex";
         // @ts-ignore
-        runoxbutton.style.display = "none";
+        runoxbutton.style.display = "block";
         // @ts-ignore
         startbutton.style.display = "none";
         roomStart();
