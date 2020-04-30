@@ -13,12 +13,11 @@ export class StartGameCommand extends GameCommand {
     state.playersGroup.players.forEach((player, index) => {
       // por algun motivo esto explota ya que hand es un array no un objeto completo
       try {
-
         player.hand.addCards(
           state.deck.cards.splice(index * handsLength, handsLength)
         );
       } catch (e) {
-        console.log('set player by catch');
+        console.log("set player by catch");
         let _player = new Player(player.id, player.name, player.pic);
         _player.hand.addCards(player.hand.cards);
         player = player;
@@ -46,7 +45,6 @@ export class StartGameCommand extends GameCommand {
     this.events.dispatchAfterGameStart();
     this.events.dispatchBeforeTurn(new BeforeTurnEvent(playerTurn));
 
-    console.log(state);
     firebaseUpdateState(state);
   }
 

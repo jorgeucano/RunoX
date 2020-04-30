@@ -1,5 +1,12 @@
 // import { Player } from "../models/player.model";
-import { login, setUsers, startGame, drawTurn, drawStack } from "../index";
+import {
+  login,
+  setUsers,
+  startGame,
+  drawTurn,
+  drawStack,
+  afterGameStart
+} from "../index";
 import { GameEngine } from "../game-engine";
 import { Player } from "../models/player.model";
 
@@ -120,47 +127,44 @@ export const roomData$ = () => {
       includeMetadataChanges: true
     },
     (doc: any) => {
-      _data$ = doc.data()
+      _data$ = doc.data();
       // TODO: Facu aca necesitamos ejecutar las acciones dependiendo que pasa
       // TODO: Cuando nuevos usuarios ingresan, las manos tienen que ser repartidas de nuevo,
       // osea que en todos deberia ejecutarse el startGame command || O NO?
 
       // agregar a los jugadores
-      setUsers(_data$.playersGroup)
+      setUsers(_data$.playersGroup);
 
       // empezar la partida
       if (_data$.start && !gameStart) {
-        gameStart = true
-        const chat = document.getElementById('chat')
-        const deck = document.getElementById('deck')
-        const stack = document.getElementById('stack-container')
-        const playersTitle = document.getElementById('players-title')
-        const runoxbutton = document.getElementById('button-uno')
-        const startbutton = document.getElementById('button-start')
+        gameStart = true;
+        const chat = document.getElementById("chat");
+        const deck = document.getElementById("deck");
+        const stack = document.getElementById("stack-container");
+        const playersTitle = document.getElementById("players-title");
+        const runoxbutton = document.getElementById("button-uno");
+        const startbutton = document.getElementById("button-start");
 
         // @ts-ignore
-        chat.style.display = 'flex'
+        chat.style.display = "flex";
         // @ts-ignore
-        deck.style.display = 'flex'
+        deck.style.display = "flex";
         // @ts-ignore
-        stack.style.display = 'flex'
+        stack.style.display = "flex";
         // @ts-ignore
         playersTitle.style.display = "block";
         // @ts-ignore
-        runoxbutton.style.display = 'block'
+        runoxbutton.style.display = "block";
         // @ts-ignore
-        startbutton.style.display = 'none'
+        startbutton.style.display = "none";
 
-        startGame()
+        startGame();
       }
       // Aqui re-populamos el estado del juego con lo que hay en firebase
-      game.gameState.populateData(_data$)
+      game.gameState.populateData(_data$);
 
-      // agregar a los jugadores
-      const _players = game.gameState.playersGroup.players
-      // TODO Hay que cambiar _players[0] por el player actual
-      // game.PlayerTurn viene con los datos a null
-      if (_players.length) drawTurn(_players[0])
+      console.log("AFTER GAME START");
+      afterGameStart();
 
       // entrega de nueva carta
 

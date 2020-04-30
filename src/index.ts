@@ -11,13 +11,15 @@ import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
 import { getUrlSearch } from "./utils/utils";
 // @ts-ignore
-import { Sortable } from '@shopify/draggable'
+import { Sortable } from "@shopify/draggable";
 import {
   initializeFirebase,
   firebaseLogin,
   checkRoomInFirebase,
-  roomStart
+  roomStart,
+  firebase
 } from "./db/firebase";
+import { Card } from "./models/card.model";
 
 const game = GameEngine.getInstance();
 const _players = document.getElementById("players");
@@ -25,7 +27,7 @@ const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
 const _avatars = document.getElementById("avatars");
 
-let globalPlayer: any;
+export let globalPlayer: any;
 
 // TODO: analizar donde debe ser agregado en el state
 let selectedCardId = "";
@@ -83,6 +85,13 @@ const setGame = () => {
   );
 };
 
+export function afterGameStart() {
+  drawPlayersCards();
+  drawStack();
+  // @ts-ignore
+  drawTurn(game.gameState.turn.player);
+}
+
 /**
  * Observamos el click de todos los botones "JUGAR CARTA"
  * @TODO Seguro hay una manera más eficiente de hacerlo ...
@@ -138,28 +147,30 @@ const buttons$ = merge(
 buttons$.subscribe();
 
 /** Dibuja a los jugadores con su respectiva mano
- * TODO: separar
+ * TODO: separar funciones de hacer primera vez el draw y la actualizacion cuando ya se esta jugando,
+ * para no cargar mucho al DOM
  */
 function drawPlayersCards() {
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
-  game.players.forEach(player => {
-    const playerDiv = document.createElement("div");
-    playerDiv.setAttribute("id", player.id);
-    playerDiv.setAttribute("class", "player");
+  const player = game.gameState.playersGroup.players.filter(
+    player => player.id === globalPlayer.id
+  )[0];
+  const playerDiv = document.createElement("div");
+  playerDiv.setAttribute("id", player.id);
+  playerDiv.setAttribute("class", "player");
 
-    const playerCards = document.createElement("div");
-    playerCards.setAttribute("class", "player-cards");
-    player.hand.cards.forEach(card => {
-      const _card = new CardComponent(card.id, card.sprite);
-      playerCards.appendChild(_card.element);
-    });
-    playerDiv.appendChild(playerCards);
-
-    _players?.appendChild(playerDiv);
-    setPlayerClicks(player.id);
+  const playerCards = document.createElement("div");
+  playerCards.setAttribute("class", "player-cards");
+  player.hand.cards.forEach(card => {
+    const _card = new CardComponent(card.id, card.sprite);
+    playerCards.appendChild(_card.element);
   });
+  playerDiv.appendChild(playerCards);
+
+  _players?.appendChild(playerDiv);
+  setPlayerClicks(player.id);
 
   /**
    * Añadimos opción de reordenar las cartas.
@@ -205,72 +216,82 @@ function setPlayerClicks(id: string) {
       // @ts-ignore
       filter(event => event.target.classList.contains("carta")),
       // no funciona porque playerTurn es undefined
-      tap((event) => {
-        console.log(game);
+      tap(event => {
+        // console.log(game);
         // debugger;
       }),
-      filter(() => id === game.playerTurn?.id),
+      filter(() => id === game.gameState.turn.player?.id),
       map(event => {
-        // @ts-ignore
-        return event.target.id;
+        return {
+          // @ts-ignore
+          cardId: event.target.id,
+          // @ts-ignore
+          cardSprite: event.target.classList[1]
+        };
       })
     )
-    .subscribe((cardId: string) => {
-      /*
+    .subscribe(
+      ({ cardId, cardSprite }: { cardId: string; cardSprite: string }) => {
+        /*
        primero queremos iterar la mano para remover la clase carta-selected
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
 
-      console.log("carta click!", cardId);
+        // console.log("carta click!", cardId);
 
-      try {
-        _player?.querySelectorAll(".carta-selected").forEach(el => {
-          el.classList.remove("carta-selected");
-        });
+        try {
+          _player?.querySelectorAll(".carta-selected").forEach(el => {
+            el.classList.remove("carta-selected");
+          });
 
-        const selectedCard = document.getElementById(cardId);
-        selectedCard?.classList.add("carta-selected");
-        const buttonPlay = selectedCard?.querySelector(".button-play-card");
+          const selectedCard = document.getElementById(cardId);
+          selectedCard?.classList.add("carta-selected");
+          const buttonPlay = selectedCard?.querySelector(".button-play-card");
 
-        /**
-         * @TODO Revisar esto por si los leaks
-         */
-        //@ts-ignore
-        fromEvent(buttonPlay, "click").subscribe(() => {
-          const card = game.playerTurn?.hand.cards.find(c => c.id === cardId);
-
-          // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
-          if (!card) {
-            return;
-          }
-
-          if (
-            card?.value === Value.WILDCARD ||
-            card?.value === Value.PLUS_FOUR
-          ) {
-            let newColor;
-            // TODO: Cambiar el metodo de entrada del color
-            while (!isValidColor(newColor as Color)) {
-              newColor = prompt(
-                "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
-              );
-            }
-
-            card.setColor(newColor as Color);
-          }
-
+          /**
+           * @TODO Revisar esto por si los leaks
+           */
           //@ts-ignore
-          game.playCard(game.playerTurn.id, card).subscribe(
-            () => {},
-            (error: string) => {
-              alert(error);
-            }
-          );
-        });
+          fromEvent(buttonPlay, "click").subscribe(() => {
+            const cardInPlayer = game.gameState.turn.player?.hand.cards.find(
+              c => c.sprite === cardSprite
+            );
 
-        selectedCardId = cardId;
-      } catch (e) {}
-    });
+            // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
+            if (!cardInPlayer) {
+              return;
+            }
+
+            const card = new Card(cardInPlayer.value, cardInPlayer.color);
+
+            if (
+              card?.value === Value.WILDCARD ||
+              card?.value === Value.PLUS_FOUR
+            ) {
+              let newColor;
+              // TODO: Cambiar el metodo de entrada del color
+              while (!isValidColor(newColor as Color)) {
+                newColor = prompt(
+                  "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
+                );
+              }
+
+              card.setColor(newColor as Color);
+            }
+
+            //@ts-ignore
+            game.playCard(game.gameState.turn.player.id, card).subscribe(
+              () => {},
+              (error: string) => {
+                alert(error);
+              }
+            );
+          });
+
+          selectedCardId = cardId;
+        } catch (e) {}
+      }
+    );
 }
 
 /** Dibuja los jugadores y la información del turno */
@@ -281,7 +302,10 @@ export function drawTurn(player?: Player) {
   const playersAvatars = document.createElement("div");
   playersAvatars.setAttribute("id", "avatars");
 
-  const players = game.players.length > 0 ? game.players : users
+  const players =
+    game.gameState.playersGroup.players.length > 0
+      ? game.gameState.playersGroup.players
+      : users;
   players.forEach(_player => {
     const avatar = new Avatar(
       _player,
@@ -299,7 +323,7 @@ export function drawTurn(player?: Player) {
     el.classList.remove("player-select-button");
   });
 
-  if (player) {  
+  if (player) {
     document.getElementById(player.id)?.classList.add("player-select");
     document.getElementById(player.id)?.classList.add("player-select-button");
   }
@@ -328,7 +352,7 @@ export const setUsers = (players: Array<any>) => {
         users.push(user);
       }
     });
-    console.log("players", users);
+    // console.log("players", users);
     drawTurn();
   }
 };
@@ -339,15 +363,15 @@ export const startGame = () => {
 
 const checkRoomExist = (user: Player) => {
   const roomName = getUrlSearch();
-  console.log(roomName);
+  // console.log(roomName);
 
   checkRoomInFirebase(roomName, user).then(() => {
-    const chat = document.getElementById('chat')
-    const deck = document.getElementById('deck')
-    const stack = document.getElementById('stack')
-    const playersTitle = document.getElementById('players-title')
-    const runoxbutton = document.getElementById('button-uno')
-    const startbutton = document.getElementById('button-start')
+    const chat = document.getElementById("chat");
+    const deck = document.getElementById("deck");
+    const stack = document.getElementById("stack");
+    const playersTitle = document.getElementById("players-title");
+    const runoxbutton = document.getElementById("button-uno");
+    const startbutton = document.getElementById("button-start");
 
     // @ts-ignore
     fromEvent(startbutton, "click")
