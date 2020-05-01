@@ -9,7 +9,7 @@ import {
 } from "../index";
 import { GameEngine } from "../game-engine";
 import { Player } from "../models/player.model";
-
+import { getUrlSearch } from "../utils/utils";
 // @ts-ignore
 export const firebase = window.firebase;
 export var db: any;
@@ -39,9 +39,9 @@ export const initializeFirebase = (gameEngine: GameEngine) => {
 };
 
 export const firebaseLogin = () => {
+  getUrlSearch();
   var provider = new firebase.auth.GoogleAuthProvider();
   const user = firebase.auth().currentUser;
-
   if (!user) {
     firebase
       .auth()
