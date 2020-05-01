@@ -7,13 +7,12 @@ import { CommandValidation } from "./command-result";
 
 export class BuildDeckCommand extends GameCommand {
   execute(state: GameState) {
-    const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
-
+    /* const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
     state.deck.addCards([
       ...specialCards.map((specialCard) => new Card(specialCard)),
       ...specialCards.map((specialCard) => new Card(specialCard)),
     ]);
-
+    */
     COLORS.forEach((color) => {
       VALUES.filter(
         (card) => card !== Value.WILDCARD && card !== Value.PLUS_FOUR

@@ -165,7 +165,7 @@ export class GameState {
       );
 
       this.turn.player.hand.addCards(state.turn.player.hand.cards);
-
+      this.unoYellers = state.unoYellers;
       console.log(this.playersGroup);
     } catch (e) {
       console.log("todavia no esta listo");
