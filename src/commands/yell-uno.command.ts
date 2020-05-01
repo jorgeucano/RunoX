@@ -4,6 +4,7 @@ import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 import { AfterYellUnoEvent } from "../events/after-yell-uno.event";
+import { firebaseUpdateState } from "../db/firebase";
 
 export class YellUnoCommand extends GameCommand {
   private readonly yeller?: Player;
@@ -25,6 +26,7 @@ export class YellUnoCommand extends GameCommand {
       console.log(`El jugador ${yeller.name} ha gritado UNO!`);
 
       this.events.dispatchAfterYellUno(new AfterYellUnoEvent(yeller));
+      firebaseUpdateState(state);
     } else {
       // si tiene mas de 2 cartas o ya habia gritado
       // entonces debemos validar que no haya mentido

@@ -136,7 +136,8 @@ export class GameState {
               }
             }
           : null
-      }
+      },
+      unoYellers: this.unoYellers
     };
     return state;
   }
