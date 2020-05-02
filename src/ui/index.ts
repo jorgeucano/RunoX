@@ -21,7 +21,6 @@ const _turn = document.getElementById("turn");
 
 /** Dibuja el stack
  * TODO: serparar
- * TODO: observar los cambios de gameState.stack.cardOnTop
  */
 export function drawStack(game: GameEngine) {
   if (!game.stackCard) {
@@ -66,7 +65,7 @@ export function drawPlayersCards(game: GameEngine, globalPlayerId: string) {
     _players?.removeChild(_players?.lastElementChild);
   }
 
-  const player = game.gameState.playersGroup.players.find(
+  const player = game.players.find(
     (player) => player.id === globalPlayerId
   );
 
@@ -180,7 +179,7 @@ function setPlayerClicks(game: GameEngine, id: string) {
     .pipe(
       // @ts-ignore
       filter((event) => event.target.classList.contains("carta")),
-      filter(() => id === game.gameState.turn.player?.id),
+      filter(() => id === game.playerTurn?.id),
       // @ts-ignore
       map((event) => event.target.id)
     )

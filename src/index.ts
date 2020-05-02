@@ -82,7 +82,7 @@ export const updateMainLayout = () => {
   drawPlayersCards(game, globalPlayer.id);
   drawStack(game);
   // @ts-ignore
-  drawTurn(game, game.gameState.turn.player);
+  drawTurn(game, game.playerTurn);
 
   showTurnNotification();
 };
