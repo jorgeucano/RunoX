@@ -184,7 +184,7 @@ export class GameState {
       this.gameDirection = state.gameDirection;
       this.cardsToGive = state.cardsToGive;
     } catch (e) {
-      console.log("todavia no esta listo");
+      console.error("No ha sido posible cargar el estado, posiblemente haya inconsistencia de datos");
     }
   }
 }

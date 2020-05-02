@@ -1,6 +1,6 @@
-import { GameObject, GameObjectProp } from "../game-object.model";
 
 import './card.styles.css';
+import { GameObject, GameObjectProp } from '../game-object.model';
 
 export class CardComponent extends GameObject { 
   constructor(

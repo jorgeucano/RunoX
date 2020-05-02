@@ -1,12 +1,8 @@
-import {
-  afterGameStart,
-  drawStartLayout,
-  setGlobalPlayer,
-  drawStack,
-} from "../index";
+import { updateMainLayout, setGlobalPlayer } from "../index";
 import { GameEngine } from "../game-engine";
 import { Player } from "../models/player.model";
 import { getUrlSearch } from "../utils/utils";
+import { drawStartLayout } from "../ui";
 // @ts-ignore
 export const firebase = window.firebase;
 export var db: any;
@@ -44,7 +40,7 @@ export const initializeFirebase = (gameEngine: GameEngine) => {
       return enterToRoom(user);
     })
     .then(() => {
-      drawStartLayout();
+      drawStartLayout(game);
     });
 };
 
@@ -70,7 +66,7 @@ export const firebaseLogin = (): Promise<Player> => {
           resolve(player);
         })
         .catch((error: any) => {
-          console.log(`singIn error: ${error}`);
+          console.error(`singIn error: ${error}`);
 
           reject();
         });
@@ -96,7 +92,7 @@ export const enterToRoom = (user: Player) => {
               (player: any) => player.id === user.id
             )
           ) {
-            console.log("ya existe el user");
+            console.warn("ya existe el user");
 
             // Aqui re-populamos el estado del juego con lo que hay en firebase
             if (game.gameState.id !== _data.id) {
@@ -164,8 +160,6 @@ export const enterToRoom = (user: Player) => {
             .doc(roomName)
             .set(room)
             .then((doc: any) => {
-              console.log(doc);
-
               roomData$();
 
               return resolve();
@@ -226,7 +220,7 @@ export const roomData$ = () => {
         game.gameState.populateData(_data$);
       }
 
-      afterGameStart();
+      updateMainLayout();
     }
   );
 };

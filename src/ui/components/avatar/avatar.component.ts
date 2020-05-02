@@ -1,7 +1,8 @@
-import { GameObject, GameObjectProp } from "../game-object.model";
-import { Player } from "../../models/player.model";
 
 import "./avatar.styles.css";
+
+import { GameObject } from "../game-object.model";
+import { Player } from "../../../models/player.model";
 
 export class Avatar extends GameObject {
   constructor(player: Player, cardsNumber: number = 0, isCurrent: boolean = false) {
