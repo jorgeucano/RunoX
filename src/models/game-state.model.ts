@@ -5,9 +5,9 @@ import { Stack } from "./stack.model";
 import { GameDirection } from "./game-direction.model";
 import { Card } from "./card.model";
 import { Player } from "./player.model";
-import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 import { GameEvents } from "../events/game-events";
-import { Hand } from "./hand.model";
+import { generateUniqueId } from "../utils/id-generator.helper";
+import { Value } from "./values.model";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -20,8 +20,10 @@ export class GameState {
   gameDirection: GameDirection;
   cardsToGive: number;
   unoYellers: { [id: string]: boolean };
+  id: number;
 
   constructor() {
+    this.id = new Date().getTime();
     this.deck = new Deck();
     this.stack = new Stack();
     this.playersGroup = new PlayersGroup();
@@ -40,7 +42,7 @@ export class GameState {
     }
 
     let currentPlayerIndex = this.playersGroup.players.findIndex(
-      player => player.id === this.turn.player?.id
+      (player) => player.id === this.turn.player?.id
     );
 
     const nextPlayerIndex = currentPlayerIndex + 1;
@@ -85,7 +87,6 @@ export class GameState {
     }
 
     toPlayer.hand.addCards(newCards);
-    this.playersGroup.getPlayerById(toPlayer.id).hand.addCards(newCards);
 
     console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
 
@@ -94,7 +95,7 @@ export class GameState {
 
   addStackCardsToDeck() {
     const newDeckCards = this.stack.cards.filter(
-      card => card.id === this.stack.cardOnTop?.id
+      (card) => card.id === this.stack.cardOnTop?.id
     );
 
     this.deck.addCards(newDeckCards);
@@ -113,60 +114,75 @@ export class GameState {
   }
 
   parseObjects(array: any[]) {
-    return array.map(element => {
+    return array.map((element) => {
       return element.parseObject();
     });
   }
 
   parseState() {
     const state = {
+      id: this.id,
       deck: {
-        cards: this.parseObjects(this.deck.cards)
+        cards: this.parseObjects(this.deck.cards),
       },
       stack: {
-        cards: this.parseObjects(this.stack.cards)
+        cards: this.parseObjects(this.stack.cards),
       },
-      playersGroup: this.playersGroup.players,
+      playersGroup: {
+        players: this.parseObjects(this.playersGroup.players),
+      },
       turn: {
-        player: this.turn.player
-          ? {
-              ...this.turn.player,
-              hand: {
-                cards: this.turn.player.hand.cards
-              }
-            }
-          : null
+        player: this.turn.player ? this.turn.player.parseObject() : null,
       },
-      unoYellers: this.unoYellers
+      unoYellers: this.unoYellers,
+      gameDirection: this.gameDirection,
+      cardsToGive: this.cardsToGive,
     };
+
     return state;
   }
 
   populateData(state: any) {
     try {
+      this.id = state.id;
+
       this.deck.cards = state.deck.cards.map((card: any) => {
-        return new Card(card.value, card.color);
+        return new Card(card.value, card.color, card.id);
       });
 
       this.stack.cards = state.stack.cards.map((card: any) => {
-        return new Card(card.value, card.color);
-      });
-      this.playersGroup.players = state.playersGroup.map((player: any) => {
-        const pl = new Player(player.id, player.name, player.pic);
+        if (card.value === Value.PLUS_FOUR || card.value === Value.WILDCARD) {
+          const specialCard = new Card(card.value, undefined, card.id);
 
-        pl.hand.cards = player.hand.cards;
-        return pl;
+          specialCard.setColor(card.color);
+
+          return specialCard;
+        }
+
+        return new Card(card.value, card.color, card.id);
       });
-      // debugger;
-      this.turn.player = new Player(
-        state.turn.player.id,
-        state.turn.player.name,
-        state.turn.player.pic
+
+      this.playersGroup.players = state.playersGroup.players.map(
+        (player: any) => {
+          const pl = new Player(player.id, player.name, player.pic);
+
+          pl.hand.cards = player.hand.cards.map((card: any) => {
+            return new Card(card.value, card.color, card.id);
+          });
+
+          return pl;
+        }
       );
 
-      this.turn.player.hand.addCards(state.turn.player.hand.cards);
+      this.turn.player = state.turn.player
+        ? (this.playersGroup.players.find(
+            (player) => player.id === state.turn.player.id
+          ) as Player)
+        : null;
+
       this.unoYellers = state.unoYellers;
-      console.log(this.playersGroup);
+      this.gameDirection = state.gameDirection;
+      this.cardsToGive = state.cardsToGive;
     } catch (e) {
       console.log("todavia no esta listo");
     }

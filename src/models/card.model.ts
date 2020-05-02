@@ -8,12 +8,12 @@ export class Card {
   readonly value: Value;
   color?: Color;
 
-  constructor(value: Value, color?: Color) {
+  constructor(value: Value, color?: Color, id?: string) {
     if (isSpecial(value) && color) {
       throw new Error(`La carta "${value}" no puede tener el color "${color}"`);
     }
 
-    this.id = generateUniqueId();
+    this.id = id || generateUniqueId();
     this.sprite = color ? `${value}--${color}` : value;
     this.value = value;
     this.color = color;
@@ -91,7 +91,7 @@ export class Card {
       id: this.id,
       sprite: this.sprite,
       value: this.value,
-      color: this.color
+      color: this.color,
     };
   }
 }
