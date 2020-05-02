@@ -12,7 +12,7 @@ export class Stack {
       return null;
     }
 
-    return this.cards[this.cards.length - 1];
+    return this.cards[0];
   }
 
   addCard(card: Card | undefined) {
@@ -22,7 +22,7 @@ export class Stack {
       );
     }
 
-    this.cards.push(card);
+    this.cards.unshift(card);
   }
 
   empty() {

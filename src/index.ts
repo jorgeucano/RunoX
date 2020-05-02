@@ -1,64 +1,50 @@
 import "./styles/styles.css";
 
-import { fromEvent, merge } from "rxjs";
-import { map, filter, pluck, mapTo, first, tap } from "rxjs/operators";
+import { fromEvent } from "rxjs";
+import { map, filter, first, switchMap } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import { GameEngine } from "./game-engine";
 import { CardComponent } from "./components/card/card.component";
-import { isBuffer } from "util";
 import { Avatar } from "./components/avatar/avatar.component";
 import { Value } from "./models/values.model";
 import { isValidColor, Color } from "./models/color.model";
-import { getUrlSearch } from "./utils/utils";
 // @ts-ignore
 import { Sortable } from "@shopify/draggable";
 import {
   initializeFirebase,
-  firebaseLogin,
-  checkRoomInFirebase,
   roomStart,
-  firebase
+  firebaseUpdateState,
+  setWinner,
 } from "./db/firebase";
-import { Card } from "./models/card.model";
 
 const game = GameEngine.getInstance();
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
 const _turn = document.getElementById("turn");
-const _avatars = document.getElementById("avatars");
 
 export let globalPlayer: any;
 
-// TODO: analizar donde debe ser agregado en el state
-let selectedCardId = "";
-let users: Array<Player> = [];
-
-const setGame = () => {
-  game.join([...users]).subscribe(
-    () => {},
-    (error: string) => {
-      alert(error);
-    }
-  );
-
-  game.events.afterGameStart.subscribe(() => {
-    drawPlayersCards();
-    drawStack();
-    // @ts-ignore
-    drawTurn(game.playerTurn);
+game.events.afterGameStart.subscribe(() => {
+  firebaseUpdateState(game.gameState).then(() => {
+    afterGameStart();
   });
+});
 
-  game.events.beforeTurn.subscribe(data => {
+game.events.beforeTurn.subscribe((data) => {
+  firebaseUpdateState(game.gameState).then(() => {
     drawTurn(data.player);
   });
+});
 
-  game.events.afterPlayCard.subscribe(() => {
-    selectedCardId = "";
+game.events.afterPlayCard.subscribe(() => {
+  firebaseUpdateState(game.gameState).then(() => {
     drawPlayersCards();
     drawStack();
   });
+});
 
-  game.events.afterTakeCards.subscribe(() => {
+game.events.afterTakeCards.subscribe(() => {
+  firebaseUpdateState(game.gameState).then(() => {
     drawPlayersCards();
 
     // TODO: esto es un workaround acoplado al diseño actual
@@ -68,22 +54,21 @@ const setGame = () => {
     // @ts-ignore
     drawTurn(game.playerTurn);
   });
+});
 
-  game.events.gameEnd.subscribe(data => {
+game.events.afterYellUno.subscribe(() => {
+  firebaseUpdateState(game.gameState);
+});
+
+game.events.gameEnd.subscribe((data) => {
+  firebaseUpdateState(game.gameState).then(() => {
     alert(
       `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
     );
 
-    window.location.reload();
+    setWinner(data.winner.name, data.score);
   });
-
-  game.start().subscribe(
-    () => {},
-    (error: string) => {
-      alert(error);
-    }
-  );
-};
+});
 
 export function afterGameStart() {
   drawPlayersCards();
@@ -92,59 +77,23 @@ export function afterGameStart() {
   drawTurn(game.gameState.turn.player);
 }
 
-/**
- * Observamos el click de todos los botones "JUGAR CARTA"
- * @TODO Seguro hay una manera más eficiente de hacerlo ...
- **/
-/* const getPlayButtons = (): NodeListOf<Element> => document.querySelectorAll('.button-play-card')
-const playButtons = Array.from(getPlayButtons()).map(element => {
-  return fromEvent(element, "click").pipe(
-    map(element => {
-      // @ts-ignore
-      game.playCard(game.playerTurn?.id, element.target.dataset.card)
-    })
-  )
-}) */
-
 // @ts-ignore
 const getElement = (id: string): HTMLElement => document.getElementById(id);
 
 // @ts-ignore
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
-const fromClickMap = (id: string, fn: () => any) => fromClick(id).pipe(map(fn));
 
-const fromKeyboard = () => fromEvent(document, "keyup");
-const fromKeyboardMapToTrue = (code: string) =>
-  fromKeyboard().pipe(
-    pluck("code"),
-    filter(c => c === code),
-    mapTo(true)
-  );
-const fromKeybordClickMap = (code: string, id: string, fn: () => any) =>
-  merge(fromKeyboardMapToTrue(code), fromClick(id)).pipe(map(fn));
-
-const buttons$ = merge(
-  fromClickMap("button-take", () => game.takeCard()),
-  // 83 es la tecla s y 68 la tecla d.
-  fromKeybordClickMap("KeyS", "button-take", () =>
-    game.takeCard().subscribe(
-      () => {},
-      (error: string) => {
-        alert(error);
-      }
-    )
-  ),
-  fromClickMap("button-uno", () =>
-    // @ts-ignore
-    game.uno(game.playerTurn).subscribe(
-      () => {},
-      (error: string) => {
-        alert(error);
-      }
-    )
+fromClick("button-take")
+  .pipe(
+    filter(() => game.playerTurn?.id === globalPlayer.id),
+    switchMap(() => game.takeCard())
   )
-);
-buttons$.subscribe();
+  .subscribe();
+
+fromClick("button-uno")
+  // @ts-ignore
+  .pipe(switchMap(() => game.uno(globalPlayer.id)))
+  .subscribe();
 
 /** Dibuja a los jugadores con su respectiva mano
  * TODO: separar funciones de hacer primera vez el draw y la actualizacion cuando ya se esta jugando,
@@ -154,23 +103,33 @@ function drawPlayersCards() {
   while (_players?.lastElementChild) {
     _players?.removeChild(_players?.lastElementChild);
   }
-  const player = game.gameState.playersGroup.players.filter(
-    player => player.id === globalPlayer.id
-  )[0];
+
+  const player = game.gameState.playersGroup.players.find(
+    (player) => player.id === globalPlayer.id
+  );
+
   const playerDiv = document.createElement("div");
-  playerDiv.setAttribute("id", player.id);
+  // @ts-ignore
+  playerDiv.setAttribute("id", player?.id);
   playerDiv.setAttribute("class", "player");
 
   const playerCards = document.createElement("div");
   playerCards.setAttribute("class", "player-cards");
-  player.hand.cards.forEach(card => {
-    const _card = new CardComponent(card.id, card.sprite);
-    playerCards.appendChild(_card.element);
-  });
+
+  player?.hand.cards
+    .filter((card, index) => player?.hand.cards.indexOf(card) === index)
+    .forEach((card) => {
+      const _card = new CardComponent(card.id, card.sprite);
+
+      playerCards.appendChild(_card.element);
+    });
+
   playerDiv.appendChild(playerCards);
 
   _players?.appendChild(playerDiv);
-  setPlayerClicks(player.id);
+
+  // @ts-ignore
+  setPlayerClicks(player?.id);
 
   /**
    * Añadimos opción de reordenar las cartas.
@@ -179,7 +138,7 @@ function drawPlayersCards() {
    **/
   new Sortable(document.querySelectorAll(".player-cards"), {
     draggable: ".carta",
-    delay: 300
+    delay: 300,
   });
 }
 
@@ -197,7 +156,21 @@ export function drawStack() {
     return;
   }
 
+  const stackCardElement = document.getElementById(
+    `carta-stack-${game.stackCard.id}`
+  );
+
+  if (
+    stackCardElement !== null &&
+    `carta-stack-${game.stackCard.id}` === stackCardElement.id
+  ) {
+    console.warn("La carta ya esta dibujada en la cima del stack");
+
+    return;
+  }
+
   const stackCardDiv = document.createElement("div");
+  stackCardDiv.setAttribute("id", `carta-stack-${game.stackCard.id}`);
   stackCardDiv.setAttribute("class", `carta ${game.stackCard.sprite}`);
 
   var rotacion = Math.floor(Math.random() * 20) + 10;
@@ -214,84 +187,66 @@ function setPlayerClicks(id: string) {
   fromEvent(_player, "click")
     .pipe(
       // @ts-ignore
-      filter(event => event.target.classList.contains("carta")),
-      // no funciona porque playerTurn es undefined
-      tap(event => {
-        // console.log(game);
-        // debugger;
-      }),
+      filter((event) => event.target.classList.contains("carta")),
       filter(() => id === game.gameState.turn.player?.id),
-      map(event => {
-        return {
-          // @ts-ignore
-          cardId: event.target.id,
-          // @ts-ignore
-          cardSprite: event.target.classList[1]
-        };
-      })
+      // @ts-ignore
+      map((event) => event.target.id)
     )
-    .subscribe(
-      ({ cardId, cardSprite }: { cardId: string; cardSprite: string }) => {
-        /*
+    .subscribe((cardId: string) => {
+      /*
        primero queremos iterar la mano para remover la clase carta-selected
        luego vamos a agregar la clase a la carta que tiene nuevo click
       */
 
-        // console.log("carta click!", cardId);
+      try {
+        _player?.querySelectorAll(".carta-selected").forEach((el) => {
+          el.classList.remove("carta-selected");
+        });
 
-        try {
-          _player?.querySelectorAll(".carta-selected").forEach(el => {
-            el.classList.remove("carta-selected");
-          });
+        const selectedCard = document.getElementById(cardId);
+        selectedCard?.classList.add("carta-selected");
+        const buttonPlay = selectedCard?.querySelector(".button-play-card");
 
-          const selectedCard = document.getElementById(cardId);
-          selectedCard?.classList.add("carta-selected");
-          const buttonPlay = selectedCard?.querySelector(".button-play-card");
+        /**
+         * @TODO Revisar esto por si los leaks
+         */
+        //@ts-ignore
+        fromEvent(buttonPlay, "click").subscribe(() => {
+          const cardInPlayer = game.playerTurn?.hand.cards.find(
+            (c) => c.id === cardId
+          );
 
-          /**
-           * @TODO Revisar esto por si los leaks
-           */
-          //@ts-ignore
-          fromEvent(buttonPlay, "click").subscribe(() => {
-            const cardInPlayer = game.gameState.turn.player?.hand.cards.find(
-              c => c.sprite === cardSprite
-            );
+          if (!cardInPlayer) {
+            return;
+          }
 
-            // TODO: previene error debido a que se esta suscribiendo mas de una vez al hacer click en mas de una carta
-            if (!cardInPlayer) {
-              return;
+          if (
+            cardInPlayer?.value === Value.WILDCARD ||
+            cardInPlayer?.value === Value.PLUS_FOUR
+          ) {
+            let newColor;
+            // TODO: Cambiar el metodo de entrada del color
+            while (!isValidColor(newColor as Color)) {
+              newColor = prompt(
+                "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
+              );
             }
 
-            const card = new Card(cardInPlayer.value, cardInPlayer.color);
+            cardInPlayer.setColor(newColor as Color);
+          }
 
-            if (
-              card?.value === Value.WILDCARD ||
-              card?.value === Value.PLUS_FOUR
-            ) {
-              let newColor;
-              // TODO: Cambiar el metodo de entrada del color
-              while (!isValidColor(newColor as Color)) {
-                newColor = prompt(
-                  "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
-                );
-              }
-
-              card.setColor(newColor as Color);
-            }
-
+          game
             //@ts-ignore
-            game.playCard(game.gameState.turn.player.id, card).subscribe(
+            .playCard(game.playerTurn?.id, cardInPlayer)
+            .subscribe(
               () => {},
               (error: string) => {
                 alert(error);
               }
             );
-          });
-
-          selectedCardId = cardId;
-        } catch (e) {}
-      }
-    );
+        });
+      } catch (e) {}
+    });
 }
 
 /** Dibuja los jugadores y la información del turno */
@@ -302,23 +257,20 @@ export function drawTurn(player?: Player) {
   const playersAvatars = document.createElement("div");
   playersAvatars.setAttribute("id", "avatars");
 
-  const players =
-    game.gameState.playersGroup.players.length > 0
-      ? game.gameState.playersGroup.players
-      : users;
-  players.forEach(_player => {
+  game.players.forEach((_player) => {
     const avatar = new Avatar(
       _player,
       _player.hand.cards.length,
       player && _player.id === player.id
     );
+
     playersAvatars.appendChild(avatar.element);
   });
 
   const turnDiv = document.createElement("div");
   turnDiv.appendChild(playersAvatars);
 
-  _players?.querySelectorAll(".player-select").forEach(el => {
+  _players?.querySelectorAll(".player-select").forEach((el) => {
     el.classList.remove("player-select");
     el.classList.remove("player-select-button");
   });
@@ -331,67 +283,50 @@ export function drawTurn(player?: Player) {
   _turn?.appendChild(turnDiv);
 }
 
-export const login = (user: any) => {
-  const player = new Player(user.email, user.displayName, user.photoURL);
-  checkRoomExist(player);
-  users.push(player);
-  globalPlayer = {
-    id: user.email,
-    name: user.displayName,
-    pic: user.photoURL
-  };
-};
+export function drawStartLayout() {
+  const chat = document.getElementById("chat");
+  const deck = document.getElementById("deck");
+  const stack = document.getElementById("stack");
+  const playersTitle = document.getElementById("players-title");
+  const runoxbutton = document.getElementById("button-uno");
+  const startbutton = document.getElementById("button-start");
 
-export const setUsers = (players: Array<any>) => {
-  if (players.length > 0) {
-    users = [];
-    players.forEach(user => {
-      if (!user.hand.cards.length) {
-        users.push(new Player(user.id, user.name, user.pic));
-      } else {
-        users.push(user);
-      }
+  // @ts-ignore
+  fromEvent(startbutton, "click")
+    .pipe(first())
+    .subscribe(() => {
+      // @ts-ignore
+      chat.style.display = "flex";
+      // @ts-ignore
+      deck.style.display = "flex";
+      // @ts-ignore
+      stack.style.display = "flex";
+      // @ts-ignore
+      playersTitle.style.display = "block";
+      // @ts-ignore
+      runoxbutton.style.display = "block";
+      // @ts-ignore
+      startbutton.style.display = "none";
+
+      roomStart().then(() => {
+        startGame();
+      });
     });
-    // console.log("players", users);
-    drawTurn();
-  }
+
+  drawTurn();
+}
+
+export const setGlobalPlayer = (user: Player) => {
+  globalPlayer = user;
 };
 
 export const startGame = () => {
-  setGame();
-};
-
-const checkRoomExist = (user: Player) => {
-  const roomName = getUrlSearch();
-  // console.log(roomName);
-
-  checkRoomInFirebase(roomName, user).then(() => {
-    const chat = document.getElementById("chat");
-    const deck = document.getElementById("deck");
-    const stack = document.getElementById("stack");
-    const playersTitle = document.getElementById("players-title");
-    const runoxbutton = document.getElementById("button-uno");
-    const startbutton = document.getElementById("button-start");
-
-    // @ts-ignore
-    fromEvent(startbutton, "click")
-      .pipe(first())
-      .subscribe(() => {
-        // @ts-ignore
-        chat.style.display = "flex";
-        // @ts-ignore
-        deck.style.display = "flex";
-        // @ts-ignore
-        stack.style.display = "flex";
-        // @ts-ignore
-        playersTitle.style.display = "block";
-        // @ts-ignore
-        runoxbutton.style.display = "block";
-        // @ts-ignore
-        startbutton.style.display = "none";
-        roomStart();
-      });
-  });
+  game.start().subscribe(
+    () => {},
+    (error: string) => {
+      alert(error);
+    }
+  );
 };
 
 initializeFirebase(game);

@@ -4,19 +4,20 @@ import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 import { AfterYellUnoEvent } from "../events/after-yell-uno.event";
-import { firebaseUpdateState } from "../db/firebase";
 
 export class YellUnoCommand extends GameCommand {
-  private readonly yeller?: Player;
+  private readonly yellerId?: string;
 
-  constructor(yeller?: Player) {
+  constructor(yellerId?: string) {
     super();
 
-    this.yeller = yeller;
+    this.yellerId = yellerId;
   }
 
   execute(state: GameState) {
-    const yeller = this.yeller || (state.turn.player as Player);
+    const yeller = this.yellerId
+      ? state.playersGroup.getPlayerById(this.yellerId)
+      : (state.turn.player as Player);
 
     // es posible que el jugador tenga 2 cartas al momento de gritar UNO!
     if (yeller.hand.cards.length <= 2 && !state.unoYellers[yeller.id]) {
@@ -26,7 +27,6 @@ export class YellUnoCommand extends GameCommand {
       console.log(`El jugador ${yeller.name} ha gritado UNO!`);
 
       this.events.dispatchAfterYellUno(new AfterYellUnoEvent(yeller));
-      firebaseUpdateState(state);
     } else {
       // si tiene mas de 2 cartas o ya habia gritado
       // entonces debemos validar que no haya mentido

@@ -10,8 +10,9 @@ describe("YellUnoCommand", () => {
     const player = new Player("p1", "player 1", "avatar");
     const card = new Card(Value.ONE, Color.BLUE);
     player.hand.addCard(card);
-    const command = new YellUnoCommand(player);
+    const command = new YellUnoCommand(player.id);
     const state = new GameState();
+    state.playersGroup.addPlayer(player);
 
     command.execute(state);
 
@@ -25,8 +26,9 @@ describe("YellUnoCommand", () => {
       new Card(Value.TWO, Color.BLUE),
       new Card(Value.THREE, Color.BLUE),
     ]);
-    const command = new YellUnoCommand(player);
+    const command = new YellUnoCommand(player.id);
     const state = new GameState();
+    state.playersGroup.addPlayer(player);
     state.deck.addCards([
       new Card(Value.FOUR, Color.BLUE),
       new Card(Value.FIVE, Color.BLUE),

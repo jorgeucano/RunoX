@@ -69,7 +69,7 @@ export class GameEngine {
     return this.commandService.takeCard(this.state);
   }
 
-  uno(yeller?: Player) {
-    return this.commandService.yellUno(this.state, yeller);
+  uno(yellerId?: string) {
+    return this.commandService.yellUno(this.state, yellerId);
   }
 }

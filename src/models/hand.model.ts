@@ -29,9 +29,9 @@ export class Hand {
     if (card === undefined) {
       throw new Error(`La mano del jugador no posee cartas`);
     }
-    // Check FIXME en play-card.command.ts
+
     const cardIndex = this.cards.findIndex(
-      handCard => handCard.sprite === card.sprite
+      (handCard) => handCard.id === card.id
     );
 
     if (cardIndex === -1) {
@@ -45,11 +45,11 @@ export class Hand {
 
   hasCard(value: Value, color?: Color) {
     if (!color) {
-      return this.cards.some(handCard => handCard.value === value);
+      return this.cards.some((handCard) => handCard.value === value);
     }
 
     return this.cards.some(
-      handCard => handCard.value === value && handCard.color === color
+      (handCard) => handCard.value === value && handCard.color === color
     );
   }
 }

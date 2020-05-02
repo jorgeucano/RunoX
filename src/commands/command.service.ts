@@ -44,8 +44,8 @@ export class CommandService {
     return invoker.invoke(currentState);
   }
 
-  yellUno(currentState: GameState, yeller?: Player) {
-    const invoker = new CommandsInvoker([new YellUnoCommand(yeller)]);
+  yellUno(currentState: GameState, yellerId?: string) {
+    const invoker = new CommandsInvoker([new YellUnoCommand(yellerId)]);
 
     return invoker.invoke(currentState);
   }
