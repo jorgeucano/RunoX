@@ -120,7 +120,7 @@ export const showTurnNotification = () => {
           tag: "turnNotification",
           // TODO: mejorar la imagen que se muestra
           image: "./assets/images/logo2x.png",
-          requireInteraction: false
+          requireInteraction: false,
         }
       );
 
