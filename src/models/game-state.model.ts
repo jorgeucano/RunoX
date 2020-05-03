@@ -118,7 +118,7 @@ export class GameState {
     });
   }
 
-  parseState() {
+  parseAsJSON() {
     const state = {
       id: this.id,
       deck: {
@@ -141,7 +141,7 @@ export class GameState {
     return state;
   }
 
-  populateData(state: any) {
+  overrideInternalState(state: any) {
     try {
       this.id = state.id;
 

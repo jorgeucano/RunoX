@@ -36,9 +36,9 @@ export const initializeFirebase = (gameEngine: GameEngine) => {
     .then((user) => {
       setGlobalPlayer(user);
       // @ts-ignore
-      document.getElementById('button-start')?.style.display = 'block';
+      document.getElementById("button-start")?.style.display = "block";
       // @ts-ignore
-      document.getElementById('google-login')?.style.display = 'none';
+      document.getElementById("google-login")?.style.display = "none";
       return enterToRoom(user);
     })
     .then(() => {
@@ -98,8 +98,8 @@ export const enterToRoom = (user: Player) => {
             console.warn("ya existe el user");
 
             // Aqui re-populamos el estado del juego con lo que hay en firebase
-            if (game.gameState.id !== _data.id) {
-              game.gameState.populateData(_data);
+            if (game.gameStateAsJSON.id !== _data.id) {
+              game.overrideInternalState(_data);
             }
           } else {
             if (_data.start) {
@@ -115,13 +115,13 @@ export const enterToRoom = (user: Player) => {
             }
 
             // Aqui re-populamos el estado del juego con lo que hay en firebase
-            if (game.gameState.id !== _data.id) {
-              game.gameState.populateData(_data);
+            if (game.gameStateAsJSON.id !== _data.id) {
+              game.overrideInternalState(_data);
             }
 
             game.join([user]).subscribe(
               () => {
-                firebaseUpdateState(game.gameState);
+                firebaseUpdateState(game.gameStateAsJSON);
 
                 return resolve();
               },
@@ -147,7 +147,7 @@ export const enterToRoom = (user: Player) => {
             }
           );
 
-          let _state = game.gameState.parseState();
+          let _state = game.gameStateAsJSON;
           _state = JSON.parse(JSON.stringify(_state));
 
           const room = Object.assign(
@@ -219,8 +219,8 @@ export const roomData$ = () => {
       }
 
       // Aqui re-populamos el estado del juego con lo que hay en firebase
-      if (game.gameState.id === _data$.id) {
-        game.gameState.populateData(_data$);
+      if (game.gameStateAsJSON.id === _data$.id) {
+        game.overrideInternalState(_data$);
       }
 
       updateMainLayout();
@@ -253,9 +253,7 @@ export const setWinner = (name: string, score: number): Promise<any> => {
 };
 
 export const firebaseUpdateState = (state: any): Promise<any> => {
-  let _state = state.parseState();
-
-  _state = JSON.parse(JSON.stringify(_state));
+  const _state = JSON.parse(JSON.stringify(state));
 
   const docRef = db.collection("rooms").doc(roomName);
 

@@ -11,32 +11,31 @@ import {
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { GameEngine } from "./game-engine";
-import { getUrlSearch } from "./utils/utils";
 
 const game = GameEngine.getInstance();
 let globalPlayer: Player;
 
 game.events.afterGameStart.subscribe(() => {
-  firebaseUpdateState(game.gameState).then(() => {
+  firebaseUpdateState(game.gameStateAsJSON).then(() => {
     updateMainLayout();
   });
 });
 
 game.events.beforeTurn.subscribe((data) => {
-  firebaseUpdateState(game.gameState).then(() => {
+  firebaseUpdateState(game.gameStateAsJSON).then(() => {
     drawTurn(game, data.player);
   });
 });
 
 game.events.afterPlayCard.subscribe(() => {
-  firebaseUpdateState(game.gameState).then(() => {
+  firebaseUpdateState(game.gameStateAsJSON).then(() => {
     drawPlayersCards(game, globalPlayer.id);
     drawStack(game);
   });
 });
 
 game.events.afterTakeCards.subscribe(() => {
-  firebaseUpdateState(game.gameState).then(() => {
+  firebaseUpdateState(game.gameStateAsJSON).then(() => {
     drawPlayersCards(game, globalPlayer.id);
 
     // TODO: esto es un workaround acoplado al diseño actual
@@ -49,11 +48,11 @@ game.events.afterTakeCards.subscribe(() => {
 });
 
 game.events.afterYellUno.subscribe(() => {
-  firebaseUpdateState(game.gameState);
+  firebaseUpdateState(game.gameStateAsJSON);
 });
 
 game.events.gameEnd.subscribe((data) => {
-  firebaseUpdateState(game.gameState).then(() => {
+  firebaseUpdateState(game.gameStateAsJSON).then(() => {
     alert(
       `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
     );
@@ -129,20 +128,12 @@ export const showTurnNotification = () => {
   });
 };
 
-
-
 // @ts-ignore
-document.getElementById('button-start')?.style.display = 'none';
+document.getElementById("button-start")?.style.display = "none";
 
 // @ts-ignore
 fromClick("google-login")
-  .pipe(
-    first()
-  )
-  .subscribe(
-    () => {
-      initializeFirebase(game);
-    }
-  );
-
-
+  .pipe(first())
+  .subscribe(() => {
+    initializeFirebase(game);
+  });

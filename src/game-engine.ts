@@ -33,7 +33,7 @@ export class GameEngine {
       [GameEvent.AFTER_TAKE_CARDS]: this.gameEvents.afterTakeCards$,
       [GameEvent.AFTER_YELL_UNO]: this.gameEvents.afterYellUno$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
-      [GameEvent.GAME_END]: this.gameEvents.gameEnd$
+      [GameEvent.GAME_END]: this.gameEvents.gameEnd$,
     };
   }
 
@@ -49,8 +49,8 @@ export class GameEngine {
     return this.state.stack.cardOnTop;
   }
 
-  get gameState() {
-    return this.state;
+  get gameStateAsJSON() {
+    return this.state.parseAsJSON();
   }
 
   start() {
@@ -71,5 +71,9 @@ export class GameEngine {
 
   uno(yellerId?: string) {
     return this.commandService.yellUno(this.state, yellerId);
+  }
+
+  overrideInternalState(externalState: any) {
+    this.state.overrideInternalState(externalState);
   }
 }

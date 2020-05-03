@@ -65,9 +65,7 @@ export function drawPlayersCards(game: GameEngine, globalPlayerId: string) {
     _players?.removeChild(_players?.lastElementChild);
   }
 
-  const player = game.players.find(
-    (player) => player.id === globalPlayerId
-  );
+  const player = game.players.find((player) => player.id === globalPlayerId);
 
   const playerDiv = document.createElement("div");
   // @ts-ignore
