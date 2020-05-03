@@ -82,7 +82,9 @@ export const updateMainLayout = () => {
   drawPlayersCards(game, globalPlayer.id);
   drawStack(game);
   // @ts-ignore
-  drawTurn(game, game.gameState.turn.player);
+  drawTurn(game, game.playerTurn);
+
+  showTurnNotification();
 };
 
 export const setGlobalPlayer = (user: Player) => {
@@ -96,6 +98,34 @@ export const startGame = () => {
       alert(error);
     }
   );
+};
+
+export const showTurnNotification = () => {
+  if (!window.Notification) {
+    console.log("Las notificaciones no estan disponibles en el equipo");
+
+    return;
+  }
+
+  window.Notification.requestPermission().then(() => {
+    if (
+      Notification.permission === "granted" &&
+      game.playerTurn?.id === globalPlayer.id
+    ) {
+      const notification = new Notification(
+        `${globalPlayer.name} es tu turno de jugar!`,
+        {
+          body: "Tus amigos estan esperando que juegues una carta",
+          tag: "turnNotification",
+          // TODO: mejorar la imagen que se muestra
+          image: "./assets/images/logo2x.png",
+          requireInteraction: false,
+        }
+      );
+
+      setTimeout(notification.close.bind(notification), 5000);
+    }
+  });
 };
 
 initializeFirebase(game);

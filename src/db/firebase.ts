@@ -3,9 +3,11 @@ import { GameEngine } from "../game-engine";
 import { Player } from "../models/player.model";
 import { getUrlSearch } from "../utils/utils";
 import { drawStartLayout } from "../ui";
+
 // @ts-ignore
 export const firebase = window.firebase;
 export var db: any;
+
 let game: GameEngine;
 let gameStart = false;
 let roomName = "";
@@ -63,15 +65,15 @@ export const firebaseLogin = (): Promise<Player> => {
             result.user.photoURL
           );
 
-          resolve(player);
+          return resolve(player);
         })
         .catch((error: any) => {
           console.error(`singIn error: ${error}`);
 
-          reject();
+          return reject();
         });
     } else {
-      resolve(new Player(user.id, user.name, user.pic));
+      return resolve(new Player(user.id, user.name, user.pic));
     }
   });
 };
