@@ -1,7 +1,7 @@
-import { BuildDeckCommand } from "../../src/commands/build-deck.command";
-import { GameState } from "../../src/models/game-state.model";
-import { Color } from "../../src/models/color.model";
-import { Value } from "../../src/models/values.model";
+import { BuildDeckCommand } from "../../../src/server/commands/build-deck.command";
+import { GameState } from "../../../src/server/models/game-state.model";
+import { Color } from "../../../src/server/models/color.model";
+import { Value } from "../../../src/server/models/values.model";
 
 describe("BuildDeckCommand", () => {
   it("should generate a deck and add it to the state when we execute the command", () => {

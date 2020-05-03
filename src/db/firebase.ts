@@ -1,7 +1,7 @@
 import { updateMainLayout, setGlobalPlayer } from "../index";
-import { GameEngine } from "../game-engine";
-import { Player } from "../models/player.model";
-import { getUrlSearch } from "../utils/utils";
+import { GameEngine } from "../server/game-engine";
+import { Player } from "../server/models/player.model";
+import { getUrlSearch } from "../ui/utils/utils";
 import { drawStartLayout } from "../ui";
 
 // @ts-ignore

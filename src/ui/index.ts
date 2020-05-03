@@ -1,10 +1,10 @@
 import { fromEvent } from "rxjs";
 import { first, filter, map } from "rxjs/operators";
 
-import { Value } from "../models/values.model";
-import { isValidColor, Color } from "../models/color.model";
-import { Player } from "../models/player.model";
-import { GameEngine } from "../game-engine";
+import { Value } from "../server/models/values.model";
+import { isValidColor, Color } from "../server/models/color.model";
+import { Player } from "../server/models/player.model";
+import { GameEngine } from "../server/game-engine";
 
 import { CardComponent } from "./components/card/card.component";
 import { Avatar } from "./components/avatar/avatar.component";

@@ -1,7 +1,7 @@
-import { Deck } from "../../src/models/deck.model";
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
-import { Color } from "../../src/models/color.model";
+import { Deck } from "../../../src/server/models/deck.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
+import { Color } from "../../../src/server/models/color.model";
 
 describe("Deck", () => {
   it("should initialize cards when we create a deck", () => {

@@ -1,8 +1,8 @@
-import "./styles/styles.css";
+import "./ui/styles/styles.css";
 
 import { fromEvent } from "rxjs";
 import { filter, switchMap, first } from "rxjs/operators";
-import { Player } from "./models/player.model";
+import { Player } from "./server/models/player.model";
 import {
   initializeFirebase,
   firebaseUpdateState,
@@ -10,7 +10,7 @@ import {
 } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
-import { GameEngine } from "./game-engine";
+import { GameEngine } from "./server/game-engine";
 
 const game = GameEngine.getInstance();
 let globalPlayer: Player;

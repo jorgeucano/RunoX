@@ -1,5 +1,5 @@
-import { GameState } from "../../src/models/game-state.model";
-import { GameDirection } from "../../src/models/game-direction.model";
+import { GameState } from "../../../src/server/models/game-state.model";
+import { GameDirection } from "../../../src/server/models/game-direction.model";
 
 describe("GameState", () => {
   it("should initialize attributes when we create a GameState model", () => {

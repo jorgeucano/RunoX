@@ -1,4 +1,4 @@
-import { Player } from "../../src/models/player.model";
+import { Player } from "../../../src/server/models/player.model";
 
 describe("Player", () => {
   it("should initialize player's hand when we create a player", () => {

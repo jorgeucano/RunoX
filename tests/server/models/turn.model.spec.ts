@@ -1,5 +1,5 @@
-import { Turn } from "../../src/models/turn.model";
-import { Player } from "../../src/models/player.model";
+import { Turn } from "../../../src/server/models/turn.model";
+import { Player } from "../../../src/server/models/player.model";
 
 describe("Turn", () => {
   it("should initialize player attribute as null when we create a turn model", () => {

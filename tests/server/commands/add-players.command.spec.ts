@@ -1,6 +1,6 @@
-import { Player } from "../../src/models/player.model";
-import { AddPlayersCommand } from "../../src/commands/add-players.command";
-import { GameState } from "../../src/models/game-state.model";
+import { Player } from "../../../src/server/models/player.model";
+import { AddPlayersCommand } from "../../../src/server/commands/add-players.command";
+import { GameState } from "../../../src/server/models/game-state.model";
 
 describe("AddPlayersCommand", () => {
   it("should add players to state when we execute the command", () => {

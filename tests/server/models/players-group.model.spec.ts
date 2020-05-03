@@ -1,5 +1,5 @@
-import { PlayersGroup } from "../../src/models/players-group.model";
-import { Player } from "../../src/models/player.model";
+import { PlayersGroup } from "../../../src/server/models/players-group.model";
+import { Player } from "../../../src/server/models/player.model";
 
 describe("PlayersGroup", () => {
   it("should initialize players array when we create a players model", () => {

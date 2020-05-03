@@ -1,7 +1,7 @@
-import { Hand } from "../../src/models/hand.model";
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
-import { Color } from "../../src/models/color.model";
+import { Hand } from "../../../src/server/models/hand.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
+import { Color } from "../../../src/server/models/color.model";
 
 describe("Hand", () => {
   it("should initialize cards when we create a hand", () => {
