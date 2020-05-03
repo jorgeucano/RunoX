@@ -110,7 +110,6 @@ export const showTurnNotification = () => {
   window.Notification.requestPermission().then(() => {
     if (
       Notification.permission === "granted" &&
-      document.hidden &&
       game.playerTurn?.id === globalPlayer.id
     ) {
       const notification = new Notification(
