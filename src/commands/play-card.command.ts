@@ -8,10 +8,19 @@ import { Card } from "../models/card.model";
 import { GameEndEvent } from "../events/game-end.event";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
+/**
+ * Class that allows a player to play a card from his hand
+ */
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
   private readonly card: Card;
 
+  /**
+   * Class that allows a player to play a card from his hand
+   *
+   * @param playerId - identifier of the player who wants to play a card
+   * @param card - card to be played
+   */
   constructor(playerId: string, card: Card) {
     super();
 

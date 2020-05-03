@@ -5,8 +5,24 @@ import { COLORS } from "../models/color.model";
 import { Value, VALUES } from "../models/values.model";
 import { CommandValidation } from "./command-result";
 
+/**
+ * Class that allows cards creation and add them to the game deck
+ */
 export class BuildDeckCommand extends GameCommand {
+  /**
+   * Class that allows cards creation and add them to the game deck
+   */
+  constructor() {
+    super();
+  }
+
   execute(state: GameState) {
+    /*
+      Traditional deck contains:
+      - +4 x2
+      - wildcard x2
+      - color cards x2
+    */
     const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
 
     state.deck.addCards([

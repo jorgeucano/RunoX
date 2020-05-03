@@ -5,9 +5,17 @@ import { CommandValidation } from "./command-result";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 import { AfterYellUnoEvent } from "../events/after-yell-uno.event";
 
+/**
+ * Class that allows a player to yell Uno
+ */
 export class YellUnoCommand extends GameCommand {
   private readonly yellerId?: string;
 
+  /**
+   * Class that allows a player to yell Uno
+   *
+   * @param yellerId - identifier of the player who wants to yell Uno
+   */
   constructor(yellerId?: string) {
     super();
 

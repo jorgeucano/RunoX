@@ -4,7 +4,17 @@ import { Card } from "../models/card.model";
 import { CommandValidation } from "./command-result";
 import { BeforeTurnEvent } from "../events/before-turn.event";
 
+/**
+ * Class that allows the game to start
+ */
 export class StartGameCommand extends GameCommand {
+  /**
+   * Class that allows the game to start
+   */
+  constructor() {
+    super();
+  }
+
   execute(state: GameState) {
     const handsLength = 7;
 
