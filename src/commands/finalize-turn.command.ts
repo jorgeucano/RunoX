@@ -3,7 +3,17 @@ import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
 import { BeforeTurnEvent } from "../events/before-turn.event";
 
+/**
+ * Class that allows the end of the current player's turn and select the next one
+ */
 export class FinalizeTurnCommand extends GameCommand {
+  /**
+   * Class that allows the end of the current player's turn and select the next one
+   */
+  constructor() {
+    super();
+  }
+
   execute(state: GameState) {
     const nextPlayer = state.nextPlayerToPlay;
 

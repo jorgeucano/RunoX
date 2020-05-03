@@ -4,7 +4,17 @@ import { CommandValidation } from "./command-result";
 import { Player } from "../models/player.model";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
 
+/**
+ * Class that allows the current player to take a card from the deck
+ */
 export class TakeDeckCardCommand extends GameCommand {
+  /**
+   * Class that allows the current player to take a card from the deck
+   */
+  constructor() {
+    super();
+  }
+
   execute(state: GameState) {
     const currentPlayer = state.turn.player as Player;
 

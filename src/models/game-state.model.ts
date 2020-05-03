@@ -6,7 +6,6 @@ import { GameDirection } from "./game-direction.model";
 import { Card } from "./card.model";
 import { Player } from "./player.model";
 import { GameEvents } from "../events/game-events";
-import { generateUniqueId } from "../utils/id-generator.helper";
 import { Value } from "./values.model";
 
 /** Clase que representa el estado del juego */
