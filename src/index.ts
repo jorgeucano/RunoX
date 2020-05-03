@@ -1,7 +1,7 @@
 import "./styles/styles.css";
 
 import { fromEvent } from "rxjs";
-import { filter, switchMap } from "rxjs/operators";
+import { filter, switchMap, first } from "rxjs/operators";
 import { Player } from "./models/player.model";
 import {
   initializeFirebase,
@@ -11,6 +11,7 @@ import {
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { GameEngine } from "./game-engine";
+import { getUrlSearch } from "./utils/utils";
 
 const game = GameEngine.getInstance();
 let globalPlayer: Player;
@@ -128,4 +129,20 @@ export const showTurnNotification = () => {
   });
 };
 
-initializeFirebase(game);
+
+
+// @ts-ignore
+document.getElementById('button-start')?.style.display = 'none';
+
+// @ts-ignore
+fromClick("google-login")
+  .pipe(
+    first()
+  )
+  .subscribe(
+    () => {
+      initializeFirebase(game);
+    }
+  );
+
+

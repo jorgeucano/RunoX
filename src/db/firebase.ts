@@ -15,7 +15,6 @@ let _data$: any;
 
 export const initializeFirebase = (gameEngine: GameEngine) => {
   game = gameEngine;
-
   // TODO: Replace the following with your app's Firebase project configuration
   if (!firebase.apps.length) {
     const firebaseConfig = {
@@ -36,9 +35,10 @@ export const initializeFirebase = (gameEngine: GameEngine) => {
   firebaseLogin()
     .then((user) => {
       setGlobalPlayer(user);
-
-      roomName = getUrlSearch();
-
+      // @ts-ignore
+      document.getElementById('button-start')?.style.display = 'block';
+      // @ts-ignore
+      document.getElementById('google-login')?.style.display = 'none';
       return enterToRoom(user);
     })
     .then(() => {
@@ -79,6 +79,7 @@ export const firebaseLogin = (): Promise<Player> => {
 };
 
 export const enterToRoom = (user: Player) => {
+  roomName = getUrlSearch();
   const docRef = db.collection("rooms").doc(roomName);
   const roomRef = db.collection("rooms");
 
