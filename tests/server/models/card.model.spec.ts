@@ -1,6 +1,6 @@
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
-import { Color } from "../../src/models/color.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
+import { Color } from "../../../src/server/models/color.model";
 
 describe("Card", () => {
   it("should set sprite attribute when we create a card", () => {

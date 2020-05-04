@@ -1,8 +1,8 @@
-import { TakeDeckCardCommand } from "../../src/commands/take-deck-card.command";
-import { GameState } from "../../src/models/game-state.model";
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
-import { Player } from "../../src/models/player.model";
+import { TakeDeckCardCommand } from "../../../src/server/commands/take-deck-card.command";
+import { GameState } from "../../../src/server/models/game-state.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
+import { Player } from "../../../src/server/models/player.model";
 
 describe("TakeDeckCardCommand", () => {
   it("should return error result when there is no cards in the deck and we execute the command", () => {

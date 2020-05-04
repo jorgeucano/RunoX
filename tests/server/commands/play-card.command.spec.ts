@@ -1,9 +1,9 @@
-import { GameState } from "../../src/models/game-state.model";
-import { PlayCardCommand } from "../../src/commands/play-card.command";
-import { Player } from "../../src/models/player.model";
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
-import { Color } from "../../src/models/color.model";
+import { GameState } from "../../../src/server/models/game-state.model";
+import { PlayCardCommand } from "../../../src/server/commands/play-card.command";
+import { Player } from "../../../src/server/models/player.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
+import { Color } from "../../../src/server/models/color.model";
 
 describe("PlayCardCommand", () => {
   it("should throw error result when we execute the command and the player is not playing", () => {

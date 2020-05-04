@@ -1,6 +1,6 @@
-import { Stack } from "../../src/models/stack.model";
-import { Card } from "../../src/models/card.model";
-import { Value } from "../../src/models/values.model";
+import { Stack } from "../../../src/server/models/stack.model";
+import { Card } from "../../../src/server/models/card.model";
+import { Value } from "../../../src/server/models/values.model";
 
 describe("Stack", () => {
   it("should initialize cards when we create a Stack model", () => {

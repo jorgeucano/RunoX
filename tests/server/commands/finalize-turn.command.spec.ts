@@ -1,6 +1,6 @@
-import { FinalizeTurnCommand } from "../../src/commands/finalize-turn.command";
-import { GameState } from "../../src/models/game-state.model";
-import { Player } from "../../src/models/player.model";
+import { FinalizeTurnCommand } from "../../../src/server/commands/finalize-turn.command";
+import { GameState } from "../../../src/server/models/game-state.model";
+import { Player } from "../../../src/server/models/player.model";
 
 describe("FinalizeTurnCommand", () => {
   it("should return error result when when we execute the command and there are not players playing", () => {
