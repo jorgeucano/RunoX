@@ -9,6 +9,7 @@ import { TakeDeckCardCommand } from "./take-deck-card.command";
 import { FinalizeTurnCommand } from "./finalize-turn.command";
 import { YellUnoCommand } from "./yell-uno.command";
 import { Card } from "../models/card.model";
+import { GameModes } from "../models/game-modes";
 
 /**
  * Class that serves as an entry point for invoking commands within the game
@@ -23,13 +24,14 @@ export class CommandService {
    * Invokes the necessary commands to start the game
    *
    * @param currentState - current game state
+   * @param gameModes - different game modes
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  startGame(currentState: GameState) {
+  startGame(currentState: GameState, gameModes?: GameModes) {
     const invoker = new CommandsInvoker([
       new BuildDeckCommand(),
-      new StartGameCommand(),
+      new StartGameCommand(gameModes),
     ]);
 
     return invoker.invoke(currentState);

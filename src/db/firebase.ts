@@ -47,8 +47,6 @@ export const initializeFirebase = (gameEngine: GameEngine) => {
 };
 
 export const firebaseLogin = (): Promise<Player> => {
-  getUrlSearch();
-
   return new Promise((resolve, reject) => {
     const user = firebase.auth().currentUser;
 
