@@ -3,20 +3,29 @@ import { GameState } from "../models/game-state.model";
 import { Card } from "../models/card.model";
 import { CommandValidation } from "./command-result";
 import { BeforeTurnEvent } from "../events/before-turn.event";
+import { GameModes } from "../models/game-modes";
 
 /**
  * Class that allows the game to start
  */
 export class StartGameCommand extends GameCommand {
+  private readonly gameModes: GameModes;
+
   /**
    * Class that allows the game to start
    */
-  constructor() {
+  constructor(gameModes?: GameModes) {
     super();
+
+    this.gameModes = gameModes || {
+      randomTakeDeckCard: false,
+    };
   }
 
   execute(state: GameState) {
     const handsLength = 7;
+
+    state.gameModes = this.gameModes;
 
     state.playersGroup.players.forEach((player, index) => {
       player.hand.addCards(

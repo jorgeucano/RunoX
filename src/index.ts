@@ -11,6 +11,10 @@ import {
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { GameEngine } from "./server/game-engine";
+import { GameModes } from "./server/models/game-modes";
+import { getUrlSearch } from "./ui/utils/utils";
+
+getUrlSearch();
 
 const game = GameEngine.getInstance();
 let globalPlayer: Player;
@@ -92,7 +96,11 @@ export const setGlobalPlayer = (user: Player) => {
 };
 
 export const startGame = () => {
-  game.start().subscribe(
+  const gameModes: GameModes = {
+    randomTakeDeckCard: false,
+  };
+
+  game.start(gameModes).subscribe(
     () => {},
     (error: string) => {
       alert(error);

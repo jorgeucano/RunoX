@@ -7,6 +7,7 @@ import { Card } from "./card.model";
 import { Player } from "./player.model";
 import { GameEvents } from "../events/game-events";
 import { Value } from "./values.model";
+import { GameModes } from "./game-modes";
 
 /** Clase que representa el estado del juego */
 export class GameState {
@@ -20,6 +21,7 @@ export class GameState {
   cardsToGive: number;
   unoYellers: { [id: string]: boolean };
   id: number;
+  gameModes: GameModes;
 
   constructor() {
     this.id = new Date().getTime();
@@ -32,6 +34,9 @@ export class GameState {
     this.gameDirection = GameDirection.CLOCKWISE;
     this.cardsToGive = 0;
     this.unoYellers = {};
+    this.gameModes = {
+      randomTakeDeckCard: false,
+    };
   }
 
   get nextPlayerToPlay() {
@@ -136,6 +141,7 @@ export class GameState {
       unoYellers: this.unoYellers,
       gameDirection: this.gameDirection,
       cardsToGive: this.cardsToGive,
+      gameModes: this.gameModes,
     };
 
     return state;
@@ -182,8 +188,11 @@ export class GameState {
       this.unoYellers = state.unoYellers;
       this.gameDirection = state.gameDirection;
       this.cardsToGive = state.cardsToGive;
+      this.gameModes = state.gameModes;
     } catch (e) {
-      console.error("No ha sido posible cargar el estado, posiblemente haya inconsistencia de datos");
+      console.error(
+        "No ha sido posible cargar el estado, posiblemente haya inconsistencia de datos"
+      );
     }
   }
 }

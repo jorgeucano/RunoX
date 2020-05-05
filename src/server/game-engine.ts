@@ -4,6 +4,7 @@ import { GameEvents } from "./events/game-events";
 import { GameEvent } from "./events/game-event.enum";
 import { CommandService } from "./commands/command.service";
 import { Card } from "./models/card.model";
+import { GameModes } from "./models/game-modes";
 
 export class GameEngine {
   private static instance: GameEngine;
@@ -53,8 +54,8 @@ export class GameEngine {
     return this.state.parseAsJSON();
   }
 
-  start() {
-    return this.commandService.startGame(this.state);
+  start(gameModes?: GameModes) {
+    return this.commandService.startGame(this.state, gameModes);
   }
 
   join(players: Player[]) {

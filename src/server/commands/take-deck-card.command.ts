@@ -3,6 +3,7 @@ import { GameState } from "../models/game-state.model";
 import { CommandValidation } from "./command-result";
 import { Player } from "../models/player.model";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
+import { Card } from "../models/card.model";
 
 /**
  * Class that allows the current player to take a card from the deck
@@ -18,10 +19,16 @@ export class TakeDeckCardCommand extends GameCommand {
   execute(state: GameState) {
     const currentPlayer = state.turn.player as Player;
 
-    const newCard = state.giveCards(1, currentPlayer);
+    let newCards: Card[];
+
+    if (state.gameModes.randomTakeDeckCard) {
+      newCards = state.giveCards(this.randomizeInteger(1, 5), currentPlayer);
+    } else {
+      newCards = state.giveCards(1, currentPlayer);
+    }
 
     this.events.dispatchAfterTakeCards(
-      new AfterTakeCardsEvent(newCard, currentPlayer)
+      new AfterTakeCardsEvent(newCards, currentPlayer)
     );
 
     state.unoYellers[currentPlayer.id] = false;
@@ -52,5 +59,21 @@ export class TakeDeckCardCommand extends GameCommand {
     }
 
     return new CommandValidation(true);
+  }
+
+  private randomizeInteger(min: number, max: number) {
+    if (max === null) {
+      max = min === null ? Number.MAX_SAFE_INTEGER : min;
+      min = 1;
+    }
+
+    min = Math.ceil(min); // inclusive min
+    max = Math.floor(max); // exclusive max
+
+    if (min > max - 1) {
+      throw new Error("Incorrect arguments.");
+    }
+
+    return min + Math.floor((max - min) * Math.random());
   }
 }
