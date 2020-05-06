@@ -1,0 +1,11 @@
+0 silly argv { _: [ 'add' ],
+0 silly argv   globs: [],
+0 silly argv   lernaVersion: '3.20.2',
+0 silly argv   '$0':
+0 silly argv    'C:\\Users\\Jorge\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
+0 silly argv   pkg: 'runox-firebase' }
+1 notice cli v3.20.2
+2 verbose rootPath C:\example\twitch\uno\lerna-runox
+3 info versioning independent
+4 error Error: 404 Not Found - GET https://registry.npmjs.org/runox-firebase - Not found
+4 error     at res.buffer.catch.then.body (C:\Users\Jorge\AppData\Roaming\npm\node_modules\lerna\node_modules\@evocateur\npm-registry-fetch\check-response.js:104:15)
