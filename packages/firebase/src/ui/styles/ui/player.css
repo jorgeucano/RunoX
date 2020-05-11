@@ -1,0 +1,22 @@
+.player {
+  width: 100%;
+}
+
+.player .player-title {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.player .player-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.player:not(.player-select) {
+  pointer-events: none;
+}

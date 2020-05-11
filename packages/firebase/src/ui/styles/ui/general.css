@@ -1,0 +1,58 @@
+@import "https://fonts.googleapis.com/css?family=Montserrat:200,400,500&display=swap";
+
+* {
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 400;
+  user-select: none !important;
+  outline: none !important;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input, textarea {
+  user-select: text !important;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+button {
+  background-color: var(--main-red-color);
+  border: 3px solid white;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: bold;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: .4rem;
+  letter-spacing: 1px;
+  transition: transform .12s ease-in-out;
+  text-transform: uppercase;
+}
+
+button:active {
+  transform: scale(.92);
+}
+
+button:focus {
+  outline:0;
+}
+
+.title {
+    background-color: rgba(0,0,0,.80);
+    color: #bebebe;
+    font-size: 12px;
+    font-weight: 500;
+    padding: .37rem;
+    text-align: center;
+    letter-spacing: .12rem;
+}
+
+@import "game-board.css";
+@import "player.css";
