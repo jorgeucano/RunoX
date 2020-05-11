@@ -22,6 +22,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "runox-game-engine": "^0.0.0"
+    "runox-game-engine": "^0.0.0",
+    "undefined": "D:\\example\\twitch\\uno\\RunoX\\packages\\runox-firebase"
   }
 }
