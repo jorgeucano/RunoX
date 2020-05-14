@@ -1,0 +1,11 @@
+<div class="rnx-avatar">
+  <div class="rnx-avatar__name" *ngIf="name">
+    {{name}}
+  </div>
+  <div class="rnx-avatar__conatiner">
+    <img [src]="avatarImage" class="rnx-avatar__image" [alt]="name">
+    <div class="rnx-avatar__badge" *ngIf="badge">
+      {{badge}}
+    </div>
+  </div>
+</div>

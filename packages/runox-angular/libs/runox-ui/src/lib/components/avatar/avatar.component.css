@@ -1,0 +1,45 @@
+.rnx-avatar {
+  display: inline-flex;
+  flex-direction: column;
+  width: 99px;
+}
+
+.rnx-avatar__conatiner {
+  position: relative;
+}
+
+.rnx-avatar__image {
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  height: 99px;
+  object-fit: cover;
+  width: 99px;
+}
+
+.rnx-avatar__badge {
+  align-items: center;
+  background-color: #983128;
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  font-size: 10px;
+  font-weight: 600;
+  height: 27px;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 27px;
+}
+
+.rnx-avatar__name {
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.24em;
+  text-wrap: none;
+  overflow: hidden;
+  height: 30px;
+}
