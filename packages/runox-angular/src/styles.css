@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  user-select: none !important;
+}
+
+input, textarea, .text-selectable {
+  user-select: text !important;
+}
+
+body {
+  background: url(/assets/images/main-bg.jpg) no-repeat center;
+  background-size: cover;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}

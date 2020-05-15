@@ -1,0 +1,15 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+rnx-login-modal {
+  min-height: 600px;
+  width: 800px;
+}
+
+rnx-avatar {
+  margin: 1.2rem;
+}

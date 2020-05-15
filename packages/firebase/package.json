@@ -44,7 +44,6 @@
     "firebase": "^7.14.2",
     "firebaseui": "^4.5.0",
     "rxjs": "^6.5.4",
-    "ts-loader": "^6.2.2",
-    "undefined": "D:\\example\\twitch\\uno\\RunoX\\packages\\runox-firebase"
+    "ts-loader": "^6.2.2"
   }
 }
