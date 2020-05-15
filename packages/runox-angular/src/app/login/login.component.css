@@ -5,8 +5,8 @@
   height: 100vh;
 }
 
-rnx-card {
-  height: 600px;
+rnx-login-modal {
+  min-height: 600px;
   width: 800px;
 }
 
