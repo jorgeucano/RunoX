@@ -17,13 +17,7 @@
     "lib": [
       "es2018",
       "dom"
-    ],
-    "paths": {
-      "runox-ui": [
-        "dist/runox-ui/runox-ui",
-        "dist/runox-ui"
-      ]
-    }
+    ]
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

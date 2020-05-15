@@ -1,9 +1,11 @@
 <div class="login-page">
   <rnx-card>
+    <!-- header -->
     <div slot="header" class="flex justify-center">
       <img src="/assets/images/logo.png" alt="RunoX logo">
     </div>
 
+    <!-- content -->
     <div class="text-center">
       <div class="opacity-75 text-sm">SALA</div>
       <h1 class="text-2xl font-semibold">{{room.name}}</h1>
@@ -21,8 +23,9 @@
       </div>
     </div>
 
+    <!-- footer -->
     <div slot="footer">
-      <div class="opacity-75 text-sm mb-4 pb-2 border-b border-gray-800">PLAYERS</div>
+      <div class="opacity-75 text-sm pb-2 border-b border-gray-800">PLAYERS</div>
       <div class="flex justify-around flex-wrap" *ngIf="avatars.length; else noPlayers">
         <rnx-avatar
           *ngFor="let avatar of avatars"
@@ -33,11 +36,9 @@
       </div>
       <ng-template #noPlayers>
         <div class="text-gray-400 uppercase text-sm tracking-wider">
-          Aún no se han añadido jugadores a la sala
+          Aún no se han añadido jugadores a la sala.
         </div>
       </ng-template>
     </div>
   </rnx-card>
-
-
 </div>
