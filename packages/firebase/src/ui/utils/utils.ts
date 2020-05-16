@@ -7,3 +7,13 @@ export const getUrlSearch = () => {
     }
     return search;
 }
+
+export const showInfoAlert = (text: string) => {
+    console.info(`showing info alert: ${text}`);
+    alert(text);
+}
+
+export const showErrorAlert = (text: string) => {
+    console.error(`showing error alert: ${text}`);
+    alert(text);
+}
