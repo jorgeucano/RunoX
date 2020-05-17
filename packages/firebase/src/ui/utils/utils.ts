@@ -10,10 +10,12 @@ export const getUrlSearch = () => {
 
 export const showInfoAlert = (text: string) => {
     console.info(`showing info alert: ${text}`);
+    /* Estaría bueno tener un observable para que la UI se subscriba a las alertas */
     alert(text);
 }
 
 export const showErrorAlert = (text: string) => {
     console.error(`showing error alert: ${text}`);
+    /* Estaría bueno tener un observable para que la UI se subscriba a las alertas */
     alert(text);
 }
