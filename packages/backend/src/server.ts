@@ -11,10 +11,14 @@ app.set('port', process.env.PORT || 3000);
 
 io.on('connection', (socket) => {
   console.log('A new client has connected');
+
+  socket.on('message', function (message: any) {
+    console.log(message);
+  });
 });
 
 app.get('/', (req: any, res: any) => {
-  res.send('hello world');
+  res.sendFile(path.resolve('./src/client/index.html'));
 });
 
 server.listen(app.get('port'), () => {
