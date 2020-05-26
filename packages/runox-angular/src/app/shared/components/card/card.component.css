@@ -2,6 +2,7 @@
   background: rgba(24, 24, 24, 0.82);
   border-radius: 8px;
   color: #f2f2f2;
+  overflow: hidden;
 }
 
 .rnx-card__header {
@@ -12,6 +13,11 @@
 .rnx-card__footer {
   padding: 2.5rem;
   text-align: center;
+}
+
+.rnx-card__header:empty,
+.rnx-card__footer:empty {
+  display: none;
 }
 
 .rnx-card__content {

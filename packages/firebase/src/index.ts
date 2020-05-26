@@ -9,9 +9,9 @@ import {
 } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
-import { getUrlSearch } from "./ui/utils/utils";
-import { GameEngine } from "@runox-game/game-engine";
+import { getUrlSearch, showInfoAlert, showErrorAlert } from "./ui/utils/utils";
 import { Player } from "@runox-game/game-engine/lib/models/player.model";
+import { GameEngine } from "@runox-game/game-engine";
 import { GameModes } from "@runox-game/game-engine/lib/models/game-modes";
 
 getUrlSearch();
@@ -57,7 +57,7 @@ game.events.afterYellUno.subscribe(() => {
 
 game.events.gameEnd.subscribe((data) => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
-    alert(
+    showInfoAlert(
       `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
     );
 
@@ -103,7 +103,7 @@ export const startGame = () => {
   game.start(gameModes).subscribe(
     () => {},
     (error: string) => {
-      alert(error);
+      showErrorAlert(error);
     }
   );
 };

@@ -14,6 +14,7 @@ import { GameEngine } from "@runox-game/game-engine";
 import { Player } from "@runox-game/game-engine/lib/models/player.model";
 import { Value } from "@runox-game/game-engine/lib/models/values.model";
 import { isValidColor, Color } from "@runox-game/game-engine/lib/models/color.model";
+import { showErrorAlert } from "./utils/utils";
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
@@ -230,7 +231,7 @@ function setPlayerClicks(game: GameEngine, id: string) {
             .subscribe(
               () => {},
               (error: string) => {
-                alert(error);
+                showErrorAlert(error);
               }
             );
         });
