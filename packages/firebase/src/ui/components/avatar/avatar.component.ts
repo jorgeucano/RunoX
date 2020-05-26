@@ -2,10 +2,10 @@
 import "./avatar.styles.css";
 
 import { GameObject } from "../game-object.model";
-import { Player } from "../../../server/models/player.model";
+import { IPlayer } from "@runox-game/game-engine/lib/models/player.model";
 
 export class Avatar extends GameObject {
-  constructor(player: Player, cardsNumber: number = 0, isCurrent: boolean = false) {
+  constructor(player: IPlayer, cardsNumber: number = 0, isCurrent: boolean = false) {
     const image = document.createElement("img");
     image.setAttribute("src", player.pic);
 

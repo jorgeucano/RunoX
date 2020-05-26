@@ -1,10 +1,6 @@
 import { fromEvent } from "rxjs";
 import { first, filter, map } from "rxjs/operators";
 
-import { Value } from "../server/models/values.model";
-import { isValidColor, Color } from "../server/models/color.model";
-import { Player } from "../server/models/player.model";
-import { GameEngine } from "../server/game-engine";
 
 import { CardComponent } from "./components/card/card.component";
 import { Avatar } from "./components/avatar/avatar.component";
@@ -14,6 +10,10 @@ import { startGame } from "../index";
 
 // @ts-ignore
 import { Sortable } from "@shopify/draggable";
+import { GameEngine } from "@runox-game/game-engine";
+import { Player } from "@runox-game/game-engine/lib/models/player.model";
+import { Value } from "@runox-game/game-engine/lib/models/values.model";
+import { isValidColor, Color } from "@runox-game/game-engine/lib/models/color.model";
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");

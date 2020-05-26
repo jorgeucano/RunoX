@@ -1,8 +1,8 @@
 import { updateMainLayout, setGlobalPlayer } from "../index";
-import { GameEngine } from "../server/game-engine";
-import { Player } from "../server/models/player.model";
 import { getUrlSearch } from "../ui/utils/utils";
 import { drawStartLayout } from "../ui";
+import { GameEngine } from "@runox-game/game-engine";
+import { Player } from "@runox-game/game-engine/lib/models/player.model";
 
 // @ts-ignore
 export const firebase = window.firebase;
