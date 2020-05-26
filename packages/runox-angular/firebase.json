@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "runox-angular",
+      "public": "dist/runox-angular",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
