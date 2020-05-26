@@ -12,7 +12,7 @@ import {
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { GameEngine } from "./server/game-engine";
 import { GameModes } from "./server/models/game-modes";
-import { getUrlSearch } from "./ui/utils/utils";
+import { getUrlSearch, showInfoAlert, showErrorAlert } from "./ui/utils/utils";
 
 getUrlSearch();
 
@@ -57,7 +57,7 @@ game.events.afterYellUno.subscribe(() => {
 
 game.events.gameEnd.subscribe((data) => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
-    alert(
+    showInfoAlert(
       `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
     );
 
@@ -103,7 +103,7 @@ export const startGame = () => {
   game.start(gameModes).subscribe(
     () => {},
     (error: string) => {
-      alert(error);
+      showErrorAlert(error);
     }
   );
 };

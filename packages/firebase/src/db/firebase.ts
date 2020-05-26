@@ -1,7 +1,7 @@
 import { updateMainLayout, setGlobalPlayer } from "../index";
 import { GameEngine } from "../server/game-engine";
 import { Player } from "../server/models/player.model";
-import { getUrlSearch } from "../ui/utils/utils";
+import { getUrlSearch, showErrorAlert, showInfoAlert } from "../ui/utils/utils";
 import { drawStartLayout } from "../ui";
 
 // @ts-ignore
@@ -106,13 +106,13 @@ export const enterToRoom = (user: Player) => {
             }
           } else {
             if (_data.start) {
-              alert("La partida ya ha comenzado");
+              showInfoAlert("La partida ya ha comenzado");
 
               return reject();
             }
 
             if (_data.playersGroup.players.length > 5) {
-              alert("La sala esta llena");
+              showInfoAlert("La sala esta llena");
 
               return reject();
             }
@@ -129,7 +129,7 @@ export const enterToRoom = (user: Player) => {
                 return resolve();
               },
               (error: string) => {
-                alert(error);
+                showErrorAlert(error);
               }
             );
           }
@@ -146,7 +146,7 @@ export const enterToRoom = (user: Player) => {
               return resolve();
             },
             (error: string) => {
-              alert(error);
+              showErrorAlert(error);
             }
           );
           
@@ -223,7 +223,7 @@ export const roomData$ = () => {
       }
 
       if (_data$.winner !== null) {
-        alert(
+        showInfoAlert(
           `El jugador ${_data$.winner.name} ha ganado!! Su puntaje es: ${_data$.winner.score}`
         );
       }
@@ -232,7 +232,7 @@ export const roomData$ = () => {
       if (game.gameStateAsJSON.id === _data$.id) {
         const lastCard = _data$.stack.cards[0];
         if (lastCard && (lastCard.value === 'mas-cuatro' || lastCard.value === 'comodin')) {
-          alert(`Cambio de color a ${lastCard.color}`);
+          showInfoAlert(`Cambio de color a ${lastCard.color}`);
         }
         game.overrideInternalState(_data$);
       }
