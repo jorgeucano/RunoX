@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "runox-card": {
+      "hosting": {
+        "runox-angular": [
+          "runox-card"
+        ]
+      }
+    }
+  }
+}

@@ -10,19 +10,39 @@
   "author": "jorgeucano <jorgeucano@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "lib/index.js",
+  "main": "lib/server.js",
   "directories": {
     "lib": "lib",
-    "test": "__tests__"
+    "test": "tests"
   },
   "files": [
     "lib"
   ],
+  "types": "lib/server.d.ts",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "jest --silent --verbose",
+    "test:coverage": "jest --silent --verbose --coverage",
+    "test:watch": "jest --watch",
+    "build": "tsc",
+    "serve": "nodemon lib/server.js",
+    "serve:debug": "nodemon --inspect lib/server.js",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build"
   },
   "dependencies": {
-    "runox-game-engine": "^0.0.0",
-    "undefined": "D:\\example\\twitch\\uno\\RunoX\\packages\\runox-firebase"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/jest": "^25.2.2",
+    "@types/socket.io": "^2.1.5",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.0.0",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.2"
   }
 }

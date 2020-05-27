@@ -1,0 +1,11 @@
+tests/
+src/
+docs/
+coverage/
+.github/
+
+.gitignore
+.prettierrc
+jest.config.js
+tsconfig.json
+tslint.json

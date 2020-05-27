@@ -14,6 +14,7 @@ import { startGame } from "../index";
 
 // @ts-ignore
 import { Sortable } from "@shopify/draggable";
+import { showErrorAlert } from "./utils/utils";
 
 const _players = document.getElementById("players");
 const _stack = document.getElementById("stack");
@@ -230,7 +231,7 @@ function setPlayerClicks(game: GameEngine, id: string) {
             .subscribe(
               () => {},
               (error: string) => {
-                alert(error);
+                showErrorAlert(error);
               }
             );
         });
