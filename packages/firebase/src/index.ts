@@ -3,11 +3,7 @@ import "./ui/styles/styles.css";
 import { fromEvent } from "rxjs";
 import { filter, switchMap, first } from "rxjs/operators";
 import { Player } from "./server/models/player.model";
-import {
-  initializeFirebase,
-  firebaseUpdateState,
-  setWinner,
-} from "./db/firebase";
+import { initializeFirebase, firebaseUpdateState, setWinner } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { GameEngine } from "./server/game-engine";
@@ -18,6 +14,11 @@ getUrlSearch();
 
 const game = GameEngine.getInstance();
 let globalPlayer: Player;
+
+game.events.error.subscribe((message) => {
+  // esto debería ser una alerta bonita o algo así
+  alert(message);
+});
 
 game.events.afterGameStart.subscribe(() => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
@@ -57,9 +58,7 @@ game.events.afterYellUno.subscribe(() => {
 
 game.events.gameEnd.subscribe((data) => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
-    showInfoAlert(
-      `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
-    );
+    showInfoAlert(`El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`);
 
     setWinner(data.winner.name, data.score);
   });
@@ -116,20 +115,14 @@ export const showTurnNotification = () => {
   }
 
   window.Notification.requestPermission().then(() => {
-    if (
-      Notification.permission === "granted" &&
-      game.playerTurn?.id === globalPlayer.id
-    ) {
-      const notification = new Notification(
-        `${globalPlayer.name} es tu turno de jugar!`,
-        {
-          body: "Tus amigos estan esperando que juegues una carta",
-          tag: "turnNotification",
-          // TODO: mejorar la imagen que se muestra
-          image: "./assets/images/logo2x.png",
-          requireInteraction: false,
-        }
-      );
+    if (Notification.permission === "granted" && game.playerTurn?.id === globalPlayer.id) {
+      const notification = new Notification(`${globalPlayer.name} es tu turno de jugar!`, {
+        body: "Tus amigos estan esperando que juegues una carta",
+        tag: "turnNotification",
+        // TODO: mejorar la imagen que se muestra
+        image: "./assets/images/logo2x.png",
+        requireInteraction: false,
+      });
 
       setTimeout(notification.close.bind(notification), 5000);
     }
