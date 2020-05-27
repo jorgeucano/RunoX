@@ -2,7 +2,6 @@ import "./ui/styles/styles.css";
 
 import { fromEvent } from "rxjs";
 import { filter, switchMap, first } from "rxjs/operators";
-import { Player } from "./server/models/player.model";
 import {
   initializeFirebase,
   firebaseUpdateState,
@@ -10,13 +9,14 @@ import {
 } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
-import { GameEngine } from "./server/game-engine";
-import { GameModes } from "./server/models/game-modes";
 import { getUrlSearch, showInfoAlert, showErrorAlert } from "./ui/utils/utils";
+import { Player } from "@runox-game/game-engine/lib/models/player.model";
+import { GameEngine } from "@runox-game/game-engine";
+import { GameModes } from "@runox-game/game-engine/lib/models/game-modes";
 
 getUrlSearch();
 
-const game = GameEngine.getInstance();
+const game = new GameEngine();
 let globalPlayer: Player;
 
 game.events.afterGameStart.subscribe(() => {
@@ -27,7 +27,7 @@ game.events.afterGameStart.subscribe(() => {
 
 game.events.beforeTurn.subscribe((data) => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
-    drawTurn(game, data.player);
+    drawTurn(game, data.player as Player);
   });
 });
 
