@@ -8,4 +8,8 @@ export enum GameEvent {
   AFTER_YELL_UNO = "afterYellUno",
   BEFORE_TURN = "beforeTurn",
   GAME_END = "gameEnd",
+  CHANGE_COLOR = "changeColor",
+  REVERSE = "reverse",
+  SKIP = "skip",
+  ERROR = "error",
 }
