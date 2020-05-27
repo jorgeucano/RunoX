@@ -1,7 +1,6 @@
 {
   "packages": [
-    "packages/*",
-    "packages/runox-firebase"
+    "packages/**"
   ],
   "version": "0.0.1"
 }
