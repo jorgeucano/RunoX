@@ -1,5 +1,5 @@
 {
-  "name": "runox",
+  "name": "runox-firebase",
   "version": "1.0.0",
   "description": "rxjs UNO game",
   "main": "index.js",
