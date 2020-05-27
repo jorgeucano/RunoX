@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
+import { first } from 'rxjs/operators';
 
 enum loginStatus {
   ENTER = 0, OWNER = 1, WAITING = 2,
@@ -15,22 +16,30 @@ export class LoginComponent {
   status: loginStatus = loginStatus.ENTER;
 
   room: any = {
-    name: 'RIP AND TEAR'
+    name: ''
   };
 
   isRoomOwner: boolean = true;
 
-  avatars: Array<any> = [
-    {id: 1, name: 'player apellidos del player 1', image: '', cards: 0},
-    {id: 2, name: 'player 2', image: '', cards: 0},
-    {id: 3, name: 'player 3', image: '', cards: 0},
-  ];
+  avatars: Array<any> = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private activeRouter: ActivatedRoute) {
+    activeRouter.params
+    .pipe(
+      first()
+    )
+    .subscribe(
+      (params) => {
+        console.log('params', params.id);
+        this.room.name = params.id;
+      }
+    );
+   }
 
-  onLogin() {
+  onLogin(user: any) {
     // @TODO Mostrar login de firebase para validar usario, an then ...
     this.status = this.isRoomOwner ? loginStatus.OWNER : loginStatus.WAITING;
+    this.avatars.push(user);
   }
 
   onStartGame() {

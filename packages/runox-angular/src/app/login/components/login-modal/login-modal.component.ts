@@ -12,8 +12,8 @@ export class LoginModalComponent {
   @Input() room: any = {};
   @Input() status: number;
 
-  @Output() joinRoom = new EventEmitter();
-  @Output() startGame = new EventEmitter();
+  @Output() joinRoom: EventEmitter<any> = new EventEmitter<any>();
+  @Output() startGame: EventEmitter<any> = new EventEmitter<any>();
 
 
   // tslint:disable-next-line: variable-name
@@ -23,9 +23,10 @@ export class LoginModalComponent {
 
   login() {
     this._auth.signInWithPopup(new auth.GoogleAuthProvider()).then(
-      (user) => {
-        console.log(user);
-        this.joinRoom.emit();
+      (u) => {
+        const user = u.user;
+        const _user = {name: user.displayName, id: user.email, image: user.photoURL, cards: 0 };
+        this.joinRoom.emit(_user);
       }
     )
   }
