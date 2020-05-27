@@ -25,7 +25,7 @@ export class CommandsInvoker {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  invoke(currentState: GameState) {
+  invoke(currentState: GameState): Observable<void> {
     const observable = new Observable<void>((subscriber) => {
       try {
         this.commands.forEach((command) => {
@@ -33,8 +33,9 @@ export class CommandsInvoker {
 
           if (!commandValidation.isValid) {
             console.error(commandValidation.error);
-
-            throw new Error(commandValidation.error);
+            
+            subscriber.error(commandValidation.error);
+            return;
           }
 
           command.execute(currentState);
