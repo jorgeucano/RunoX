@@ -7,6 +7,8 @@ import { Player } from "../models/player.model";
 import { Card } from "../models/card.model";
 import { GameEndEvent } from "../events/game-end.event";
 import { AfterTakeCardsEvent } from "../events/after-take-cards.event";
+import { ReverseEvent } from "../events/reverse.event";
+import { SkipEvent } from "../events/skip.event";
 
 /**
  * Class that allows a player to play a card from his hand
@@ -90,15 +92,23 @@ export class PlayCardCommand extends GameCommand {
 
     if (state.stack.cardOnTop?.value === Value.SKIP) {
       state.turn.setPlayerTurn(state.nextPlayerToPlay);
+      this.events.dispatchSkip(
+        new SkipEvent(state.nextPlayerToPlay)
+      );
     }
 
     if (state.stack.cardOnTop?.value === Value.REVERSE) {
       state.changeDirection();
+      
 
       if (state.playersGroup.players.length === 2) {
         // si son dos jugadores entonces funciona como SKIP
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       }
+      
+      this.events.dispatchReverse(
+        new ReverseEvent(state.nextPlayerToPlay)
+      );
     }
 
     const player = state.playersGroup.getPlayerById(this.playerId) as Player;
