@@ -160,3 +160,42 @@
     width: 410px;
     z-index: 100;
 }
+
+
+#player-select-color {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+#color-select {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.button-red {
+    background: red;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.button-blue {
+    background: blue;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.button-green {
+    background: green;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.button-yellow {
+    background: yellow;
+    color: black;
+    margin-left: 10px;
+    margin-right: 10px;
+}

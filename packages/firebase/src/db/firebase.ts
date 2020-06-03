@@ -85,7 +85,6 @@ export const enterToRoom = (user: Player) => {
       .then((doc: any) => {
         if (doc.exists) {
           const _data = doc.data();
-          debugger;
           if (user.id === _data.playersGroup.players[0].id) {
             // @ts-ignore
             document.getElementById("button-start")?.style.display = "block";

@@ -215,26 +215,56 @@ function setPlayerClicks(game: GameEngine, id: string) {
             cardInPlayer?.value === Value.PLUS_FOUR
           ) {
             let newColor;
-            // TODO: Cambiar el metodo de entrada del color
-            while (!isValidColor(newColor as Color)) {
-              newColor = prompt(
-                "Escribe el nuevo color a jugar: azul, rojo, verde o amarillo"
-              )?.toLowerCase();
-            }
 
-            cardInPlayer.setColor(newColor as Color);
-          }
-
-          game
+            const playerSelectColor = document.getElementById('player-select-color');
+            // @ts-ignore
+            playerSelectColor.style.display = 'block';
             //@ts-ignore
-            .playCard(game.playerTurn?.id, cardInPlayer)
-            .subscribe(
+            fromEvent(playerSelectColor, "click")
+                .pipe(
+                    // @ts-ignore
+                    filter((event) => event.target.classList.value.includes('button-')),
+                    filter(() => id === game.playerTurn?.id),
+                    // @ts-ignore
+                    map((event) => event.target.id),
+                    first()
+                )
+                .subscribe((newColor: any) => {
+                  cardInPlayer.setColor(newColor as Color);
+                  // @ts-ignore
+                  playerSelectColor.style.display = 'none';
+                  game
+                  //@ts-ignore
+                  .playCard(game.playerTurn?.id, cardInPlayer)
+                  .subscribe(
+                      () => {},
+                      (error: string) => {
+                        if (cardInPlayer?.value === Value.WILDCARD ||
+                            cardInPlayer?.value === Value.PLUS_FOUR) {
+                          return;
+                        }
+                        showErrorAlert(error);
+                      }
+                  );
+            });
+          }
+          game
+          //@ts-ignore
+          .playCard(game.playerTurn?.id, cardInPlayer)
+          .subscribe(
               () => {},
               (error: string) => {
+                if (cardInPlayer?.value === Value.WILDCARD ||
+                    cardInPlayer?.value === Value.PLUS_FOUR) {
+                  return;
+                }
                 showErrorAlert(error);
               }
-            );
+          );
+
+
         });
       } catch (e) {}
     });
+
 }
