@@ -8,7 +8,7 @@
   <div class="text-center">
     <div class="opacity-75 text-sm">SALA</div>
     <h1 *ngIf="room.name" class="text-2xl font-semibold">{{room.name}}</h1>
-    <input *ngIf="status === 1 && room.name === undefined" />
+    <input [ngModel]="roomName" *ngIf="status === 1 && room.name === undefined" />
 
     <div class="mt-6">
       <rnx-button *ngIf="status === 0" (click)="join()">

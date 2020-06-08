@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  gameMode: {
+    randomTakeDeckCard: false
+  },
   firebase: {
     apiKey: 'AIzaSyAZX1DilyM9IY01_xFa2pE4ull7FYOsQ00',
     authDomain: 'runox-card.firebaseapp.com',

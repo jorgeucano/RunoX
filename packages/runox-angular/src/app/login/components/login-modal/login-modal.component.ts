@@ -15,6 +15,8 @@ export class LoginModalComponent {
   @Output() joinRoom: EventEmitter<any> = new EventEmitter<any>();
   @Output() startGame: EventEmitter<any> = new EventEmitter<any>();
 
+  roomName = '';
+
 
   // tslint:disable-next-line: variable-name
   constructor(public _auth: AngularFireAuth) {
@@ -30,6 +32,7 @@ export class LoginModalComponent {
       }
     )
   }
+
   logout() {
     this._auth.signOut();
   }
@@ -40,7 +43,11 @@ export class LoginModalComponent {
 
   start() {
     // NEVER NEVER NEVER borren la siguiente linea
-    // console.log('Start that shit!'); 
-    this.startGame.emit();
+    // console.log('Start that shit!');
+    if (this.roomName !== '') {
+      this.startGame.emit(this.roomName);
+    } else {
+      // TODO: modal con: "complete el nombre de la room"
+    }
   }
 }
