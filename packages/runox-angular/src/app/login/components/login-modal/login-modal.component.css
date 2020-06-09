@@ -1,3 +1,7 @@
-input{
-  color: black;
+input {
+  font-weight: 600;
+  margin: 1rem auto;
+  text-align: center;
+  text-transform: uppercase;
+  width: 50%;
 }

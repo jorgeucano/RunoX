@@ -38,8 +38,8 @@
   font-weight: 400;
   text-transform: uppercase;
   margin-bottom: 6px;
-  letter-spacing: 0.24em;
-  text-wrap: none;
+  letter-spacing: 0.16em;
+  word-wrap: none;
   overflow: hidden;
   height: 30px;
 }

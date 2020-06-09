@@ -1,26 +1,35 @@
 <rnx-card>
   <!-- header -->
   <div slot="header" class="flex justify-center">
-    <img src="/assets/images/logo.png" alt="RunoX logo">
+    <img src="/assets/images/logo.png" alt="RunoX logo" />
   </div>
 
   <!-- content -->
   <div class="text-center">
     <div class="opacity-75 text-sm">SALA</div>
-    <h1 *ngIf="room.name" class="text-2xl font-semibold">{{room.name}}</h1>
-    <input [ngModel]="roomName" *ngIf="status === 1 && room.name === undefined" />
-
+    <h1 *ngIf="room.name" class="text-2xl font-semibold">{{ room.name }}</h1>
+    <input
+      [ngModel]="roomName"
+      *ngIf="status === 1 && room.name === undefined"
+      placeholder="Room name here ..."
+    />
     <div class="mt-6">
       <rnx-button *ngIf="status === 0" (click)="join()">
         JOIN THE ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === 1 && room.name === undefined" (click)="start()">
+      <rnx-button
+        *ngIf="status === 1 && room.name === undefined"
+        (click)="start()"
+      >
         CREATE ROOM!
       </rnx-button>
       <rnx-button *ngIf="status === 1 && room.name" (click)="start()">
         START THE GAME!
       </rnx-button>
-      <div *ngIf="status === 2" class="px-4 text-4xl text-red-700 font-semibold">
+      <div
+        *ngIf="status === 2"
+        class="px-4 text-4xl text-red-700 font-semibold"
+      >
         WAITING FOR THE OWNER TO START THE GAME
       </div>
     </div>
@@ -28,8 +37,13 @@
 
   <!-- footer -->
   <div slot="footer">
-    <div class="opacity-75 text-sm pb-2 mb-3 border-b border-gray-800">PLAYERS</div>
-    <div class="flex justify-around flex-wrap" *ngIf="avatars.length; else noPlayers">
+    <div class="opacity-75 text-sm pb-2 mb-3 border-b border-gray-800">
+      PLAYERS
+    </div>
+    <div
+      class="flex justify-around flex-wrap"
+      *ngIf="avatars.length; else noPlayers"
+    >
       <rnx-avatar
         *ngFor="let avatar of avatars"
         [name]="avatar.name"
