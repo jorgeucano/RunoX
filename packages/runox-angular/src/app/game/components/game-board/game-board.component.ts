@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'rnx-game-board',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameBoardComponent implements OnInit {
 
+  @Input() roomData$: any;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.roomData$.subscribe(x => console.log(x));
   }
 
 }
