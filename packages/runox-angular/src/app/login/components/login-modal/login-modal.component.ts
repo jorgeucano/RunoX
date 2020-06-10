@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase';
 
+
 @Component({
   selector: 'rnx-login-modal',
   templateUrl: './login-modal.component.html',
@@ -12,7 +13,9 @@ export class LoginModalComponent {
   @Input() room: any = {};
   @Input() status: number;
 
+
   @Output() joinRoom: EventEmitter<any> = new EventEmitter<any>();
+  @Output() createRoom: EventEmitter<any> = new EventEmitter<any>();
   @Output() startGame: EventEmitter<any> = new EventEmitter<any>();
 
   roomName = '';
@@ -39,6 +42,15 @@ export class LoginModalComponent {
 
   join() {
     this.login();
+  }
+
+  create() {
+    debugger;
+    if (this.roomName !== '') {
+      this.createRoom.emit(this.roomName);
+    } else {
+      // TODO: modal con: "complete el nombre de la room"
+    }
   }
 
   start() {

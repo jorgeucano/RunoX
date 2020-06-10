@@ -5,6 +5,7 @@ import {Player} from "@runox-game/game-engine/lib/models/player.model";
 import {GameEngineService} from "../game-engine.service";
 import {ICard} from "@runox-game/game-engine/lib/models/card.model";
 import {Hand} from "@runox-game/game-engine/lib/models/hand.model";
+import {FirebaseEngineService} from "../firebase-engine.service";
 
 enum loginStatus {
   ENTER = 0, OWNER = 1, WAITING = 2,
@@ -27,7 +28,12 @@ export class LoginComponent {
 
   avatars: Array<any> = [];
 
-  constructor(private router: Router, private activeRouter: ActivatedRoute, private gameEngineService: GameEngineService) {
+  constructor(
+    private router: Router,
+    private activeRouter: ActivatedRoute,
+    private gameEngineService: GameEngineService,
+    private firebaseEService: FirebaseEngineService
+  ) {
     activeRouter.params
     .pipe(
       first()
@@ -44,22 +50,25 @@ export class LoginComponent {
     // @TODO Mostrar login de firebase para validar usario, an then ...
     this.status = this.isRoomOwner ? loginStatus.OWNER : loginStatus.WAITING;
     this.avatars.push(user);
-    /*
-    readonly id: string;
-    readonly name: string;
-    readonly pic: string;
-    readonly hand: IHand;
-     */
+
     const hand = new Hand();
     const player: Player = {id: user.email, hand: hand, pic: user.photoURL, name: user.fullName};
     this.gameEngineService.joinUser(player);
-
   }
 
   onStartGame(roomName: string) {
-    // guardar la sala en firebase - gameEngine
+    this.firebaseEService.readRoom(roomName);
+    this.router.navigate(['game', roomName]).catch(console.error);
+  }
 
-    // @TODO Añadir lógica para empezar juego, and then ...
-    this.router.navigate(['game']).catch(console.error);
+  onCreateGame(roomName: string) {
+    debugger;
+    // guardar la sala en firebase - gameEngine
+    this.firebaseEService.createRoom(roomName).then(
+      ()=> {
+        this.firebaseEService.readRoom(roomName);
+        this.onStartGame(roomName);
+      }
+    )
   }
 }

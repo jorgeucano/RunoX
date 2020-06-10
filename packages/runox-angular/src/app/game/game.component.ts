@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {FirebaseEngineService} from "../firebase-engine.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'rnx-game',
@@ -7,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  constructor() { }
+  room$: Observable<any>;
+
+  constructor(firebaseEngineService: FirebaseEngineService) {
+    this.room$ = firebaseEngineService.room$;
+  }
 
   ngOnInit(): void {
   }
