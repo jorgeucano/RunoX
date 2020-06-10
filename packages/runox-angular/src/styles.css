@@ -3,17 +3,35 @@
   user-select: none !important;
 }
 
-input, textarea, .text-selectable {
+input,
+textarea,
+.text-selectable {
   user-select: text !important;
 }
 
 body {
   background: url(/assets/images/main-bg.jpg) no-repeat center;
   background-size: cover;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 16px;
   font-weight: 300;
   height: 100vh;
   margin: 0;
   overflow: hidden;
+}
+
+input {
+  background-color: #111;
+  border: 0.12rem solid #111;
+  border-radius: 0.5rem;
+  padding: 0.63rem 1rem;
+  outline: 0;
+}
+
+input:focus {
+  border: 0.12rem solid #2d3748;
+}
+
+input::placeholder {
+  color: #1a202c;
 }
