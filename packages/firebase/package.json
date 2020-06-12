@@ -40,7 +40,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "@runox-game/game-engine": "0.0.5",
+    "@runox-game/game-engine": "^0.0.11",
     "@shopify/draggable": "^1.0.0-beta.8",
     "firebase": "^7.14.2",
     "firebaseui": "^4.5.0",
