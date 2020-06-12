@@ -1,60 +1,62 @@
-import { fromEvent } from "rxjs";
-import { first, filter, map } from "rxjs/operators";
+import { fromEvent } from 'rxjs'
+import { first, filter, map } from 'rxjs/operators'
 
+import { CardComponent } from './components/card/card.component'
+import { Avatar } from './components/avatar/avatar.component'
 
-import { CardComponent } from "./components/card/card.component";
-import { Avatar } from "./components/avatar/avatar.component";
-
-import { roomStart } from "../db/firebase";
-import { startGame } from "../index";
+import { roomStart } from '../db/firebase'
+import { startGame } from '../index'
 
 // @ts-ignore
-import { Sortable } from "@shopify/draggable";
-import { GameEngine } from "@runox-game/game-engine";
-import { Player } from "@runox-game/game-engine/lib/models/player.model";
-import { Value } from "@runox-game/game-engine/lib/models/values.model";
-import { isValidColor, Color } from "@runox-game/game-engine/lib/models/color.model";
-import { showErrorAlert } from "./utils/utils";
+import { Sortable } from '@shopify/draggable'
+import { GameEngine } from '@runox-game/game-engine'
+import { Player } from '@runox-game/game-engine/lib/models/player.model'
+import { Value } from '@runox-game/game-engine/lib/models/values.model'
+import {
+  isValidColor,
+  Color,
+} from '@runox-game/game-engine/lib/models/color.model'
+import { showErrorAlert } from './utils/utils'
 
-const _players = document.getElementById("players");
-const _stack = document.getElementById("stack");
-const _turn = document.getElementById("turn");
+const _players = document.getElementById('players')
+const _stack = document.getElementById('stack')
+const _turn = document.getElementById('turn')
 
 /** Dibuja el stack
  * TODO: serparar
  */
 export function drawStack(game: GameEngine) {
   if (!game.stackCard) {
-    return;
+    return
   }
 
   if (!_stack) {
-    console.error("No se encontró el elemento #stack");
-    return;
+    console.error('No se encontró el elemento #stack')
+    return
   }
 
   const stackCardElement = document.getElementById(
     `carta-stack-${game.stackCard.id}`
-  );
+  )
 
   if (
     stackCardElement !== null &&
     `carta-stack-${game.stackCard.id}` === stackCardElement.id
   ) {
-    console.warn("La carta ya esta dibujada en la cima del stack");
+    console.warn('La carta ya esta dibujada en la cima del stack')
 
-    return;
+    return
   }
 
-  const stackCardDiv = document.createElement("div");
-  stackCardDiv.setAttribute("id", `carta-stack-${game.stackCard.id}`);
-  stackCardDiv.setAttribute("class", `carta ${game.stackCard.sprite}`);
+  const stackCardDiv = document.createElement('div')
+  stackCardDiv.setAttribute('id', `carta-stack-${game.stackCard.id}`)
+  stackCardDiv.setAttribute('class', `carta ${game.stackCard.sprite}`)
 
-  var rotacion = Math.floor(Math.random() * 20) + 10;
-  rotacion *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
+  var rotacion = Math.floor(Math.random() * 20) + 10
+  rotacion *= Math.floor(Math.random() * 2) == 1 ? 1 : -1
 
-  stackCardDiv.style.transform = `rotate(${rotacion}deg)`;
-  _stack.appendChild(stackCardDiv);
+  stackCardDiv.style.transform = `rotate(${rotacion}deg)`
+  _stack.appendChild(stackCardDiv)
 }
 
 /** Dibuja a los jugadores con su respectiva mano
@@ -63,121 +65,121 @@ export function drawStack(game: GameEngine) {
  */
 export function drawPlayersCards(game: GameEngine, globalPlayerId: string) {
   while (_players?.lastElementChild) {
-    _players?.removeChild(_players?.lastElementChild);
+    _players?.removeChild(_players?.lastElementChild)
   }
 
-  const player = game.players.find((player) => player.id === globalPlayerId);
+  const player = game.players.find((player) => player.id === globalPlayerId)
 
-  const playerDiv = document.createElement("div");
+  const playerDiv = document.createElement('div')
   // @ts-ignore
-  playerDiv.setAttribute("id", player?.id);
-  playerDiv.setAttribute("class", "player");
+  playerDiv.setAttribute('id', player?.id)
+  playerDiv.setAttribute('class', 'player')
 
-  const playerCards = document.createElement("div");
-  playerCards.setAttribute("class", "player-cards");
+  const playerCards = document.createElement('div')
+  playerCards.setAttribute('class', 'player-cards')
 
   player?.hand.cards
     .filter((card, index) => player?.hand.cards.indexOf(card) === index)
     .forEach((card) => {
-      const _card = new CardComponent(card.id, card.sprite);
+      const _card = new CardComponent(card.id, card.sprite)
 
-      playerCards.appendChild(_card.element);
-    });
+      playerCards.appendChild(_card.element)
+    })
 
-  playerDiv.appendChild(playerCards);
+  playerDiv.appendChild(playerCards)
 
-  _players?.appendChild(playerDiv);
+  _players?.appendChild(playerDiv)
 
   // @ts-ignore
-  setPlayerClicks(game, player?.id);
+  setPlayerClicks(game, player?.id)
 
   /**
    * Añadimos opción de reordenar las cartas.
    * Ahora mismo es un poco "inutil" ya que cuando pasa turno se mezclan de nuevo
    * pero cuando el jugador solo vea sus cartas deberían de permanecer ordenadas.
    **/
-  new Sortable(document.querySelectorAll(".player-cards"), {
-    draggable: ".carta",
+  new Sortable(document.querySelectorAll('.player-cards'), {
+    draggable: '.carta',
     delay: 300,
-  });
+  })
 }
 
 /** Dibuja los jugadores y la información del turno */
 export function drawTurn(game: GameEngine, player?: Player) {
   while (_turn?.lastElementChild) {
-    _turn?.removeChild(_turn?.lastElementChild);
+    _turn?.removeChild(_turn?.lastElementChild)
   }
 
-  const playersAvatars = document.createElement("div");
-  playersAvatars.setAttribute("id", "avatars");
+  const playersAvatars = document.createElement('div')
+  playersAvatars.setAttribute('id', 'avatars')
 
   game.players.forEach((_player) => {
     const avatar = new Avatar(
       _player,
       _player.hand.cards.length,
       player && _player.id === player.id
-    );
+    )
 
-    playersAvatars.appendChild(avatar.element);
-  });
+    playersAvatars.appendChild(avatar.element)
+  })
 
-  const turnDiv = document.createElement("div");
-  turnDiv.appendChild(playersAvatars);
+  const turnDiv = document.createElement('div')
+  turnDiv.appendChild(playersAvatars)
 
-  _players?.querySelectorAll(".player-select").forEach((el) => {
-    el.classList.remove("player-select");
-    el.classList.remove("player-select-button");
-  });
+  _players?.querySelectorAll('.player-select').forEach((el) => {
+    el.classList.remove('player-select')
+    el.classList.remove('player-select-button')
+  })
 
   if (player) {
-    document.getElementById(player.id)?.classList.add("player-select");
-    document.getElementById(player.id)?.classList.add("player-select-button");
+    document.getElementById(player.id)?.classList.add('player-select')
+    document.getElementById(player.id)?.classList.add('player-select-button')
   }
 
-  _turn?.appendChild(turnDiv);
+  _turn?.appendChild(turnDiv)
 }
 
 export function drawStartLayout(game: GameEngine) {
-  const chat = document.getElementById("chat");
-  const deck = document.getElementById("deck");
-  const stack = document.getElementById("stack");
-  const playersTitle = document.getElementById("players-title");
-  const runoxbutton = document.getElementById("button-uno");
-  const startbutton = document.getElementById("button-start");
+  // const chat = document.getElementById("chat");
+  const deck = document.getElementById('deck')
+  const stack = document.getElementById('stack')
+  const playersTitle = document.getElementById('players-title')
+  const runoxbutton = document.getElementById('button-uno')
+  const startbutton = document.getElementById('button-start')
 
   // @ts-ignore
-  fromEvent(startbutton, "click")
+  fromEvent(startbutton, 'click')
     .pipe(first())
     .subscribe(() => {
       // @ts-ignore
-      chat.style.display = "flex";
+      // chat.style.display = "flex";
       // @ts-ignore
-      deck.style.display = "flex";
+      deck.style.display = 'flex'
       // @ts-ignore
-      stack.style.display = "flex";
+      stack.style.display = 'flex'
       // @ts-ignore
-      playersTitle.style.display = "block";
+      playersTitle.style.display = 'block'
       // @ts-ignore
-      runoxbutton.style.display = "block";
+      runoxbutton.style.display = 'block'
       // @ts-ignore
-      startbutton.style.display = "none";
+      startbutton.style.display = 'none'
 
       roomStart().then(() => {
-        startGame();
-      });
-    });
+        startGame()
+      })
+    })
 
-  drawTurn(game);
+  drawTurn(game)
 }
 
 function setPlayerClicks(game: GameEngine, id: string) {
-  const _player = document.getElementById(id);
+  const _player = document.getElementById(id)
 
   // @ts-ignore
-  fromEvent(_player, "click")
+  fromEvent(_player, 'click')
     .pipe(
       // @ts-ignore
-      filter((event) => event.target.classList.contains("carta")),
+      filter((event) => event.target.classList.contains('carta')),
       filter(() => id === game.playerTurn?.id),
       // @ts-ignore
       map((event) => event.target.id)
@@ -189,82 +191,87 @@ function setPlayerClicks(game: GameEngine, id: string) {
       */
 
       try {
-        _player?.querySelectorAll(".carta-selected").forEach((el) => {
-          el.classList.remove("carta-selected");
-        });
+        _player?.querySelectorAll('.carta-selected').forEach((el) => {
+          el.classList.remove('carta-selected')
+        })
 
-        const selectedCard = document.getElementById(cardId);
-        selectedCard?.classList.add("carta-selected");
-        const buttonPlay = selectedCard?.querySelector(".button-play-card");
+        const selectedCard = document.getElementById(cardId)
+        selectedCard?.classList.add('carta-selected')
+        const buttonPlay = selectedCard?.querySelector('.button-play-card')
 
         /**
          * @TODO Revisar esto por si los leaks
          */
         //@ts-ignore
-        fromEvent(buttonPlay, "click").subscribe(() => {
+        fromEvent(buttonPlay, 'click').subscribe(() => {
           const cardInPlayer = game.playerTurn?.hand.cards.find(
             (c) => c.id === cardId
-          );
+          )
 
           if (!cardInPlayer) {
-            return;
+            return
           }
 
           if (
             cardInPlayer?.value === Value.WILDCARD ||
             cardInPlayer?.value === Value.PLUS_FOUR
           ) {
-            let newColor;
+            let newColor
 
-            const playerSelectColor = document.getElementById('player-select-color');
+            const playerSelectColor = document.getElementById(
+              'player-select-color'
+            )
             // @ts-ignore
-            playerSelectColor.style.display = 'block';
+            playerSelectColor.style.display = 'block'
             //@ts-ignore
-            fromEvent(playerSelectColor, "click")
-                .pipe(
-                    // @ts-ignore
-                    filter((event) => event.target.classList.value.includes('button-')),
-                    filter(() => id === game.playerTurn?.id),
-                    // @ts-ignore
-                    map((event) => event.target.id),
-                    first()
-                )
-                .subscribe((newColor: any) => {
-                  cardInPlayer.setColor(newColor as Color);
-                  // @ts-ignore
-                  playerSelectColor.style.display = 'none';
-                  game
+            fromEvent(playerSelectColor, 'click')
+              .pipe(
+                // @ts-ignore
+                filter((event) =>
+                  event.target.classList.value.includes('button-')
+                ),
+                filter(() => id === game.playerTurn?.id),
+                // @ts-ignore
+                map((event) => event.target.id),
+                first()
+              )
+              .subscribe((newColor: any) => {
+                cardInPlayer.setColor(newColor as Color)
+                // @ts-ignore
+                playerSelectColor.style.display = 'none'
+                game
                   //@ts-ignore
                   .playCard(game.playerTurn?.id, cardInPlayer)
                   .subscribe(
-                      () => {},
-                      (error: string) => {
-                        if (cardInPlayer?.value === Value.WILDCARD ||
-                            cardInPlayer?.value === Value.PLUS_FOUR) {
-                          return;
-                        }
-                        showErrorAlert(error);
+                    () => {},
+                    (error: string) => {
+                      if (
+                        cardInPlayer?.value === Value.WILDCARD ||
+                        cardInPlayer?.value === Value.PLUS_FOUR
+                      ) {
+                        return
                       }
-                  );
-            });
+                      showErrorAlert(error)
+                    }
+                  )
+              })
           }
           game
-          //@ts-ignore
-          .playCard(game.playerTurn?.id, cardInPlayer)
-          .subscribe(
+            //@ts-ignore
+            .playCard(game.playerTurn?.id, cardInPlayer)
+            .subscribe(
               () => {},
               (error: string) => {
-                if (cardInPlayer?.value === Value.WILDCARD ||
-                    cardInPlayer?.value === Value.PLUS_FOUR) {
-                  return;
+                if (
+                  cardInPlayer?.value === Value.WILDCARD ||
+                  cardInPlayer?.value === Value.PLUS_FOUR
+                ) {
+                  return
                 }
-                showErrorAlert(error);
+                showErrorAlert(error)
               }
-          );
-
-
-        });
+            )
+        })
       } catch (e) {}
-    });
-
+    })
 }

@@ -1,201 +1,239 @@
 #container {
-    background: url('/assets/images/bg-main.jpg') no-repeat center center;
-    background-size: cover;
-    display: flex;
-    height: 100%;
+  background: url('/assets/images/bg-main.jpg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  height: 100%;
 }
 
 #chat {
-    background-color: rgba(0,0,0,.60);
-    display: none;
-    height: 100%;
-    max-width: 340px;
-    width: 35vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  height: 100%;
+  max-width: 340px;
+  width: 35vw;
 }
 
 #chat-top {
-    background-color: #1A1712;
-    box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
-    color: #ffffff;
-    display: flex;
-    flex: 1;
-    font-size: 12px;
-    font-weight: bold;
-    height: 65px;
+  background-color: #1a1712;
+  box-shadow: 0 10px 14px rgba(0, 0, 0, 0.23);
+  color: #ffffff;
+  display: flex;
+  flex: 1;
+  font-size: 12px;
+  font-weight: bold;
+  height: 65px;
 }
 
 #chat .chat-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 #root {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 2px solid #1a1712;
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin: 0 auto;
+  max-width: 1448px;
+  position: relative;
   width: 100%;
 }
 
 #top {
-    background-color: #1A1712;
-    box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
-    color: #ffffff;
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    padding: 1rem 2rem;
-    height: 65px;
+  background-color: #1a1712;
+  box-shadow: 0 10px 14px rgba(0, 0, 0, 0.23);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 1rem 2rem;
+  height: 65px;
 }
 
 #top #deck {
-    align-items: center;
-    height: 160px;
-    position: relative;
-    width: 110px;
-    display: none;
-    justify-content: center;
-    margin-right: 20px;
+  align-items: center;
+  height: 160px;
+  position: relative;
+  width: 110px;
+  display: none;
+  justify-content: center;
+  margin-right: 20px;
 }
 
 #top #deck img {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    height: 160px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 160px;
 }
 
 #top #deck button {
-    width: 120px;
-    z-index: 100;
+  width: 120px;
+  z-index: 100;
 }
 
 #top #stack-container {
-    display: none;
+  display: none;
 }
 
 #top #stack-container #stack {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    width: 140px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 140px;
 }
 
 #top #stack-container #stack-title {
-    font-size: 10px;
-    text-align: center;
+  font-size: 10px;
+  text-align: center;
 }
 
 #top #stack-container #stack .carta {
-    top: 10px;
-    margin-bottom: -28px;
-    position: absolute;
+  top: 10px;
+  margin-bottom: -28px;
+  position: absolute;
 }
 
 #players {
-    overflow-y: auto;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    position: relative;
-    padding-top: 56px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
+  overflow-y: auto;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  padding-top: 56px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
 }
 
 #players-title {
-    margin-top: 3rem;
-    display: none;
+  margin-top: 3rem;
+  display: none;
 }
 
-#button-uno  {
-    border-radius: 50%;
-    border-width: 6px;
-    bottom: 50px;
-    box-shadow: 0 8px 4px rgba(0, 0, 0, .32);
-    display: none;
-    font-size: 12px;
-    height: 96px;
-    position: fixed;
-    right: 50px;
-    width: 96px;
-    z-index: 100;
+/* #button-uno {
+  border-radius: 50%;
+  border-width: 6px;
+  bottom: 50px;
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.32);
+  display: none;
+  font-size: 12px;
+  height: 96px;
+  position: fixed;
+  right: 50px;
+  width: 96px;
+  z-index: 100;
+} */
+
+#button-uno {
+  border-radius: 50%;
+  border-width: 6px;
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.32);
+  display: none;
+  font-size: 16px;
+  height: 110px;
+  position: absolute;
+  right: 3rem;
+  bottom: 1rem;
+  width: 110px;
+  z-index: 100;
 }
 
-#button-start  {
-    border-radius: 50%;
-    border-width: 6px;
-    box-shadow: 0 8px 4px rgba(0, 0, 0, .32);
-    font-size: 16px;
-    height: 110px;
-    position: fixed;
-    right: 50px;
-    top: 20vh;
-    left: 50%;
-    margin-left: -55px;
-    width: 110px;
-    z-index: 100;
+#google-login {
+  border-radius: 50%;
+  border-width: 6px;
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.32);
+  font-size: 16px;
+  height: 110px;
+  position: fixed;
+  right: 50px;
+  top: 20vh;
+  left: 50%;
+  margin-left: -55px;
+  width: 110px;
+  z-index: 100;
 }
 
+#button-start {
+  border-radius: 50%;
+  border-width: 6px;
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.32);
+  font-size: 16px;
+  height: 110px;
+  position: fixed;
+  right: 50px;
+  top: 20vh;
+  left: 50%;
+  margin-left: -55px;
+  width: 110px;
+  z-index: 100;
+}
 
 #waiting-title {
-    border-radius: 50%;
-    border-width: 6px;
-    display: none;
-    font-size: 28px;
-    height: 210px;
-    position: fixed;
-    right: 50px;
-    top: 20vh;
-    left: 40%;
-    margin-left: -100px;
-    width: 410px;
-    z-index: 100;
+  border-radius: 50%;
+  border-width: 6px;
+  display: none;
+  font-size: 28px;
+  height: 210px;
+  position: fixed;
+  right: 50px;
+  top: 20vh;
+  left: 40%;
+  margin-left: -100px;
+  width: 410px;
+  z-index: 100;
 }
 
-
 #player-select-color {
-    display: none;
-    text-align: center;
-    padding: 20px;
+  display: none;
+  text-align: center;
+  padding: 20px;
 }
 
 #color-select {
-    display: none;
-    text-align: center;
-    padding: 20px;
+  display: none;
+  text-align: center;
+  padding: 20px;
 }
 
 .button-red {
-    background: red;
-    color: white;
-    margin-left: 10px;
-    margin-right: 10px;
+  background: #ee1c24;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .button-blue {
-    background: blue;
-    color: white;
-    margin-left: 10px;
-    margin-right: 10px;
+  background: #0095da;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .button-green {
-    background: green;
-    color: white;
-    margin-left: 10px;
-    margin-right: 10px;
+  background: #00a651;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .button-yellow {
-    background: yellow;
-    color: black;
-    margin-left: 10px;
-    margin-right: 10px;
+  background: #ffde00;
+  color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#player-select-color button {
+  width: 200px;
+  height: 50px;
+  font-size: 23px;
 }
