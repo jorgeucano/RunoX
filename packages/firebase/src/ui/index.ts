@@ -224,10 +224,11 @@ function setPlayerClicks(game: GameEngine, id: string) {
             // @ts-ignore
             playerSelectColor.style.display = 'block'
             //@ts-ignore
+            // @ts-ignore
             fromEvent(playerSelectColor, 'click')
               .pipe(
-                // @ts-ignore
                 filter((event) =>
+                  // @ts-ignore
                   event.target.classList.value.includes('button-')
                 ),
                 filter(() => id === game.playerTurn?.id),

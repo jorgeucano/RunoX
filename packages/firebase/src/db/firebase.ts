@@ -239,7 +239,9 @@ export const roomData$ = () => {
       }
 
       updateMainLayout()
+      getMessage(roomName);
     }
+
   )
 }
 
@@ -274,3 +276,43 @@ export const firebaseUpdateState = (state: any): Promise<any> => {
 
   return docRef.set(_state, { merge: true })
 }
+
+
+
+export const getMessage = (roomName: string): any => {
+
+  sendMessage(roomName, 'mensaje de prueba', 'Jorge');
+
+  const docRef = db.collection(`chat`).doc(`${roomName}-chat`);
+  docRef
+      .get()
+      .then((doc: any) => {
+        if(doc.exists) {
+          showMessage(doc.data());
+        } else {
+          db.collection(`chat`)
+              .doc(`${roomName}-chat`)
+              .set()
+              .then((doc: any) => {
+                showMessage(doc.data());
+              })
+        }
+      });
+};
+
+export const sendMessage = (roomName: string, message: string, name: string): any => {
+  const docRef = db.collection('chat').doc(`${roomName}-chat`);
+  const _state = {roomName, message, name};
+  return docRef.set(_state, { merge: true })
+}
+
+export const showMessage = (docs: any): any => {
+  // @ts-ignore
+  document.getElementById('chat-content').innerHTML = `<p>${docs.name}: ${docs.message}`;
+  console.log(docs);
+}
+
+
+
+
+

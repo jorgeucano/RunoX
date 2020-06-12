@@ -9,7 +9,6 @@
 
 #chat {
   background-color: rgba(0, 0, 0, 0.6);
-  display: none;
   height: 100%;
   max-width: 340px;
   width: 35vw;
@@ -33,6 +32,28 @@
   width: 100%;
 }
 
+#chat-content {
+  flex: 1;
+  align-items: flex-end;
+  height: 90%;
+}
+
+#chat-input > input {
+  font-weight: 600;
+  float: left;
+  margin: 1rem auto;
+  text-align: center;
+  text-transform: uppercase;
+  width: 70%;
+}
+#chat-input > button {
+  margin: 1rem auto;
+  margin-left: 3px;
+  width: 25%;
+  float: left;
+}
+
+
 #root {
   background-color: rgba(0, 0, 0, 0.25);
   border: 2px solid #1a1712;
@@ -40,8 +61,8 @@
   flex-direction: column;
   height: 100%;
   margin: 0 auto;
-  max-width: 1680px;
-  max-height: 1050px;
+  /* max-width: 1680px;
+  max-height: 1050px; */
   position: relative;
   width: 100%;
 }
