@@ -3,6 +3,8 @@
   background-size: cover;
   display: flex;
   height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 #chat {
@@ -38,7 +40,8 @@
   flex-direction: column;
   height: 100%;
   margin: 0 auto;
-  max-width: 1448px;
+  max-width: 1680px;
+  max-height: 1050px;
   position: relative;
   width: 100%;
 }
@@ -235,5 +238,5 @@
 #player-select-color button {
   width: 200px;
   height: 50px;
-  font-size: 23px;
+  font-size: 18px;
 }
