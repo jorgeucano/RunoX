@@ -1,12 +1,8 @@
 import "./ui/styles/styles.css";
 
 import { fromEvent } from "rxjs";
-import { filter, switchMap, first } from "rxjs/operators";
-import {
-  initializeFirebase,
-  firebaseUpdateState,
-  setWinner,
-} from "./db/firebase";
+import { filter, switchMap, first, distinctUntilChanged } from "rxjs/operators";
+import { initializeFirebase, firebaseUpdateState, setWinner, createAndSendMessage } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
 import { getUrlSearch, showInfoAlert, showErrorAlert } from "./ui/utils/utils";
@@ -57,9 +53,7 @@ game.events.afterYellUno.subscribe(() => {
 
 game.events.gameEnd.subscribe((data) => {
   firebaseUpdateState(game.gameStateAsJSON).then(() => {
-    showInfoAlert(
-      `El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`
-    );
+    showInfoAlert(`El jugador ${data.winner.name} ha ganado!! Su puntaje es: ${data.score}`);
 
     setWinner(data.winner.name, data.score);
   });
@@ -80,6 +74,11 @@ fromClick("button-take")
 fromClick("button-uno")
   // @ts-ignore
   .pipe(switchMap(() => game.uno(globalPlayer.id)))
+  .subscribe();
+
+fromClick("button-send-message")
+   // @ts-ignore
+  .pipe(switchMap(() => createAndSendMessage(globalPlayer)))
   .subscribe();
 
 export const updateMainLayout = () => {
@@ -116,20 +115,14 @@ export const showTurnNotification = () => {
   }
 
   window.Notification.requestPermission().then(() => {
-    if (
-      Notification.permission === "granted" &&
-      game.playerTurn?.id === globalPlayer.id
-    ) {
-      const notification = new Notification(
-        `${globalPlayer.name} es tu turno de jugar!`,
-        {
-          body: "Tus amigos estan esperando que juegues una carta",
-          tag: "turnNotification",
-          // TODO: mejorar la imagen que se muestra
-          image: "./assets/images/logo2x.png",
-          requireInteraction: false,
-        }
-      );
+    if (Notification.permission === "granted" && game.playerTurn?.id === globalPlayer.id) {
+      const notification = new Notification(`${globalPlayer.name} es tu turno de jugar!`, {
+        body: "Tus amigos estan esperando que juegues una carta",
+        tag: "turnNotification",
+        // TODO: mejorar la imagen que se muestra
+        image: "./assets/images/logo2x.png",
+        requireInteraction: false,
+      });
 
       setTimeout(notification.close.bind(notification), 5000);
     }
@@ -137,7 +130,7 @@ export const showTurnNotification = () => {
 };
 
 // @ts-ignore
-document.getElementById("button-start")?.style.display = "none";
+document.getElementById("button-start")?.style.display = "block";
 
 // @ts-ignore
 fromClick("google-login")
