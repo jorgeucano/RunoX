@@ -1,5 +1,5 @@
 #container {
-  background: url('/assets/images/bg-main.jpg') no-repeat center center;
+  background: url("/assets/images/bg-main.jpg") no-repeat center center;
   background-size: cover;
   display: flex;
   height: 100%;
@@ -35,24 +35,48 @@
 #chat-content {
   flex: 1;
   align-items: flex-end;
-  height: 90%;
+  height: calc(100vh - 109px - 2rem);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
 }
 
-#chat-input > input {
-  font-weight: 600;
-  float: left;
-  margin: 1rem auto;
-  text-align: center;
-  text-transform: uppercase;
-  width: 70%;
-}
-#chat-input > button {
-  margin: 1rem auto;
-  margin-left: 3px;
-  width: 25%;
-  float: left;
+#chat-actions {
+  display: none;
+  margin: 1rem;
+  justify-content: space-between;
 }
 
+#input-write-message {
+  width: calc(100% - 60px);
+  font-size: 1rem;
+  padding: 0.7rem;
+}
+
+#button-send-message {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.chat-bubble {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 3px;
+  padding: 0.7rem;
+  font-size: 1rem;
+}
+.chat-bubble+.chat-bubble {
+  margin-top: 1rem;
+}
+
+.chat-bubble-username {
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.chat-bubble-message {
+  
+}
 
 #root {
   background-color: rgba(0, 0, 0, 0.25);

@@ -150,7 +150,7 @@ export const enterToRoom = (user: Player) => {
           )
 
           // @ts-ignore
-          document.getElementById('button-start')?.style.display = 'block'
+          document.getElementById('button-start')?.style.display = 'block';
 
           let _state = game.gameStateAsJSON
           _state = JSON.parse(JSON.stringify(_state))
@@ -239,7 +239,8 @@ export const roomData$ = () => {
       }
 
       updateMainLayout()
-      getMessage(roomName);
+      createRoomChat();
+      displayMessages(roomName);
     }
 
   )
@@ -277,42 +278,65 @@ export const firebaseUpdateState = (state: any): Promise<any> => {
   return docRef.set(_state, { merge: true })
 }
 
+/******************************* BEGIN CHAT *******************************/
 
+export const createRoomChat = () => {
+  const chatRoom = { messages: [] };
+  
+  db.collection(`chat`)
+    .doc(`${roomName}-chat`)
+    .get()
+    .then((doc: any) => {
 
-export const getMessage = (roomName: string): any => {
-
-  sendMessage(roomName, 'mensaje de prueba', 'Jorge');
-
-  const docRef = db.collection(`chat`).doc(`${roomName}-chat`);
-  docRef
-      .get()
-      .then((doc: any) => {
-        if(doc.exists) {
-          showMessage(doc.data());
-        } else {
-          db.collection(`chat`)
-              .doc(`${roomName}-chat`)
-              .set()
-              .then((doc: any) => {
-                showMessage(doc.data());
-              })
-        }
-      });
-};
-
-export const sendMessage = (roomName: string, message: string, name: string): any => {
-  const docRef = db.collection('chat').doc(`${roomName}-chat`);
-  const _state = {roomName, message, name};
-  return docRef.set(_state, { merge: true })
+      if(!doc.exists) {
+        db.collection(`chat`)
+        .doc(`${roomName}-chat`)
+        .set(chatRoom)
+        .then(() => {
+          displayMessages(roomName);
+        })
+      }
+      // @ts-ignore
+      document.getElementById('chat-actions')?.style.display = 'flex';
+    });
 }
 
-export const showMessage = (docs: any): any => {
+export const createAndSendMessage = (player: any) => {
   // @ts-ignore
-  document.getElementById('chat-content').innerHTML = `<p>${docs.name}: ${docs.message}`;
-  console.log(docs);
+  const text = document.getElementById('input-write-message').value;
+  createMessage(roomName, player,  text);
 }
 
+export const displayMessages = (roomName: string): any => {
+  var query = db.collection(`chat`).doc(`${roomName}-chat`).collection('messages').orderBy('timestamp', 'asc').limit(13);
+ 
+  // @ts-ignore
+  document.getElementById('chat-content').innerHTML = '';
 
+  query.onSnapshot(function(snapshot: any) {
+    snapshot.docChanges().forEach(function(change:any) {
+     var message = change.doc.data();
+     displayMessage(message.name, message.text);
+    });
+  });
+}
 
+export const displayMessage = (name: string, text: string) => {
+  // @ts-ignore
+  document.getElementById('chat-content').innerHTML =
+  // @ts-ignore
+  document.getElementById('chat-content').innerHTML + 
+    `<div class="chat-bubble"><div class="chat-bubble-username">${name}</div><div class="chat-bubble-message">${text}</div></div>` 
+    ;
+}
 
+export const createMessage = (roomName: string, player: any,  text: string) => {
+  const colRef = db.collection(`chat`).doc(`${roomName}-chat`).collection('messages');
 
+  const timestamp =  Date.now();
+  const msg = { roomName, text, name: player.name, timestamp };
+
+  return colRef.add(msg);
+}
+
+/******************************* END CHAT *******************************/

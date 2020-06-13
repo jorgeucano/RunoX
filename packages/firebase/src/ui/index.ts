@@ -12,10 +12,7 @@ import { Sortable } from '@shopify/draggable'
 import { GameEngine } from '@runox-game/game-engine'
 import { Player } from '@runox-game/game-engine/lib/models/player.model'
 import { Value } from '@runox-game/game-engine/lib/models/values.model'
-import {
-  isValidColor,
-  Color,
-} from '@runox-game/game-engine/lib/models/color.model'
+import { Color } from '@runox-game/game-engine/lib/models/color.model'
 import { showErrorAlert } from './utils/utils'
 
 const _players = document.getElementById('players')
