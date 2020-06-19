@@ -68,6 +68,11 @@
   margin-top: 1rem;
 }
 
+.chat-bubble-timestamp {
+  font-size: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .chat-bubble-username {
   font-size: 0.7rem;
   font-weight: bold;
@@ -76,6 +81,13 @@
 
 .chat-bubble-message {
   
+}
+
+.chat-runox-icon {
+  background-color: #CCC;
+  padding: 10px;
+  max-width: calc(100% - 60px);
+  border-radius: 18px;
 }
 
 #root {

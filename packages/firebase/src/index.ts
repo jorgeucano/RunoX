@@ -1,7 +1,7 @@
 import "./ui/styles/styles.css";
 
 import { fromEvent } from "rxjs";
-import { filter, switchMap, first, distinctUntilChanged } from "rxjs/operators";
+import { filter, switchMap, first } from "rxjs/operators";
 import { initializeFirebase, firebaseUpdateState, setWinner, createAndSendMessage } from "./db/firebase";
 
 import { drawTurn, drawStack, drawPlayersCards } from "./ui";
@@ -63,6 +63,8 @@ game.events.gameEnd.subscribe((data) => {
 const getElement = (id: string): HTMLElement => document.getElementById(id);
 // @ts-ignore
 const fromClick = (id: string) => fromEvent(getElement(id), "click");
+// @ts-ignore
+const fromKeyUp = (id: string) => fromEvent(getElement(id), "keyup").pipe(filter(e => e.keyCode == 13));
 
 fromClick("button-take")
   .pipe(
@@ -77,6 +79,11 @@ fromClick("button-uno")
   .subscribe();
 
 fromClick("button-send-message")
+   // @ts-ignore
+  .pipe(switchMap(() => createAndSendMessage(globalPlayer)))
+  .subscribe();
+
+  fromKeyUp("input-write-message")
    // @ts-ignore
   .pipe(switchMap(() => createAndSendMessage(globalPlayer)))
   .subscribe();
