@@ -6,6 +6,7 @@ import {GameEngineService} from "../game-engine.service";
 import {ICard} from "@runox-game/game-engine/lib/models/card.model";
 import {Hand} from "@runox-game/game-engine/lib/models/hand.model";
 import {FirebaseEngineService} from "../firebase-engine.service";
+import {Observable} from "rxjs";
 
 enum loginStatus {
   ENTER = 0, OWNER = 1, WAITING = 2,
@@ -27,6 +28,7 @@ export class LoginComponent {
   isRoomOwner: boolean = true;
 
   avatars: Array<any> = [];
+  room$: Observable<any> = this.firebaseEService.room$;
 
   constructor(
     private router: Router,
@@ -42,15 +44,19 @@ export class LoginComponent {
       (params) => {
         console.log('params', params.id);
         this.room.name = params.id;
+        this.setRoom(params.id);
       }
     );
+   }
+
+   setRoom(roomName: string) {
+     this.firebaseEService.readRoom(roomName);
    }
 
   onLogin(user: any) {
     // @TODO Mostrar login de firebase para validar usario, an then ...
     this.status = this.isRoomOwner ? loginStatus.OWNER : loginStatus.WAITING;
     this.avatars.push(user);
-
     const hand = new Hand();
     const player: Player = {id: user.email, hand: hand, pic: user.photoURL, name: user.fullName};
     this.gameEngineService.joinUser(player);
@@ -66,8 +72,7 @@ export class LoginComponent {
     // guardar la sala en firebase - gameEngine
     this.firebaseEService.createRoom(roomName).then(
       ()=> {
-        this.firebaseEService.readRoom(roomName);
-        this.onStartGame(roomName);
+        this.setRoom(roomName);
       }
     )
   }
