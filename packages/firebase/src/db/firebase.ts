@@ -302,24 +302,25 @@ export const displayMessages = (roomName: string): any => {
   document.getElementById("chat-content").innerHTML = "";
 
   query.onSnapshot(function (snapshot: any) {
-    snapshot.docChanges().forEach(function (change: any) {
-      if ((change.type = "added")) {
-        var message = change.doc.data();
-        displayMessage(message.name, amazingText(message.text));
-      } else {
-        console.debug(change.type);
-      }
-    });
+    if (!snapshot.metadata.hasPendingWrites) {
+      snapshot.docChanges().forEach(function (change: any) {
+        if ((change.type = "added")) {
+          var message = change.doc.data();
+          displayMessage(message.name, amazingText(message.text), new Date(message.timestamp));
+        }
+      });
+    }
   });
 };
 
-export const displayMessage = (name: string, text: string) => {
+export const displayMessage = (name: string, text: string, timestamp: Date) => {
   const chatContent = document.getElementById("chat-content");
   // @ts-ignore
   chatContent.innerHTML =
     // @ts-ignore
     chatContent.innerHTML +
     `<div class="chat-bubble">
+      <div class="chat-bubble-timestamp">${timestamp?.toTimeString()}</div>
       <div class="chat-bubble-username">
         ${name}
       </div>
@@ -337,13 +338,17 @@ const amazingText = (text: string): string => {
       return '<img src="/assets/images/logo2x.png" alt="RunoX logo" class="chat-runox-icon">';
 
     case "!voluntad":
-      return "<h2>Ponele voluntaaddd!</h2>";
+      return '<h2 style="color:green">Ponele voluntaaddd!</h2>';
 
     case "!2":
-      return "<h2><strong> +2 </strong></h2>";
+      return '<h2 style="color:darkorange">+2</h2>';
 
     case "!4":
-      return "<h2><strong> +4 </strong></h2>";
+      return '<h2 style="color:red">+4</h2>';
+
+    case "!not-send!":
+      return '<h3 style="color:red"> mensaje no enviado </h3>';
+
     default:
       return text;
   }
@@ -355,7 +360,14 @@ export const createMessage = (roomName: string, player: any, text: string) => {
   const timestamp = Date.now();
   const msg = { roomName, text, name: player.name, timestamp };
 
-  return colRef.add(msg);
+  return colRef
+    .add(msg)
+    .then(() => {
+      displayMessage(player.name, amazingText(text), new Date(timestamp));
+    })
+    .catch((error: any) => {
+      displayMessage(player.name, amazingText("!not-send!"), new Date(timestamp));
+    });
 };
 
 /******************************* END CHAT *******************************/
