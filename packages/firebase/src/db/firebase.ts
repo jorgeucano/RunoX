@@ -302,8 +302,11 @@ export const createRoomChat = () => {
 }
 
 export const createAndSendMessage = (player: any) => {
+  const input = document.getElementById('input-write-message');
   // @ts-ignore
-  const text = document.getElementById('input-write-message').value;
+  const text = input.value;
+  // @ts-ignore
+  input.value = null;
   createMessage(roomName, player,  text);
 }
 
@@ -315,19 +318,50 @@ export const displayMessages = (roomName: string): any => {
 
   query.onSnapshot(function(snapshot: any) {
     snapshot.docChanges().forEach(function(change:any) {
-     var message = change.doc.data();
-     displayMessage(message.name, message.text);
+      if (change.type="added"){
+        var message = change.doc.data();
+        displayMessage(message.name, amazingText(message.text));
+      }else{
+        console.debug(change.type);
+      }
     });
   });
 }
 
 export const displayMessage = (name: string, text: string) => {
+  const chatContent = document.getElementById('chat-content');
   // @ts-ignore
-  document.getElementById('chat-content').innerHTML =
+  chatContent.innerHTML =
   // @ts-ignore
-  document.getElementById('chat-content').innerHTML + 
-    `<div class="chat-bubble"><div class="chat-bubble-username">${name}</div><div class="chat-bubble-message">${text}</div></div>` 
-    ;
+  chatContent.innerHTML + 
+    `<div class="chat-bubble">
+      <div class="chat-bubble-username">
+        ${name}
+      </div>
+      <div class="chat-bubble-message">
+        ${text}
+      </div>
+    </div>`;
+    // @ts-ignore
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+const amazingText = (text: string): string => {
+  switch (text) {
+    case "!runox":
+      return '<img src="/assets/images/logo2x.png" alt="RunoX logo" class="chat-runox-icon">';
+  
+    case "!voluntad":
+      return '<h2>Ponele voluntaaddd!</h2>';
+
+    case "!2":
+      return '<h2><strong> +2 </strong></h2>';
+
+    case "!4":
+      return '<h2><strong> +4 </strong></h2>';
+    default:
+      return text;
+  }
 }
 
 export const createMessage = (roomName: string, player: any,  text: string) => {
