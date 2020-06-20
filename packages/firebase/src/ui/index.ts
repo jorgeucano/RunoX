@@ -1,5 +1,5 @@
 import { fromEvent } from 'rxjs'
-import { first, filter, map } from 'rxjs/operators'
+import { first, filter, map, tap } from 'rxjs/operators'
 
 import { CardComponent } from './components/card/card.component'
 import { Avatar } from './components/avatar/avatar.component'
@@ -228,7 +228,7 @@ function setPlayerClicks(game: GameEngine, id: string) {
                   // @ts-ignore
                   event.target.classList.value.includes('button-')
                 ),
-                filter(() => id === game.playerTurn?.id),
+                //filter(() => id === game.playerTurn?.id),
                 // @ts-ignore
                 map((event) => event.target.id),
                 first()
@@ -253,8 +253,8 @@ function setPlayerClicks(game: GameEngine, id: string) {
                     }
                   )
               })
-          }
-          game
+          } else {
+            game
             //@ts-ignore
             .playCard(game.playerTurn?.id, cardInPlayer)
             .subscribe(
@@ -269,6 +269,7 @@ function setPlayerClicks(game: GameEngine, id: string) {
                 showErrorAlert(error)
               }
             )
+          }
         })
       } catch (e) {}
     })
