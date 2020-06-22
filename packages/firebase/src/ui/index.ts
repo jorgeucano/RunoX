@@ -40,9 +40,8 @@ export function drawStack(game: GameEngine) {
     stackCardElement !== null &&
     `carta-stack-${game.stackCard.id}` === stackCardElement.id
   ) {
-    console.warn('La carta ya esta dibujada en la cima del stack')
-
-    return
+    // console.warn('La carta ya esta dibujada en la cima del stack')
+    return;
   }
 
   const stackCardDiv = document.createElement('div')
@@ -74,7 +73,7 @@ export function drawPlayersCards(game: GameEngine, globalPlayerId: string) {
 
   const playerCards = document.createElement('div')
   playerCards.setAttribute('class', 'player-cards')
-
+  debugger;
   player?.hand.cards
     .filter((card, index) => player?.hand.cards.indexOf(card) === index)
     .forEach((card) => {

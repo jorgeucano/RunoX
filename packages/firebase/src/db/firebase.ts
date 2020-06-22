@@ -212,7 +212,7 @@ export const roomData$ = () => {
         waitingGif.style.display = "none";
       }
 
-      if (_data$.winner !== null) {
+      if (_data$.winner && _data$.winner !== null) {
         showInfoAlert(`El jugador ${_data$.winner.name} ha ganado!! Su puntaje es: ${_data$.winner.score}`);
       }
 
