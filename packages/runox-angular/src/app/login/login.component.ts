@@ -3,7 +3,6 @@ import {Router, ActivatedRoute} from '@angular/router';
 import { first } from 'rxjs/operators';
 import {Player} from "@runox-game/game-engine/lib/models/player.model";
 import {GameEngineService} from "../game-engine.service";
-import {ICard} from "@runox-game/game-engine/lib/models/card.model";
 import {Hand} from "@runox-game/game-engine/lib/models/hand.model";
 import {FirebaseEngineService} from "../firebase-engine.service";
 import {Observable} from "rxjs";
