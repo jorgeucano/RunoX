@@ -73,7 +73,6 @@ export function drawPlayersCards(game: GameEngine, globalPlayerId: string) {
 
   const playerCards = document.createElement('div')
   playerCards.setAttribute('class', 'player-cards')
-  debugger;
   player?.hand.cards
     .filter((card, index) => player?.hand.cards.indexOf(card) === index)
     .forEach((card) => {

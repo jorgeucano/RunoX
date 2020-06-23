@@ -76,8 +76,7 @@ fromClick("button-take")
 fromClick("button-uno")
   // @ts-ignore
   .pipe(switchMap(() => {
-    debugger;
-    game.uno(globalPlayer.id);
+    return game.uno(globalPlayer.id);
   }))
   .subscribe();
 
