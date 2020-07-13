@@ -50,6 +50,7 @@ export class LoginModalComponent {
       this.createRoom.emit(this.roomName);
     } else {
       // TODO: modal con: "complete el nombre de la room"
+      alert('Necesitas darl un nombre a la sala');
     }
   }
 

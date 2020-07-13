@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/firestore";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {GameEngineService} from "./game-engine.service";
 import {Player} from "@runox-game/game-engine/lib/models/player.model";
-import {mergeMap} from "rxjs/operators";
+import {first, map, mergeMap} from "rxjs/operators";
+import {IGameState} from "@runox-game/game-engine/lib/models/game-state.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class FirebaseEngineService {
 
   createRoom(roomName: string): Promise<any> {
     let _state = this.gameEngine.game.gameStateAsJSON;
+    debugger;
     _state = JSON.parse(JSON.stringify(_state));
     const room = Object.assign(
       {},
@@ -26,13 +28,14 @@ export class FirebaseEngineService {
         ..._state,
         start: false,
         winner: null,
+        name: roomName
       }
     );
     return this.roomCollection.doc(roomName).set(room);
   }
 
   readRoom(roomName: string) {
-    this.room$.pipe(
+    return this.room$.pipe(
       mergeMap(
         () => {
           return this.roomCollection.doc(roomName).valueChanges();
@@ -41,8 +44,48 @@ export class FirebaseEngineService {
     );
   }
 
-  joinUser(user: Player, roomName: string) {
-    // this.roomCollection.doc(roomName).update()
+  updateData() {
+    this.gameEngine.onStateChanged()
+  }
+
+  updateFirebase(newState: IGameState) {
+    const _state = JSON.parse(JSON.stringify(newState));
+    const room = Object.assign(
+      {},
+      {
+        ..._state
+      }
+    );
+    this.roomCollection.doc(room.name).update(room).then(
+      (response) => {
+        console.log(`response de firebase`, response);
+      }
+    )
+  }
+
+  joinUser(user: Player, roomName: string): Promise<any> {
+    this.gameEngine.joinUser(user);
+    let _state = this.gameEngine.game.gameStateAsJSON;
+    _state = JSON.parse(JSON.stringify(_state));
+    const room = Object.assign(
+      {},
+      {
+        ..._state,
+        start: false,
+        winner: null,
+        name: roomName
+      }
+    );
+    debugger;
+    return this.roomCollection.doc(roomName).update(room);
+  }
+
+
+  checkRoom(roomName: string): Observable<any> {
+    return this.roomCollection.doc(roomName).get()
+        .pipe(
+          first()
+        );
   }
 
 

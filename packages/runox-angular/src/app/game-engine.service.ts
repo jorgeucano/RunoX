@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameEngine} from "@runox-game/game-engine";
 import {GameModes} from "@runox-game/game-engine/lib/models/game-modes";
 import { environment } from "../environments/environment";
-import {Player} from "@runox-game/game-engine/lib/models/player.model";
+import {IPlayer, Player} from "@runox-game/game-engine/lib/models/player.model";
 import {ICard} from "@runox-game/game-engine/lib/models/card.model";
 import {ILog} from "@runox-game/game-engine/lib/log/log.factory";
 
@@ -55,6 +55,10 @@ export class GameEngineService {
 
   overrideInternalState(data: any) {
     this.game.overrideInternalState(data);
+  }
+
+  onStateChanged() {
+    // return this.game.onStateChanged();
   }
 
 
