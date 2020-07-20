@@ -19,14 +19,11 @@ enum loginStatus {
 export class LoginComponent {
 
   status: loginStatus = loginStatus.ENTER;
-
   room: any = {
     name: ''
   };
   user: any;
-
   isRoomOwner: boolean = true;
-
   avatars: Array<any> = [];
   room$: Observable<any> = new BehaviorSubject<any>({name: ''});
 
@@ -60,7 +57,6 @@ export class LoginComponent {
     this.status = this.isRoomOwner ? loginStatus.OWNER : loginStatus.WAITING;
     this.avatars.push(user);
     const hand = new Hand();
-    debugger;
     const player: Player = {id: user.id, hand: hand, pic: user.image, name: user.name};
     if (this.room.name !== '' && this.room.name) {
       // chequear si la sala existe
@@ -71,19 +67,26 @@ export class LoginComponent {
     }
   }
 
+  setAvatars(avatars: Array<any>) {
+    this.avatars = avatars;
+  }
+
   checkRoom(roomName: string, player: any) {
     this.firebaseEService.checkRoom(roomName).subscribe(
       (data) => {
-        console.log(data.exists);
         if (data.exists) {
           this.gameEngineService.overrideInternalState(data.data());
-          console.log('entro aca');
-          // simple agregar al usuario
-          this.firebaseEService.joinUser(player, this.room.name).then(
-            (x) => {
-              console.log(`usuario agregado ${x}`);
-            }
-          );
+          const fullData = data.data();
+          this.setAvatars(fullData.playersGroup.players);
+          if (
+            !fullData.playersGroup.players.find(data => data.id === player.id)
+          ) {
+            this.firebaseEService.joinUser(player, this.room.name).then(
+              (x) => {
+                this.setAvatars([...fullData.playersGroup.players, player]);
+              }
+            );
+          }
         } else {
           alert('La sala no existe');
         }

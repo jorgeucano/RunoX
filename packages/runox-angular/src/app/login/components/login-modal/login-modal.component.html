@@ -12,6 +12,7 @@
       [(ngModel)]="roomName"
       *ngIf="status === 1 && room.name === ''"
       placeholder="Room name here ..."
+      (keydown.enter)="create()"
     />
     <div class="mt-6">
       <rnx-button *ngIf="status === 0 && room.name !== ''" (click)="join()">

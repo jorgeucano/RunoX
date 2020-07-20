@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/firestore";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, combineLatest, from} from "rxjs";
 import {GameEngineService} from "./game-engine.service";
 import {Player} from "@runox-game/game-engine/lib/models/player.model";
-import {first, map, mergeMap} from "rxjs/operators";
+import {filter, first, map, mergeMap} from "rxjs/operators";
 import {IGameState} from "@runox-game/game-engine/lib/models/game-state.model";
 
 @Injectable({
@@ -36,6 +36,12 @@ export class FirebaseEngineService {
 
   readRoom(roomName: string) {
     return this.room$.pipe(
+      mergeMap(() => this.checkRoom(roomName)),
+      map(data => {
+        if (!data.exists) {
+          return from(this.createRoom(roomName));
+        }
+      }),
       mergeMap(
         () => {
           return this.roomCollection.doc(roomName).valueChanges();
@@ -43,6 +49,9 @@ export class FirebaseEngineService {
       )
     );
   }
+
+
+
 
   updateData() {
     this.gameEngine.onStateChanged()
