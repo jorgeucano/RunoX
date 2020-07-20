@@ -45,7 +45,6 @@ export class LoginModalComponent {
   }
 
   create() {
-    debugger;
     if (this.roomName !== '') {
       this.createRoom.emit(this.roomName);
     } else {

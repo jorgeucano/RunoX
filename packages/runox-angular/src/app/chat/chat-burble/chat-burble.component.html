@@ -1,0 +1,13 @@
+<ng-container *ngIf="message != null">
+    <div class="chat-bubble">
+        <div class="chat-bubble-timestamp">
+            {{ message.timestamp | date:'yyyy-MM-dd HH:mm'  }}
+        </div>
+        <div class="chat-bubble-username">
+            {{ message.name }}
+        </div>
+        <div class="chat-bubble-message">
+            {{ amazingText(message.text) }}
+        </div>
+    </div>
+</ng-container>
