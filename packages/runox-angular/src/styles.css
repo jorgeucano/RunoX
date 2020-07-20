@@ -26,6 +26,7 @@ input {
   border-radius: 0.5rem;
   padding: 0.63rem 1rem;
   outline: 0;
+  color: #FFF;
 }
 
 input:focus {

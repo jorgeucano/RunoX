@@ -1,0 +1,12 @@
+<div id="chat">
+    <div id="chat-top">
+        <h1 class="chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
+    </div>
+    <div id="chat-content">
+        <rnx-chat-burble *ngFor="let message of messages$ | async" [message]="message"></rnx-chat-burble>
+    </div>
+    <div id="chat-actionsSARASA">
+        <input id="input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
+        <button id="button-send-message" (click)="sendMessage()">Enviar</button>
+    </div>
+</div>

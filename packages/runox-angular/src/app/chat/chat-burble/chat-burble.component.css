@@ -1,0 +1,28 @@
+.chat-bubble {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 3px;
+  padding: 0.7rem;
+  font-size: 1rem;
+}
+
+.chat-bubble-timestamp {
+  font-size: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.chat-bubble-username {
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.chat-bubble-message {
+}
+
+.chat-runox-icon {
+  background-color: #ccc;
+  padding: 10px;
+  max-width: calc(100% - 60px);
+  border-radius: 18px;
+}

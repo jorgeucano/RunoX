@@ -67,7 +67,6 @@ export class LoginComponent {
   }
 
   onCreateGame(roomName: string) {
-    debugger;
     // guardar la sala en firebase - gameEngine
     this.firebaseEService.createRoom(roomName).then(
       ()=> {
