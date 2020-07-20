@@ -14,21 +14,25 @@ const ENTER_CODE = 13;
   styleUrls: ["./chat-room.component.css"],
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
-  @Input() roomData$: any;
+  @Input('roomData') set(roomData: any) {
+    this.roomData = roomData;
+    console.log(roomData);
+  }
   @Input() player: IPlayer = new Player("", "Jugador", "");
   newMessageText: string;
   chatRoom: string = 'runox';
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];
+  roomData: any;
 
   constructor(private service: ChatService) {}
 
   ngOnInit(): void {
-    this.roomData$?.subscribe((x) => {
+    /*this.roomData$?.subscribe((x) => {
       console.log(x);
       this.chatRoom = x.name;
       this.fetchMessages();
-    });
+    });*/
     this.fetchMessages();
   }
 

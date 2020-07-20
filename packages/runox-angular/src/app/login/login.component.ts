@@ -7,7 +7,7 @@ import {Hand} from "@runox-game/game-engine/lib/models/hand.model";
 import {FirebaseEngineService} from "../firebase-engine.service";
 import {BehaviorSubject, Observable} from "rxjs";
 
-enum loginStatus {
+export enum loginStatus {
   ENTER = 0, OWNER = 1, WAITING = 2,
 }
 
