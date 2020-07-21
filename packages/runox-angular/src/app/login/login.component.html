@@ -1,6 +1,6 @@
 
 
-<rnx-chat-room *ngIf="status !== 0" [player]="user" [roomData]="room$ | async"></rnx-chat-room>
+<rnx-chat-room *ngIf="isLogged" [player]="user" [room]="room$ | async"></rnx-chat-room>
 
 <div class="login-page">
   <rnx-login-modal
