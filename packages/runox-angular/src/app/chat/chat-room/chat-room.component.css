@@ -60,3 +60,26 @@
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
+.divider-chat {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ffff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.divider-chat::before, .divider-chat::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #2d3748;
+}
+
+.divider-chat::before {
+  margin-right: .25em;
+}
+
+.divider-chat::after {
+  margin-left: .25em;
+}

@@ -10,6 +10,7 @@
 .chat-bubble-timestamp {
   font-size: 0.5rem;
   margin-bottom: 0.5rem;
+  text-align: end;
 }
 
 .chat-bubble-username {
