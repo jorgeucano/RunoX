@@ -5,7 +5,7 @@
     <div id="chat-content">
         <rnx-chat-burble *ngFor="let message of messages$ | async" [message]="message"></rnx-chat-burble>
     </div>
-    <div id="chat-actionsSARASA">
+    <div id="chat-actions">
         <input id="input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
         <button id="button-send-message" (click)="sendMessage()">Enviar</button>
     </div>
