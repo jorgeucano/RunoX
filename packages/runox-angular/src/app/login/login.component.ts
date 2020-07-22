@@ -19,7 +19,7 @@ export class LoginComponent {
   room: Room = new Room();
   user: IPlayer;
   isRoomOwner: boolean = true;
-  avatars: Array<any> = [];
+  players: Array<IPlayer> = [];
   room$: Observable<Room> = new BehaviorSubject<Room>(new Room());
 
   constructor(
@@ -44,15 +44,15 @@ export class LoginComponent {
     }
   }
 
-  onLogin(user: any) {
+  onLogin(user: IPlayer) {
     // @TODO Mostrar login de firebase para validar usario, an then ...
     this.status = this.isRoomOwner ? LoginStatus.OWNER : LoginStatus.WAITING;
-    this.avatars.push(user);
+    this.players.push(user);
     const hand = new Hand();
     const player: IPlayer = {
       id: user.id,
       hand: hand,
-      pic: user.image,
+      pic: user.pic,
       name: user.name,
     };
     if (this.room.name !== "" && this.room.name) {
@@ -64,11 +64,11 @@ export class LoginComponent {
     }
   }
 
-  setAvatars(avatars: Array<any>) {
-    this.avatars = avatars;
+  setAvatars(players: Array<IPlayer>) {
+    this.players = players;
   }
 
-  checkRoom(roomName: string, player: any) {
+  checkRoom(roomName: string, player: IPlayer) {
     this.firebaseEService.checkRoom(roomName).subscribe((gameState) => {
       if (gameState !== null) {
         this.gameEngineService.overrideInternalState(gameState);

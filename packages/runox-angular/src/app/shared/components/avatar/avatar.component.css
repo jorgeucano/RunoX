@@ -4,7 +4,7 @@
   width: 99px;
 }
 
-.rnx-avatar__conatiner {
+.rnx-avatar__container {
   position: relative;
 }
 
@@ -42,4 +42,26 @@
   word-wrap: none;
   overflow: hidden;
   height: 30px;
+}
+
+
+.rnx-avatar.active .rnx-avatar-image {
+  border-width: 6px;
+  height: 100px;
+  width: 100px;
+}
+
+.rnx-avatar.active .rnx-avatar-image img {
+  filter: grayscale(0%);
+}
+
+.rnx-avatar.active .rnx-avatar-image .rnx-avatar-badge{
+  font-size: 14px;
+  height: 26px;
+  width: 26px;
+}
+
+.rnx-avatar.active .rnx-avatar-name {
+  color: white;
+  font-size: 14px;
 }

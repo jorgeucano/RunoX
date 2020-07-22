@@ -1,8 +1,8 @@
-<div class="rnx-avatar">
+<div class="rnx-avatar" [class.active]="active">
   <div class="rnx-avatar__name" *ngIf="name">
     {{name}}
   </div>
-  <div class="rnx-avatar__conatiner">
+  <div class="rnx-avatar__container">
     <img [src]="avatarImage" class="rnx-avatar__image" [alt]="name">
     <div class="rnx-avatar__badge" *ngIf="badge">
       {{badge}}

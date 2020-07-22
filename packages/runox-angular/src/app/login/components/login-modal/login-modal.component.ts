@@ -3,6 +3,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { auth } from "firebase";
 import { Room } from "src/app/models/room";
 import { LoginStatus } from 'src/app/enums/login-status';
+import { IPlayer, Player } from '@runox-game/game-engine/lib/models/player.model';
 
 @Component({
   selector: "rnx-login-modal",
@@ -10,10 +11,10 @@ import { LoginStatus } from 'src/app/enums/login-status';
   styleUrls: ["./login-modal.component.css"],
 })
 export class LoginModalComponent {
-  @Input() avatars: Array<any> = [];
+  @Input() players: Array<IPlayer> = [];
   @Input() room: Room = new Room();
   @Input() status: number;
-  @Output() joinRoom: EventEmitter<any> = new EventEmitter<any>();
+  @Output() joinRoom: EventEmitter<IPlayer> = new EventEmitter<IPlayer>();
   @Output() createRoom: EventEmitter<any> = new EventEmitter<any>();
   @Output() startGame: EventEmitter<any> = new EventEmitter<any>();
   LoginStatus = LoginStatus;
@@ -28,12 +29,7 @@ export class LoginModalComponent {
   login() {
     this._auth.signInWithPopup(new auth.GoogleAuthProvider()).then((u) => {
       const user = u.user;
-      const _user = {
-        name: user.displayName,
-        id: user.email,
-        image: user.photoURL,
-        cards: 0,
-      };
+      const _user: IPlayer = new Player(user.email, user.displayName, user.photoURL);
       this.joinRoom.emit(_user);
     });
   }

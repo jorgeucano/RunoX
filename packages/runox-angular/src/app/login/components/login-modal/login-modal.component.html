@@ -33,9 +33,7 @@
     <div class="opacity-75 text-sm pb-2 mb-3 border-b border-gray-800">
       PLAYERS
     </div>
-    <div class="flex justify-around flex-wrap" *ngIf="avatars.length; else noPlayers">
-      <rnx-avatar *ngFor="let avatar of avatars" [name]="avatar.name" [image]="avatar.image" [badge]="avatar.cards"></rnx-avatar>
-    </div>
+    <rnx-player-list class="flex justify-around flex-wrap" [players]="players" *ngIf="players.length; else noPlayers"></rnx-player-list>
     <ng-template #noPlayers>
       <div class="text-gray-400 uppercase text-sm tracking-wider">
         Aún no se han añadido jugadores a la sala.

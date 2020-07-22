@@ -1,14 +1,15 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import { GameRoutingModule } from "./game-routing.module";
-import { SharedModule } from "../shared/shared.module";
-import { GameComponent } from "./game.component";
-import { GameBoardComponent } from "./components/game-board/game-board.component";
-import { ChatModule } from "../chat/chat.module";
+import { GameRoutingModule } from './game-routing.module';
+import { SharedModule } from '../shared/shared.module';
+import { GameComponent } from './game.component';
+import { GameBoardComponent } from './components/game-board/game-board.component';
+import { ChatModule } from '../chat/chat.module';
+import { TurnComponent } from './components/turn/turn.component';
 
 @NgModule({
-  declarations: [GameComponent, GameBoardComponent],
+  declarations: [GameComponent, GameBoardComponent, TurnComponent],
   imports: [CommonModule, GameRoutingModule, SharedModule, ChatModule],
 })
 export class GameModule {}
