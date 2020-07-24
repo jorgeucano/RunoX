@@ -62,4 +62,11 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
         console.error(error);
       });
   }
+
+  isSameDayChat(beforeMessage: ChatMessage, currentMessage: ChatMessage): boolean {
+    if (beforeMessage) {
+      return new Date(beforeMessage.timestamp).getDate() !== new Date(currentMessage.timestamp).getDate();
+    }
+    return true;
+  }
 }

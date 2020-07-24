@@ -1,7 +1,7 @@
 <ng-container *ngIf="message != null">
     <div class="chat-bubble">
         <div class="chat-bubble-timestamp">
-            {{ message.timestamp | date:'yyyy-MM-dd HH:mm'  }}
+            {{ message.timestamp | date:'HH:mm'  }}
         </div>
         <div class="chat-bubble-username">
             {{ message.name }}
