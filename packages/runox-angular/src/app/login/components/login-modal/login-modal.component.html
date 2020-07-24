@@ -8,7 +8,11 @@
   <div class="text-center">
     <div class="opacity-75 text-sm">SALA</div>
     <h1 *ngIf="roomName" class="text-2xl font-semibold">{{ roomName }}</h1>
-    <input [(ngModel)]="roomName" *ngIf="status === LoginStatus.OWNER && roomName === ''" placeholder="Room name here ..." (keydown.enter)="create()" />
+    <input
+      [(ngModel)]="roomName"
+      *ngIf="status === LoginStatus.OWNER && this.room.name === ''"
+      placeholder="Room name here ..."
+      (keydown.enter)="create()" />
     <div class="mt-6">
       <rnx-button *ngIf="status === LoginStatus.ENTER && roomName !== ''" (click)="join()">
         LOGIN & JOIN ROOM!

@@ -12,6 +12,7 @@ import {ILog} from "@runox-game/game-engine/lib/log/log.factory";
 export class GameEngineService {
 
   game = new GameEngine();
+  public playerId: string;
 
   constructor() { }
 

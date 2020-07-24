@@ -55,6 +55,8 @@ export class LoginComponent {
       pic: user.pic,
       name: user.name,
     };
+    this.gameEngineService.playerId = player.id;
+    debugger;
     if (this.room.name !== "" && this.room.name) {
       // chequear si la sala existe
       this.checkRoom(this.room.name, player);
