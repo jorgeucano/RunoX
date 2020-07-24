@@ -1,0 +1,3 @@
+<div class="flex justify-around flex-wrap">
+  <rnx-avatar *ngFor="let player of players" [name]="player.name" [image]="player.pic" [badge]="player.hand.cards.length" [active]="player.id === activePlayer?.id"></rnx-avatar>
+</div>

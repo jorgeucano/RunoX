@@ -7,33 +7,22 @@
   <!-- content -->
   <div class="text-center">
     <div class="opacity-75 text-sm">SALA</div>
-    <h1 *ngIf="room.name" class="text-2xl font-semibold">{{ room.name }}</h1>
-    <input
-      [(ngModel)]="roomName"
-      *ngIf="status === 1 && room.name === ''"
-      placeholder="Room name here ..."
-      (keydown.enter)="create()"
-    />
+    <h1 *ngIf="roomName" class="text-2xl font-semibold">{{ roomName }}</h1>
+    <input [(ngModel)]="roomName" *ngIf="status === LoginStatus.OWNER && roomName === ''" placeholder="Room name here ..." (keydown.enter)="create()" />
     <div class="mt-6">
-      <rnx-button *ngIf="status === 0 && room.name !== ''" (click)="join()">
+      <rnx-button *ngIf="status === LoginStatus.ENTER && roomName !== ''" (click)="join()">
         LOGIN & JOIN ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === 0 && room.name === ''" (click)="join()">
+      <rnx-button *ngIf="status === LoginStatus.ENTER && roomName === ''" (click)="join()">
         LOGIN & CREATE ROOM!
       </rnx-button>
-      <rnx-button
-        *ngIf="status === 1 && room.name === ''"
-        (click)="create()"
-      >
+      <rnx-button *ngIf="status === LoginStatus.OWNER && roomName === ''" (click)="create()">
         CREATE ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === 1 && room.name" (click)="start()">
+      <rnx-button *ngIf="status === LoginStatus.OWNER && roomName" (click)="start()">
         START THE GAME!
       </rnx-button>
-      <div
-        *ngIf="status === 2 && room.name !== ''"
-        class="px-4 text-4xl text-red-700 font-semibold"
-      >
+      <div *ngIf="status === LoginStatus.WAITING && roomName !== ''" class="px-4 text-4xl text-red-700 font-semibold">
         WAITING FOR THE OWNER TO START THE GAME
       </div>
     </div>
@@ -44,17 +33,7 @@
     <div class="opacity-75 text-sm pb-2 mb-3 border-b border-gray-800">
       PLAYERS
     </div>
-    <div
-      class="flex justify-around flex-wrap"
-      *ngIf="avatars.length; else noPlayers"
-    >
-      <rnx-avatar
-        *ngFor="let avatar of avatars"
-        [name]="avatar.name"
-        [image]="avatar.image"
-        [badge]="avatar.cards"
-      ></rnx-avatar>
-    </div>
+    <rnx-player-list class="flex justify-around flex-wrap" [players]="players" *ngIf="players.length; else noPlayers"></rnx-player-list>
     <ng-template #noPlayers>
       <div class="text-gray-400 uppercase text-sm tracking-wider">
         Aún no se han añadido jugadores a la sala.

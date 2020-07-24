@@ -6,33 +6,31 @@ import {
   Player,
 } from "@runox-game/game-engine/lib/models/player.model";
 import { ChatMessage } from "../models/chat-message";
+import { Room } from "src/app/models/room";
 
 const ENTER_CODE = 13;
+const PUBLIC_ROOM = "runox";
 @Component({
   selector: "rnx-chat-room",
   templateUrl: "./chat-room.component.html",
   styleUrls: ["./chat-room.component.css"],
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
-  @Input('roomData') set(roomData: any) {
-    this.roomData = roomData;
-    console.log(roomData);
+  @Input("room") set(room: Room) {
+    this.room = room;
+    this.fetchMessages();
   }
   @Input() player: IPlayer = new Player("", "Jugador", "");
   newMessageText: string;
-  chatRoom: string = 'runox';
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];
-  roomData: any;
+  room = new Room();
 
-  constructor(private service: ChatService) {}
+  constructor(private service: ChatService) {
+    this.room.name = PUBLIC_ROOM;
+  }
 
   ngOnInit(): void {
-    /*this.roomData$?.subscribe((x) => {
-      console.log(x);
-      this.chatRoom = x.name;
-      this.fetchMessages();
-    });*/
     this.fetchMessages();
   }
 
@@ -43,7 +41,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   fetchMessages() {
-    this.messages$ = this.service.getMessages(this.chatRoom);
+    this.messages$ = this.service.getMessages(this.room.name);
   }
 
   onKeyPress(e: any) {
@@ -54,9 +52,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     this.service
-      .createMessage(this.chatRoom, this.player.name, this.newMessageText)
+      .createMessage(this.room.name, this.player.name, this.newMessageText)
       .then(() => {
-        this.newMessageText = '';
+        this.newMessageText = "";
       })
       .catch((error: any) => {
         console.error(error);

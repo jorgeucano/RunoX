@@ -1,7 +1,15 @@
-<div id="chat">
-    <div id="chat-top">
-        <h1 class="chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
+<div id="rnx-chat">
+    <div id="rnx-chat-top">
+        <h1 class="rnx-chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
     </div>
+<!--
+    <div id="rnx-chat-content">
+        <rnx-chat-burble *ngFor="let message of messages$ | async" [message]="message"></rnx-chat-burble>
+    </div>
+    <div id="rnx-chat-actionsSARASA">
+        <input id="rnx-input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
+        <button id="rnx-button-send-message" (click)="sendMessage()">Enviar</button>
+-->
     <div id="chat-content" *ngIf="messages$ | async as messages">
       <div *ngFor="let message of messages; let i = index">
         <div *ngIf="isSameDayChat(messages[i-1], message)" class="divider-chat">
