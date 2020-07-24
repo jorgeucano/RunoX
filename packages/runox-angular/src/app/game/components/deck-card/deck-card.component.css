@@ -1,0 +1,129 @@
+.carta {
+  background-image: url('/assets/images/cartas-uno.png');
+  box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
+  cursor: pointer;
+  display: inline-block;
+  height: 134px;
+  margin: 0 .6rem 1rem .6rem;
+  position:relative;
+  transition: .2s ease-in-out all;
+  width: 86px;
+  outline: none;
+}
+
+.draggable-container--is-dragging * {
+  transition: none !important;
+}
+
+.carta.draggable--over {
+  background: rgba(0, 0, 0, .62);
+  border: .2rem solid #1a1712;
+  border-radius: 9px;
+  box-shadow: 0 10px 14px rgba(0, 0, 0, .23);
+  transition: none;
+}
+
+.carta.draggable--over .overlay {
+  display: none;
+  transition: none;
+}
+
+.carta.draggable-mirror {
+  transition: none !important;
+  margin-right: 100px;
+}
+
+.carta:hover {
+  transform: scale(1.26);
+}
+
+.carta .overlay {
+  align-items: center;
+  background: rgba(161, 28, 33, .60);
+  border: 4px solid white;
+  border-radius: 9px;
+  bottom: 0;
+  display: flex;
+  opacity: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 150px;
+  transition: all .23s ease-in-out;
+  justify-content: center;
+}
+
+.carta-selected {
+  transform: scale(1.26);
+  z-index: 100;
+}
+
+.carta-selected .overlay { 
+  top: 0;
+  opacity: 1;
+}
+
+/* Rojo */
+.uno--rojo { background-position: 0 0 ;}
+.dos--rojo { background-position: -85px 0 ;}
+.tres--rojo { background-position: -171px 0 ;}
+.cuatro--rojo { background-position: -256px 0 ;}
+.cinco--rojo { background-position: -342px 0 ;}
+.seis--rojo { background-position: -427px 0 ;}
+.siete--rojo { background-position: -513px 0 ;}
+.ocho--rojo { background-position: -598px 0 ;}
+.nueve--rojo { background-position: -684px 0 ;}
+.cero--rojo { background-position: -769px 0 ;}
+.saltar--rojo { background-position: 0 -534px ;}
+.reversa--rojo { background-position: -85px -534px ;}
+.mas-dos--rojo { background-position: -171px -534px ;}
+
+/* Amarillo */
+.uno--amarillo { background-position: 0 -133px ;}
+.dos--amarillo { background-position: -85px -133px;}
+.tres--amarillo { background-position: -171px -133px ;}
+.cuatro--amarillo { background-position: -256px -133px ;}
+.cinco--amarillo { background-position: -342px -133px ;}
+.seis--amarillo { background-position: -427px -133px ;}
+.siete--amarillo { background-position: -513px -133px ;}
+.ocho--amarillo { background-position: -598px -133px ;}
+.nueve--amarillo { background-position: -684px -133px ;}
+.cero--amarillo { background-position: -769px -133px ;}
+.saltar--amarillo {background-position: -256px -534px}
+.reversa--amarillo {background-position: -342px -534px}
+.mas-dos--amarillo {background-position: -427px -534px}
+
+/* Verde */
+.uno--verde { background-position: 0 -267px ;}
+.dos--verde { background-position: -85px -267px;}
+.tres--verde { background-position: -171px -267px ;}
+.cuatro--verde { background-position: -256px -267px ;}
+.cinco--verde { background-position: -342px -267px ;}
+.seis--verde { background-position: -427px -267px ;}
+.siete--verde { background-position: -513px -267px ;}
+.ocho--verde { background-position: -598px -267px ;}
+.nueve--verde { background-position: -684px -267px ;}
+.cero--verde { background-position: -769px -267px ;}
+.saltar--verde {background-position: -513px -534px ;}
+.reversa--verde { background-position: -598px -534px;}
+.mas-dos--verde { background-position: -684px -534px ;}
+
+/* Azul */
+.uno--azul { background-position: 0 -400px ;}
+.dos--azul { background-position: -85px -400px;}
+.tres--azul { background-position: -171px -400px ;}
+.cuatro--azul { background-position: -256px -400px ;}
+.cinco--azul { background-position: -342px -400px ;}
+.seis--azul { background-position: -427px -400px ;}
+.siete--azul { background-position: -513px -400px ;}
+.ocho--azul { background-position: -598px -400px ;}
+.nueve--azul { background-position: -684px -400px ;}
+.cero--azul { background-position: -769px -400px ;}
+.saltar--azul { background-position: -769px -534px ;}
+.reversa--azul { background-position: -853px -668px ;}
+.mas-dos--azul { background-position: -940px -668px ;}
+
+/* Comodines */
+.comodin { background-position: -171px -668px; }
+.mas-cuatro { background-position: -342px -668px; }
+.desconocida { background-position: -769px -802px; }
