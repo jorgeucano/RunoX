@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
-    "@runox-game/game-engine": "file:runox-game-game-engine-0.0.20.tgz",
+    "@runox-game/game-engine": "file:runox-game-game-engine-0.0.19.tgz",
     "firebase": "^7.14.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

@@ -1,40 +1,47 @@
 import { Injectable } from '@angular/core';
-import { GameEngine} from "@runox-game/game-engine";
-import {GameModes} from "@runox-game/game-engine/lib/models/game-modes";
-import { environment } from "../environments/environment";
-import {IPlayer, Player} from "@runox-game/game-engine/lib/models/player.model";
-import {ICard} from "@runox-game/game-engine/lib/models/card.model";
-import {ILog} from "@runox-game/game-engine/lib/log/log.factory";
+import { GameEngine } from '@runox-game/game-engine';
+import { GameModes } from '@runox-game/game-engine/lib/models/game-modes';
+import { environment } from '../environments/environment';
+import {
+  IPlayer,
+  Player,
+} from '@runox-game/game-engine/lib/models/player.model';
+import { ICard } from '@runox-game/game-engine/lib/models/card.model';
+import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
+import { IGameState } from '@runox-game/game-engine/lib/models/game-state.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameEngineService {
-
   game = new GameEngine();
   public playerId: string;
 
-  constructor() { }
+  constructor() {}
 
-  startGame(randomTakeDeckCard: boolean = environment.gameMode.randomTakeDeckCard) {
+  get players(): IPlayer[] {
+    return this.game.players;
+  }
 
+  create() {
+    this.game.reset();
+  }
+
+  startGame(
+    randomTakeDeckCard: boolean = environment.gameMode.randomTakeDeckCard
+  ) {
     const gameModes: GameModes = {
       randomTakeDeckCard: randomTakeDeckCard,
     };
-
-    this.game.start(gameModes).subscribe(
-      () => {},
-      (error: string) => {
-        // showErrorAlert(error);
-      }
-    );
-
+    this.game.start(gameModes).subscribe();
     this.game.logs().subscribe((log: ILog) => {
       console.log(log);
     });
   }
 
   joinUser(user: Player) {
+    this.playerId = user.id;
     this.game.join([user]).subscribe();
   }
 
@@ -58,11 +65,11 @@ export class GameEngineService {
     this.game.overrideInternalState(data);
   }
 
-  onStateChanged() {
-    // return this.game.onStateChanged();
+  gameStateAsJSON(): IGameState {
+    return this.game.gameStateAsJSON;
   }
 
-
-
-
+  onStateChanged(): Observable<IGameState> {
+    return this.game.onStateChanged();
+  }
 }

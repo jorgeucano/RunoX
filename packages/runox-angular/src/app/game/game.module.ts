@@ -10,6 +10,9 @@ import { DeckCardComponent } from './components/deck-card/deck-card.component';
 import { DeckCardListComponent } from './components/deck-card-list/deck-card-list.component';
 import { StackComponent } from './components/stack/stack.component';
 import { TurnComponent } from './components/turn/turn.component';
+import { RunoxButtonComponent } from './components/runox-button/runox-button.component';
+import { SelectColorComponent } from './components/select-color/select-color.component';
+import { PlayerCardListComponent } from './components/player-card-list/player-card-list.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +22,9 @@ import { TurnComponent } from './components/turn/turn.component';
     DeckCardComponent,
     DeckCardListComponent,
     StackComponent,
+    SelectColorComponent,
+    RunoxButtonComponent,
+    PlayerCardListComponent,
   ],
   imports: [CommonModule, GameRoutingModule, SharedModule, ChatModule],
 })

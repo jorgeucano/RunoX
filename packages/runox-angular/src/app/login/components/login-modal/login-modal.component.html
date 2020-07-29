@@ -7,26 +7,22 @@
   <!-- content -->
   <div class="text-center">
     <div class="opacity-75 text-sm">SALA</div>
-    <h1 *ngIf="roomName" class="text-2xl font-semibold">{{ roomName }}</h1>
-    <input
-      [(ngModel)]="roomName"
-      *ngIf="status === LoginStatus.OWNER && this.room.name === ''"
-      placeholder="Room name here ..."
-      (keydown.enter)="create()" />
+    <h1 *ngIf="hasRoom" class="text-2xl font-semibold">{{ _roomName }}</h1>
+    <input *ngIf="!hasRoom" [(ngModel)]="_roomName" placeholder="Room name here ..." />
     <div class="mt-6">
-      <rnx-button *ngIf="status === LoginStatus.ENTER && roomName !== ''" (click)="join()">
+      <rnx-button *ngIf="status === LoginStatus.ENTER && hasRoom" (click)="loginAndJoin()">
         LOGIN & JOIN ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === LoginStatus.ENTER && roomName === ''" (click)="join()">
+      <rnx-button *ngIf="status === LoginStatus.ENTER && !hasRoom" (click)="loginAndCreate()">
         LOGIN & CREATE ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === LoginStatus.OWNER && roomName === ''" (click)="create()">
+      <rnx-button *ngIf="status === LoginStatus.OWNER && !hasRoom" (click)="create()">
         CREATE ROOM!
       </rnx-button>
-      <rnx-button *ngIf="status === LoginStatus.OWNER && roomName" (click)="start()">
+      <rnx-button *ngIf="status === LoginStatus.OWNER && hasRoom" (click)="start()">
         START THE GAME!
       </rnx-button>
-      <div *ngIf="status === LoginStatus.WAITING && roomName !== ''" class="px-4 text-4xl text-red-700 font-semibold">
+      <div *ngIf="status === LoginStatus.WAITING && hasRoom" class="px-4 text-4xl text-red-700 font-semibold">
         WAITING FOR THE OWNER TO START THE GAME
       </div>
     </div>

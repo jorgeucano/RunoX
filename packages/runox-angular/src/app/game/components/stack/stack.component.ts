@@ -7,11 +7,11 @@ import { IStack } from '@runox-game/game-engine/lib/models/stack.model';
   styleUrls: ['./stack.component.css'],
 })
 export class StackComponent implements OnInit {
+  @Input() _stack: IStack = null;
   @Input('stack') set(stack: IStack) {
-    this.stack = stack;
+    this._stack = stack;
     this.rotate();
   }
-  @Input() stack: IStack = null;
   styleRotation = '';
 
   constructor() {}

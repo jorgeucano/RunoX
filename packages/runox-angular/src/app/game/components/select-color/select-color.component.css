@@ -1,0 +1,41 @@
+#player-select-color {
+  text-align: center;
+  padding: 20px;
+}
+
+#color-select {
+  text-align: center;
+  padding: 20px;
+}
+
+.button-red {
+  background: #ee1c24;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.button-blue {
+  background: #0095da;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.button-green {
+  background: #00a651;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.button-yellow {
+  background: #ffde00;
+  color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#player-select-color button {
+  width: 200px;
+  height: 50px;
+  font-size: 18px;
+}

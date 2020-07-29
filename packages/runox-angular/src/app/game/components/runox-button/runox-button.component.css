@@ -1,0 +1,13 @@
+#button-uno {
+  border-radius: 50%;
+  border-width: 6px;
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.32);
+  display: none;
+  font-size: 16px;
+  height: 110px;
+  position: absolute;
+  right: 3rem;
+  bottom: 1rem;
+  width: 110px;
+  z-index: 100;
+}

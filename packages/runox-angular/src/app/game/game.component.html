@@ -1,4 +1,7 @@
-
-<rnx-chat-room [player]="user" [room]="room$ | async"></rnx-chat-room>
-
-<rnx-game-board [player]="user" [room$]="room$"></rnx-game-board>
+<!-- TODO sacar estos styles feos y hacerlo como se debe -->
+<div style="float: left;">
+    <rnx-chat-room [player]="user" [roomName]="roomName"[alex]="alex"></rnx-chat-room>
+</div>
+<div style="float: left;">
+    <rnx-game-board [player]="user" [room]="room$ | async"></rnx-game-board>
+</div>

@@ -1,7 +1,19 @@
-<div class="container mx-auto h-screen flex justify-center items-center">
+<img src="/assets/images/deck.png" alt="">
+
+<div *ngIf="room">
+
+  <rnx-select-color></rnx-select-color>
+  <rnx-runox-button></rnx-runox-button>
+  <rnx-deck-card-list [cards]="room.deck.cards"></rnx-deck-card-list>
+  <rnx-stack [stack]="room.stack"></rnx-stack>
+  <rnx-player-card-list [cards]="player.hand.cards"></rnx-player-card-list>
+
+</div>
+
+
+<!-- <div class="container mx-auto h-screen flex justify-center items-center">
   <rnx-card>
     <span class="font-semibold">GAME BOARD</span>
     WIP
   </rnx-card>
-</div>
-
+</div> -->

@@ -6,7 +6,6 @@ import {
   Player,
 } from "@runox-game/game-engine/lib/models/player.model";
 import { ChatMessage } from "../models/chat-message";
-import { Room } from "src/app/models/room";
 
 const ENTER_CODE = 13;
 const PUBLIC_ROOM = "runox";
@@ -16,18 +15,22 @@ const PUBLIC_ROOM = "runox";
   styleUrls: ["./chat-room.component.css"],
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
-  @Input("room") set(room: Room) {
-    this.room = room;
-    this.fetchMessages();
-  }
+  // @Input("roomName") set(roomName: string) {
+  //   this.roomName = roomName;
+  //   this.fetchMessages();
+  // }
   @Input() player: IPlayer = new Player("", "Jugador", "");
+  @Input() roomName = PUBLIC_ROOM;
+  @Input("alex") set(alex: string) {
+    console.debug(alex);
+    this.roomName = alex;
+  }
   newMessageText: string;
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];
-  room = new Room();
+  
 
   constructor(private service: ChatService) {
-    this.room.name = PUBLIC_ROOM;
   }
 
   ngOnInit(): void {
@@ -41,7 +44,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   fetchMessages() {
-    this.messages$ = this.service.getMessages(this.room.name);
+    this.messages$ = this.service.getMessages(this.roomName);
   }
 
   onKeyPress(e: any) {
@@ -52,7 +55,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     this.service
-      .createMessage(this.room.name, this.player.name, this.newMessageText)
+      .createMessage(this.roomName, this.player.name, this.newMessageText)
       .then(() => {
         this.newMessageText = "";
       })
@@ -61,9 +64,15 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       });
   }
 
-  isSameDayChat(beforeMessage: ChatMessage, currentMessage: ChatMessage): boolean {
+  isSameDayChat(
+    beforeMessage: ChatMessage,
+    currentMessage: ChatMessage
+  ): boolean {
     if (beforeMessage) {
-      return new Date(beforeMessage.timestamp).getDate() !== new Date(currentMessage.timestamp).getDate();
+      return (
+        new Date(beforeMessage.timestamp).getDate() !==
+        new Date(currentMessage.timestamp).getDate()
+      );
     }
     return true;
   }
