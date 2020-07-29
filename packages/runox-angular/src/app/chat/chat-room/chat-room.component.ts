@@ -15,15 +15,13 @@ const PUBLIC_ROOM = "runox";
   styleUrls: ["./chat-room.component.css"],
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
-  // @Input("roomName") set(roomName: string) {
-  //   this.roomName = roomName;
-  //   this.fetchMessages();
-  // }
   @Input() player: IPlayer = new Player("", "Jugador", "");
-  @Input() roomName = PUBLIC_ROOM;
-  @Input("alex") set(alex: string) {
-    console.debug(alex);
-    this.roomName = alex;
+  _roomName = PUBLIC_ROOM;
+  @Input() set roomName(roomName: string) {
+    if (roomName){
+      this._roomName = roomName;
+      this.fetchMessages();
+    }
   }
   newMessageText: string;
   messages$: Observable<ChatMessage[]>;
@@ -44,7 +42,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   fetchMessages() {
-    this.messages$ = this.service.getMessages(this.roomName);
+    this.messages$ = this.service.getMessages(this._roomName);
   }
 
   onKeyPress(e: any) {
@@ -55,7 +53,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     this.service
-      .createMessage(this.roomName, this.player.name, this.newMessageText)
+      .createMessage(this._roomName, this.player.name, this.newMessageText)
       .then(() => {
         this.newMessageText = "";
       })

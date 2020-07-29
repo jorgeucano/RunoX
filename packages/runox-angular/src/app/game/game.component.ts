@@ -16,7 +16,7 @@ import { first, filter } from "rxjs/operators";
 export class GameComponent implements OnInit {
   room$: Observable<IGameState>;
   roomName: string = "";
-  alex = 'alex'
+  alex = ''
   // @ts-ignore
   user = this.gameEngine.game.players.find(
     (player) => player.id === this.gameEngine.playerId

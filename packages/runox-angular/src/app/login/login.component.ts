@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit {
     this.room$ = this.gameEngineService.onStateChanged().pipe(
       filter(() => this.room.name !== ""),
       map((gameState: IGameState) => {
-        debugger;
         return Object.assign(this.room, {
           ...gameState,
           name: this.room.name,
@@ -58,13 +57,13 @@ export class LoginComponent implements OnInit {
 
   onStartGame(roomPlayer: RoomPlayer) {
     this.gameEngineService.startGame();
+    this.room.name = roomPlayer.roomName;
     this.router.navigate(["game", roomPlayer.roomName]).catch(console.error);
   }
 
   onCreateGame(roomName: string) {
     this.gameEngineService.create();
     this.room.name = roomName;
-    // const gameState = this.gameEngineService.gameStateAsJSON();
     this.firebaseService.createRoom(roomName);
   }
 

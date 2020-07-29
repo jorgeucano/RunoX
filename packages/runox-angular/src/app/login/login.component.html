@@ -1,12 +1,12 @@
 
 
 <!-- <rnx-chat-room *ngIf="isLogged" [player]="user" [room]="room$ | async"></rnx-chat-room> -->
-<rnx-chat-room [player]="user" [roomName]="room.name"></rnx-chat-room>
+<rnx-chat-room [player]="user" [roomName]="roomName"></rnx-chat-room>
 
 <div class="login-page">
   <rnx-login-modal
     [status]="status"
-    [roomName]="room.name"
+    [roomName]="roomName"
     [players]="room.playersGroup.players"
     (joinRoom)="onJoinUser($event)"
     (createRoom)="onCreateGame($event)"
