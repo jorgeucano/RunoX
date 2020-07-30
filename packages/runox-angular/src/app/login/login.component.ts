@@ -21,7 +21,6 @@ export class LoginComponent implements OnInit {
   user: IPlayer;
   isRoomOwner: boolean = true;
   players: Array<IPlayer> = [];
-  room$: Observable<Room> = new BehaviorSubject<Room>(new Room());
 
   constructor(
     private router: Router,
@@ -38,7 +37,7 @@ export class LoginComponent implements OnInit {
         this.room.name = params.id;
       });
 
-    this.room$ = this.gameEngineService.onStateChanged().pipe(
+    this.gameEngineService.onStateChanged().pipe(
       filter(() => this.room.name !== ""),
       map((gameState: IGameState) => {
         return Object.assign(this.room, {
@@ -46,7 +45,7 @@ export class LoginComponent implements OnInit {
           name: this.room.name,
         });
       })
-    );
+    ).subscribe();
   }
 
   ngOnInit(): void {}

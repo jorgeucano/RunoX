@@ -29,7 +29,6 @@ export class GameComponent implements OnInit {
     private gameEngine: GameEngineService
   ) {
     activeRouter.params.pipe(first()).subscribe((params) => {
-      debugger;
       if (!!params.id) {
         this.roomName = params.id;
         this.alex = this.roomName;
