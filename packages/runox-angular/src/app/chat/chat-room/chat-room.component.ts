@@ -16,13 +16,13 @@ const PUBLIC_ROOM = "runox";
 })
 export class ChatRoomComponent implements OnInit, OnDestroy {
   @Input() player: IPlayer = new Player("", "Jugador", "");
-  _roomName = PUBLIC_ROOM;
   @Input() set roomName(roomName: string) {
     if (roomName){
       this._roomName = roomName;
       this.fetchMessages();
     }
   }
+  _roomName = PUBLIC_ROOM;
   newMessageText: string;
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];

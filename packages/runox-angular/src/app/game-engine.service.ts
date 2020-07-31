@@ -1,18 +1,18 @@
-import { Injectable } from '@angular/core';
-import { GameEngine } from '@runox-game/game-engine';
-import { GameModes } from '@runox-game/game-engine/lib/models/game-modes';
-import { environment } from '../environments/environment';
+import { Injectable } from "@angular/core";
+import { GameEngine } from "@runox-game/game-engine";
+import { GameModes } from "@runox-game/game-engine/lib/models/game-modes";
+import { environment } from "../environments/environment";
 import {
   IPlayer,
   Player,
-} from '@runox-game/game-engine/lib/models/player.model';
-import { ICard } from '@runox-game/game-engine/lib/models/card.model';
-import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
-import { IGameState } from '@runox-game/game-engine/lib/models/game-state.model';
-import { Observable } from 'rxjs';
+} from "@runox-game/game-engine/lib/models/player.model";
+import { ICard } from "@runox-game/game-engine/lib/models/card.model";
+import { ILog } from "@runox-game/game-engine/lib/log/log.factory";
+import { IGameState } from "@runox-game/game-engine/lib/models/game-state.model";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class GameEngineService {
   game = new GameEngine();
@@ -30,14 +30,14 @@ export class GameEngineService {
 
   startGame(
     randomTakeDeckCard: boolean = environment.gameMode.randomTakeDeckCard
-  ) {
+  ): Observable<void> {
     const gameModes: GameModes = {
       randomTakeDeckCard: randomTakeDeckCard,
     };
-    this.game.start(gameModes).subscribe();
     this.game.logs().subscribe((log: ILog) => {
       console.log(log);
     });
+    return this.game.start(gameModes);
   }
 
   joinUser(user: Player) {

@@ -1,13 +1,15 @@
-<img src="/assets/images/deck.png" alt="">
+
 
 <div *ngIf="room">
 
+  <rnx-deck></rnx-deck>
+  
+  <rnx-player-list class="flex justify-around flex-wrap" [players]="room.playersGroup.players"></rnx-player-list>
   <rnx-select-color></rnx-select-color>
-  <rnx-runox-button></rnx-runox-button>
-  <rnx-deck-card-list [cards]="room.deck.cards"></rnx-deck-card-list>
+  <!-- <rnx-deck-card-list [cards]="room.deck.cards"></rnx-deck-card-list> -->
   <rnx-stack [stack]="room.stack"></rnx-stack>
   <rnx-player-card-list [cards]="player.hand.cards"></rnx-player-card-list>
-
+  <rnx-runox-button></rnx-runox-button>
 </div>
 
 

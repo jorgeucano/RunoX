@@ -16,7 +16,6 @@ import { first, filter } from "rxjs/operators";
 export class GameComponent implements OnInit {
   room$: Observable<IGameState>;
   roomName: string = "";
-  alex = ''
   // @ts-ignore
   user = this.gameEngine.game.players.find(
     (player) => player.id === this.gameEngine.playerId
@@ -31,7 +30,6 @@ export class GameComponent implements OnInit {
     activeRouter.params.pipe(first()).subscribe((params) => {
       if (!!params.id) {
         this.roomName = params.id;
-        this.alex = this.roomName;
         this.firebaseEngineService.fetchRoom(this.roomName).then(
           (exists: boolean) => {
             if (exists) {

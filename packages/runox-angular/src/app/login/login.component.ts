@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { first, map, filter } from "rxjs/operators";
+import { first, map, filter, tap } from "rxjs/operators";
 import { IPlayer } from "@runox-game/game-engine/lib/models/player.model";
 import { GameEngineService } from "../game-engine.service";
 import { FirebaseEngineService } from "../firebase-engine.service";
@@ -37,15 +37,20 @@ export class LoginComponent implements OnInit {
         this.room.name = params.id;
       });
 
-    this.gameEngineService.onStateChanged().pipe(
-      filter(() => this.room.name !== ""),
-      map((gameState: IGameState) => {
-        return Object.assign(this.room, {
-          ...gameState,
-          name: this.room.name,
-        });
-      })
-    ).subscribe();
+    this.gameEngineService
+      .onStateChanged()
+      .pipe(
+        tap(console.debug),
+        filter(() => !!this.room.name),
+        map((gameState: IGameState) => {
+          this.room = Object.assign(this.room, {
+            ...gameState,
+            name: this.room.name,
+          });
+          return this.room;
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {}
@@ -55,9 +60,18 @@ export class LoginComponent implements OnInit {
   }
 
   onStartGame(roomPlayer: RoomPlayer) {
-    this.gameEngineService.startGame();
     this.room.name = roomPlayer.roomName;
-    this.router.navigate(["game", roomPlayer.roomName]).catch(console.error);
+    this.gameEngineService
+      .startGame()
+      .pipe(first())
+      .subscribe(() => {
+        const gameState = this.gameEngineService.gameStateAsJSON();
+        console.error(gameState);
+        this.firebaseService.updateFirebase(gameState, roomPlayer.roomName);
+        this.router
+          .navigate(["game", roomPlayer.roomName])
+          .catch(console.error);
+      });
   }
 
   onCreateGame(roomName: string) {
