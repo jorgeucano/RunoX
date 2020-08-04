@@ -3,13 +3,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCVVle1gjhwNpsJ-6ZqlYKA7kCPmZTi6YI",
-  authDomain: "runox-e913c.firebaseapp.com",
-  databaseURL: "https://runox-e913c.firebaseio.com",
-  projectId: "runox-e913c",
-  storageBucket: "runox-e913c.appspot.com",
-  messagingSenderId: "864843419430",
-  appId: "1:864843419430:web:77a77941ecb8958bea7be7"
+  apiKey: 'AIzaSyAZX1DilyM9IY01_xFa2pE4ull7FYOsQ00',
+  authDomain: 'runox-card.firebaseapp.com',
+  databaseURL: 'https://runox-card.firebaseio.com',
+  projectId: 'runox-card',
+  storageBucket: 'runox-card.appspot.com',
+  messagingSenderId: '608707088831',
+  appId: '1:608707088831:web:f204f1e44046d59d23d10a',
+  measurementId: 'G-RVDLEJNBM9',
 };
 
 firebase.initializeApp(firebaseConfig);
