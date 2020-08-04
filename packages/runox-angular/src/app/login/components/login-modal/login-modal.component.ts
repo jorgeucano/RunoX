@@ -1,63 +1,106 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { auth } from "firebase";
-import { Room } from "src/app/models/room";
-import { LoginStatus } from 'src/app/enums/login-status';
-import { IPlayer, Player } from '@runox-game/game-engine/lib/models/player.model';
+import { auth, User } from "firebase";
+import { LoginStatus } from "src/app/enums/login-status";
+import {
+  IPlayer,
+  Player,
+} from "@runox-game/game-engine/lib/models/player.model";
 
+export class RoomPlayer {
+  player: IPlayer;
+  roomName: string;
+}
 @Component({
   selector: "rnx-login-modal",
   templateUrl: "./login-modal.component.html",
   styleUrls: ["./login-modal.component.css"],
 })
 export class LoginModalComponent {
+  @Input("roomName") set(roomName: string) {
+    this._roomName = roomName;
+    this.hasRoom = this._roomName !== "";
+  }
   @Input() players: Array<IPlayer> = [];
-  @Input() room: Room = new Room();
   @Input() status: number;
-  @Output() joinRoom: EventEmitter<IPlayer> = new EventEmitter<IPlayer>();
-  @Output() createRoom: EventEmitter<any> = new EventEmitter<any>();
-  @Output() startGame: EventEmitter<any> = new EventEmitter<any>();
+  @Output() joinRoom: EventEmitter<RoomPlayer> = new EventEmitter<RoomPlayer>();
+  @Output() createRoom: EventEmitter<string> = new EventEmitter<string>();
+  @Output() startGame: EventEmitter<RoomPlayer> = new EventEmitter<
+    RoomPlayer
+  >();
+  _roomName = "";
   LoginStatus = LoginStatus;
+  user: User = null;
+  showRoomName = false;
+  hasRoom = false;
 
-  roomName = "";
+  constructor(public _auth: AngularFireAuth) {}
 
-  // tslint:disable-next-line: variable-name
-  constructor(public _auth: AngularFireAuth) {
-    console.log(auth, _auth);
+  login(): Promise<void> {
+    return this._auth
+      .signInWithPopup(new auth.GoogleAuthProvider())
+      .then((u) => {
+        this.user = u.user;
+        this.status === LoginStatus.ENTER;
+      });
   }
 
-  login() {
-    this._auth.signInWithPopup(new auth.GoogleAuthProvider()).then((u) => {
-      const user = u.user;
-      const _user: IPlayer = new Player(user.email, user.displayName, user.photoURL);
-      this.joinRoom.emit(_user);
+  logout(): Promise<void> {
+    return this._auth.signOut();
+  }
+
+  loginAndJoin(): Promise<void> {
+    return this.login().then(() => {
+      const _user: IPlayer = new Player(
+        this.user.email,
+        this.user.displayName,
+        this.user.photoURL
+      );
+      this.joinRoom.emit(this.getRoomPlayer());
     });
   }
 
-  logout() {
-    this._auth.signOut();
+  loginAndCreate(): Promise<void> {
+    return this.login().then(() => {
+      this.create().then(() => {
+        this.joinRoom.emit(this.getRoomPlayer());
+      });
+    });
   }
 
-  join() {
-    this.login();
+  create(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this._roomName !== "") {
+        this.hasRoom = true;
+        this.createRoom.emit(this._roomName);
+        resolve();
+      } else {
+        alert("Necesitas darle un nombre a la sala");
+        reject();
+      }
+    });
   }
 
-  create() {
-    if (this.roomName !== "") {
-      this.createRoom.emit(this.roomName);
-    } else {
-      // TODO: modal con: "complete el nombre de la room"
-      alert("Necesitas darl un nombre a la sala");
-    }
+  start(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this._roomName !== "") {
+        this.startGame.emit(this.getRoomPlayer());
+        resolve();
+      } else {
+        // alert("Necesitas darle un nombre a la sala");
+        reject();
+      }
+    });
   }
 
-  start() {
-    // NEVER NEVER NEVER borren la siguiente linea
-    // console.log('Start that shit!');
-    if (this.roomName !== "") {
-      this.startGame.emit(this.roomName);
-    } else {
-      // TODO: modal con: "complete el nombre de la room"
-    }
+  getRoomPlayer(): RoomPlayer {
+    return {
+      player: new Player(
+        this.user.email,
+        this.user.displayName,
+        this.user.photoURL
+      ),
+      roomName: this._roomName,
+    };
   }
 }

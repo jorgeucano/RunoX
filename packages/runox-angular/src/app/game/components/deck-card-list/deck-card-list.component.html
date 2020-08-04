@@ -1,3 +1,5 @@
 <div class="list-cards">
-  <rnx-deck-card *ngFor="let card of cards" [card]="card"></rnx-deck-card>
+  <div *ngFor="let card of cards; let i = index;">
+    <rnx-deck-card [card]="card"></rnx-deck-card>
+  </div>
 </div>

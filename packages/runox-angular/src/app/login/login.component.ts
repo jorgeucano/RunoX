@@ -1,102 +1,97 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { first } from "rxjs/operators";
+import { first, map, filter, tap } from "rxjs/operators";
 import { IPlayer } from "@runox-game/game-engine/lib/models/player.model";
 import { GameEngineService } from "../game-engine.service";
-import { Hand } from "@runox-game/game-engine/lib/models/hand.model";
 import { FirebaseEngineService } from "../firebase-engine.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Room } from "../models/room";
 import { LoginStatus } from "../enums/login-status";
+import { IGameState } from "@runox-game/game-engine/lib/models/game-state.model";
+import { RoomPlayer } from "./components/login-modal/login-modal.component";
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   status: LoginStatus = LoginStatus.ENTER;
   room: Room = new Room();
   user: IPlayer;
   isRoomOwner: boolean = true;
   players: Array<IPlayer> = [];
-  room$: Observable<Room> = new BehaviorSubject<Room>(new Room());
 
   constructor(
     private router: Router,
     activeRouter: ActivatedRoute,
     private gameEngineService: GameEngineService,
-    private firebaseEService: FirebaseEngineService
+    private firebaseService: FirebaseEngineService
   ) {
-    activeRouter.params.pipe(first()).subscribe((params) => {
-      this.room.name = params.id;
-      this.setRoom(params.id);
-    });
+    activeRouter.params
+      .pipe(
+        first(),
+        filter((x) => !!x.id)
+      )
+      .subscribe((params) => {
+        this.room.name = params.id;
+      });
+
+    this.gameEngineService
+      .onStateChanged()
+      .pipe(
+        tap(console.debug),
+        filter(() => !!this.room.name),
+        map((gameState: IGameState) => {
+          this.room = Object.assign(this.room, {
+            ...gameState,
+            name: this.room.name,
+          });
+          return this.room;
+        })
+      )
+      .subscribe();
   }
+
+  ngOnInit(): void {}
 
   get isLogged(): boolean {
     return this.status !== LoginStatus.ENTER;
   }
 
-  setRoom(roomName: string) {
-    if (roomName) {
-      this.room$ = this.firebaseEService.readRoom(roomName);
-    }
+  onStartGame(roomPlayer: RoomPlayer) {
+    this.room.name = roomPlayer.roomName;
+    this.gameEngineService
+      .startGame()
+      .pipe(first())
+      .subscribe(() => {
+        const gameState = this.gameEngineService.gameStateAsJSON();
+        console.error(gameState);
+        this.firebaseService.updateFirebase(gameState, roomPlayer.roomName);
+        this.router
+          .navigate(["game", roomPlayer.roomName])
+          .catch(console.error);
+      });
   }
 
-  onLogin(user: IPlayer) {
-    // @TODO Mostrar login de firebase para validar usario, an then ...
+  onCreateGame(roomName: string) {
+    this.gameEngineService.create();
+    this.room.name = roomName;
+    this.firebaseService.createRoom(roomName);
+  }
+
+  onJoinUser(roomPlayer: RoomPlayer) {
     this.status = this.isRoomOwner ? LoginStatus.OWNER : LoginStatus.WAITING;
-    this.players.push(user);
-    const hand = new Hand();
-    const player: IPlayer = {
-      id: user.id,
-      hand: hand,
-      pic: user.pic,
-      name: user.name,
-    };
-    this.gameEngineService.playerId = player.id;
-    debugger;
-    if (this.room.name !== "" && this.room.name) {
-      // chequear si la sala existe
-      this.checkRoom(this.room.name, player);
-    } else {
-      this.gameEngineService.joinUser(player);
-      this.user = player;
-    }
+    this.gameEngineService.joinUser(roomPlayer.player);
+    this.gameEngineService
+      .onStateChanged()
+      .pipe(first())
+      .subscribe((gameState: IGameState) => {
+        this.firebaseService.updateFirebase(gameState, roomPlayer.roomName);
+      });
   }
 
   setAvatars(players: Array<IPlayer>) {
     this.players = players;
-  }
-
-  checkRoom(roomName: string, player: IPlayer) {
-    this.firebaseEService.checkRoom(roomName).subscribe((gameState) => {
-      if (gameState !== null) {
-        this.gameEngineService.overrideInternalState(gameState);
-        this.setAvatars(gameState.playersGroup.players);
-        if (
-          !gameState.playersGroup.players.find((data) => data.id === player.id)
-        ) {
-          this.firebaseEService.joinUser(player, this.room.name).then((x) => {
-            this.setAvatars([...gameState.playersGroup.players, player]);
-          });
-        }
-      } else {
-        alert("La sala no existe");
-      }
-    });
-  }
-
-  onStartGame(roomName: string) {
-    this.firebaseEService.readRoom(roomName);
-    this.router.navigate(["game", roomName]).catch(console.error);
-  }
-
-  onCreateGame(roomName: string) {
-    // guardar la sala en firebase - gameEngine
-    this.firebaseEService.createRoom(roomName).then(() => {
-      this.setRoom(roomName);
-    });
   }
 }
