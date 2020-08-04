@@ -26,7 +26,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   newMessageText: string;
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];
-  
+
 
   constructor(private service: ChatService) {
   }
@@ -52,6 +52,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
+    debugger;
     this.service
       .createMessage(this._roomName, this.player.name, this.newMessageText)
       .then(() => {

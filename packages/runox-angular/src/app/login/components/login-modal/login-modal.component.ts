@@ -6,6 +6,7 @@ import {
   IPlayer,
   Player,
 } from "@runox-game/game-engine/lib/models/player.model";
+import {map, take} from "rxjs/operators";
 
 export class RoomPlayer {
   player: IPlayer;
@@ -34,7 +35,27 @@ export class LoginModalComponent {
   showRoomName = false;
   hasRoom = false;
 
-  constructor(public _auth: AngularFireAuth) {}
+  constructor(public _auth: AngularFireAuth) {
+    if (this._auth.user) {
+      this._auth.user.pipe(
+        take(1),
+        map((user: any) => {
+          this.status === LoginStatus.ENTER;
+          console.log(user);
+          debugger;
+          const _user: IPlayer = new Player(
+            user.email,
+            user.displayName,
+            user.photoURL
+          );
+          this.joinRoom.emit({ player: _user, roomName: this._roomName,});
+
+        })
+      ).subscribe()
+    } else {
+      console.log(`el usuario no existe`);
+    }
+  }
 
   login(): Promise<void> {
     return this._auth
