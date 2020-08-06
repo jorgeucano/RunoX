@@ -14,6 +14,12 @@
     startGame,
   } from "./handlers";
 
+  export let currentRoute
+  export let params = {}
+  console.log({
+    currentRoute,
+    params
+  })
   let showChat: boolean = true;
   let inputRoom: any;
 

@@ -27,6 +27,6 @@
     "firebase": "^7.17.1",
     "rxjs": "^6.6.2",
     "sirv-cli": "^1.0.0",
-    "svelte-routing": "^1.4.2"
+    "svelte-router-spa": "^5.7.2"
   }
 }

@@ -1,11 +1,6 @@
 <script lang="ts">
-  import { Router, Route } from "svelte-routing";
-  import Login from "./pages/login/Login.svelte";
-  export let url = "";
-
-
+  import { Router } from "svelte-router-spa";
+  import { routes } from "./routes";
 </script>
 
-<Router {url}>
-  <Route path="/"><Login /></Route>
-</Router>
+<Router {routes} />
