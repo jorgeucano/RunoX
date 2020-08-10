@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Chat from "../../components/chat/Chat.svelte";
-  import Button from "../../shared/Button.svelte";
-  import Card from "../../shared/Card.svelte";
-  import PlayerList from "../../shared/PlayerList.svelte";
-  import { store } from "../../store";
-  import { AppStatus } from "../../store/types";
+  import Chat from "../shared/chat/Chat.svelte";
+  import Button from "../shared/Button.svelte";
+  import Card from "../shared/Card.svelte";
+  import PlayerList from "../shared/PlayerList.svelte";
+  import { store } from "../store";
+  import { AppStatus } from "../store/types";
   import {
     createRoom,
     handleFixRoom,
@@ -14,12 +14,6 @@
     startGame,
   } from "./handlers";
 
-  export let currentRoute
-  export let params = {}
-  console.log({
-    currentRoute,
-    params
-  })
   let showChat: boolean = true;
   let inputRoom: any;
 
@@ -78,24 +72,25 @@
   <!-- Todo: Login -->
 
   {#if isAuthenticated}
-    {#if showChat === true}
+    {#if showChat === true && $store.hasRoomNameFixed}
       <Chat />
     {/if}
 
     <div class="logout">
+      {#if $store.hasRoomNameFixed}
+        <button
+          on:click={() => {
+            showChat = !showChat;
+          }}>
+          chat
+        </button>
+      {/if}
       <button on:click={logout}>logout</button>
-      <button
-        on:click={() => {
-          showChat = !showChat;
-        }}>
-        chat
-      </button>
     </div>
   {/if}
 
   <div class="login-page">
     <Card>
-
       <!-- Header -->
       <div slot="header" class="flex justify-center">
         <img src="assets/images/logo.png" alt="RunoxSvelte" />

@@ -10,8 +10,8 @@ textarea,
 }
 
 body {
-  background: url(assets/images/main-bg.jpg) no-repeat center;
-  background-size: cover;
+  background: url(../assets/images/main-bg.jpg) no-repeat center;
+  background-size: cover;     
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   font-weight: 300;
