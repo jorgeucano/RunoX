@@ -41,8 +41,6 @@ export class LoginModalComponent {
         take(1),
         map((user: any) => {
           this.status === LoginStatus.ENTER;
-          console.log(user);
-          debugger;
           const _user: IPlayer = new Player(
             user.email,
             user.displayName,
