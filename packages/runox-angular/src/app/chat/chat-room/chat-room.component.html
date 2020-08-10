@@ -1,4 +1,4 @@
-<div id="rnx-chat" *ngIf="chatVisible$ | async">
+<div class="rnx-chat" [class.rnx-chat-hide]="!(chatVisible$ | async)">
     <div id="rnx-chat-top">
         <h1 class="rnx-chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
         <button id="rnx-button-close-message" (click)="hideChat()">Ocultar</button>

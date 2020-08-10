@@ -1,8 +1,13 @@
-#rnx-chat {
+.rnx-chat {
   background-color: rgba(0, 0, 0, 0.6);
+  display: block;
   height: 100%;
   max-width: 340px;
   width: 35vw;
+}
+
+.rnx-chat-hide {
+  display: none;
 }
 
 #rnx-chat-top {
