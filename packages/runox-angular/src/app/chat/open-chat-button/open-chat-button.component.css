@@ -1,0 +1,21 @@
+.rnx-button {
+  position:fixed;
+	bottom:40px;
+	left:40px;
+  background-color: #983128;
+  border: 5px solid rgba(0, 0, 0, 0.42);
+  border-radius: 26px;
+  box-sizing: border-box;
+  color: #FFCFCB;
+  padding: 0.5rem;
+  transition: .12s ease-in-out all;
+  outline: none;
+}
+
+.rnx-button:hover {
+  transform: scale(1.082);
+}
+
+.rnx-button:active {
+  transform: scale(0.94);
+}

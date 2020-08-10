@@ -7,6 +7,7 @@ import { GameEngineService } from "../game-engine.service";
 import { IGameState } from "@runox-game/game-engine/lib/models/game-state.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { first, filter } from "rxjs/operators";
+import { ChatService } from '../chat/chat.service';
 
 @Component({
   selector: "rnx-game",
@@ -25,7 +26,8 @@ export class GameComponent implements OnInit {
     private router: Router,
     activeRouter: ActivatedRoute,
     private firebaseEngineService: FirebaseEngineService,
-    private gameEngine: GameEngineService
+    private gameEngine: GameEngineService,
+    private chat: ChatService
   ) {
     activeRouter.params.pipe(first()).subscribe((params) => {
       if (!!params.id) {
@@ -51,4 +53,8 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  hideChat(){
+    this.chat.hideChat();
+  }
 }
