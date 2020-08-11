@@ -1,17 +1,15 @@
 import { Player } from '@runox-game/game-engine/lib/models/player.model';
 import type { IPlayer } from '@runox-game/game-engine/lib/models/player.model';
-import firebase from "../../services/firebase-app";
-import { AppStatus } from "../../store/types";
-import { store } from '../../store';
-import { FirebaseEngineService } from '../../services/firebase-engine';
-import { from } from 'rxjs';
-
-const firebaseEngineService = new FirebaseEngineService();
+import { getContext } from 'svelte';
+import { store } from '../store';
+import { AppStatus } from "../store/types";
+import { docStore } from "sveltefire";
 
 export const login = async () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
+  const app = getContext('firebase').getFirebase();
+  const provider = new app.auth.GoogleAuthProvider();
   try {
-    const result = await firebase.auth().signInWithPopup(provider);
+    const result = await app.auth().signInWithPopup(provider);
     const _user: IPlayer = new Player(
       result.user.email,
       result.user.displayName,
@@ -39,14 +37,23 @@ export const logout = () => {
 }
 
 export const createRoom = (roomName: string) => {
+  const doc = docStore(`rooms-svelte/${roomName}`, {});
   store.setHasRoomNameFixed(true);
-  firebaseEngineService.checkRoom(roomName)
-    .subscribe((gameState) => {
-      if (!gameState.exists) {
-        from(firebaseEngineService.createRoom(roomName))
-          .subscribe(() => console.log(`${roomName} creada!`));
-      }
-    });
+
+  doc.subscribe((_doc: any) => {
+    if (_doc === null) {
+      // createRoom
+      doc.ref.set({ foo: "bar" });
+    }
+  });
+
+  // firebaseEngineService.checkRoom(roomName)
+  //   .subscribe((gameState) => {
+  //     if (!gameState.exists) {
+  //       from(firebaseEngineService.createRoom(roomName))
+  //         .subscribe(() => console.log(`${roomName} creada!`));
+  //     }
+  //   });
 }
 
 export const startGame = () => {
