@@ -108,7 +108,6 @@
             {$store.roomName}
           </h1>
         {/if}
-
         {#if !isAuthenticated}
           <div on:click={login} class="mt-6">
             <Button>LOGIN & CREATE ROOM!</Button>

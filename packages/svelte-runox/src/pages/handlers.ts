@@ -4,6 +4,7 @@ import { getContext } from 'svelte';
 import { store } from '../store';
 import { AppStatus } from "../store/types";
 import { docStore } from "sveltefire";
+import { goto } from '@sveltech/routify'
 
 export const login = async () => {
   const app = getContext('firebase').getFirebase();
@@ -57,5 +58,7 @@ export const createRoom = (roomName: string) => {
 }
 
 export const startGame = () => {
+  // @ts-ignore
+  $goto('/game');
   console.log('startGame edit me!');
 }

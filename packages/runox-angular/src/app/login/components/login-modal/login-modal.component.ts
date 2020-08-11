@@ -55,7 +55,7 @@ export class LoginModalComponent {
             user.displayName,
             user.photoURL
           );
-          debugger;
+          this.players.push(_user);
           if (this._roomName !== '') {
             this.joinRoom.emit({ player: _user, roomName: this._roomName});
           } else {
@@ -88,6 +88,7 @@ export class LoginModalComponent {
         this.user.displayName,
         this.user.photoURL
       );
+      this.players.push(_user);
       this.joinRoom.emit(this.getRoomPlayer());
     });
   }
