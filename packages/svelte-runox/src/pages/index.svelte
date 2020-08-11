@@ -74,7 +74,7 @@
 
   {#if isAuthenticated}
     {#if showChat === true && $store.hasRoomNameFixed}
-      <Chat />
+      <Chat roomName={$store.roomName} />
     {/if}
 
     <div class="logout">

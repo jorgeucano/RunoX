@@ -1,7 +1,7 @@
 <script>
   import { Collection } from "sveltefire";
   import Burble from "./Burble.svelte";
-
+  import { User } from "sveltefire";
   export let roomName;
   let message = "";
 </script>
@@ -120,36 +120,39 @@
 
       <!-- Actions -->
       <div class="rnx-chat-actions">
-        <input
-          on:keyup={(e) => {
-            if (e.key === 'Enter' && message.length > 0) {
-              messagesRef.add({
-                roomName: 'test-room',
-                text: message,
-                name: 'Jonatan',
-                timestamp: Date.now(),
-              });
-            }
-          }}
-          bind:value={message}
-          class="input-write-message"
-          placeholder="Escribe tu mensaje"
-          type="text" />
-        <button
-          on:click={() => {
-            if (message.length > 0) {
-              messagesRef.add({
-                roomName: 'test-room',
-                text: message,
-                name: 'Jonatan',
-                timestamp: Date.now(),
-              });
-              message = '';
-            }
-          }}
-          class="rnx-button-send-message">
-          Enviar
-        </button>
+        <User let:user>
+          <input
+            on:keyup={(e) => {
+              if (e.key === 'Enter' && message.length > 0) {
+                messagesRef.add({
+                  roomName: roomName,
+                  text: message,
+                  name: user.displayName,
+                  timestamp: Date.now(),
+                });
+              }
+            }}
+            bind:value={message}
+            class="input-write-message"
+            placeholder="Escribe tu mensaje"
+            type="text" />
+
+          <button
+            on:click={() => {
+              if (message.length > 0) {
+                messagesRef.add({
+                  roomName: roomName,
+                  text: message,
+                  name: user.displayName,
+                  timestamp: Date.now(),
+                });
+                message = '';
+              }
+            }}
+            class="rnx-button-send-message">
+            Enviar
+          </button>
+        </User>
       </div>
 
     </div>
