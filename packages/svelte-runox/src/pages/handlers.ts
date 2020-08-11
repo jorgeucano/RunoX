@@ -3,6 +3,7 @@ import type { IPlayer } from '@runox-game/game-engine/lib/models/player.model';
 import { getContext } from 'svelte';
 import { store } from '../store';
 import { AppStatus } from "../store/types";
+import { docStore } from "sveltefire";
 
 export const login = async () => {
   const app = getContext('firebase').getFirebase();
@@ -36,8 +37,16 @@ export const logout = () => {
 }
 
 export const createRoom = (roomName: string) => {
-  console.log(roomName);
-  // store.setHasRoomNameFixed(true);
+  const doc = docStore(`rooms-svelte/${roomName}`, {});
+  store.setHasRoomNameFixed(true);
+
+  doc.subscribe((_doc: any) => {
+    if (_doc === null) {
+      // createRoom
+      doc.ref.set({ foo: "bar" });
+    }
+  });
+
   // firebaseEngineService.checkRoom(roomName)
   //   .subscribe((gameState) => {
   //     if (!gameState.exists) {
