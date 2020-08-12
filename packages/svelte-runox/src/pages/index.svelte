@@ -5,7 +5,7 @@
   import PlayerList from "../shared/PlayerList.svelte";
   import { store } from "../store";
   import { AppStatus } from "../store/types";
-
+  import { goto } from '@sveltech/routify';
   import {
     createRoom,
     handleFixRoom,
@@ -108,7 +108,6 @@
             {$store.roomName}
           </h1>
         {/if}
-
         {#if !isAuthenticated}
           <div on:click={login} class="mt-6">
             <Button>LOGIN & CREATE ROOM!</Button>
@@ -127,6 +126,9 @@
             <Button>CREATE ROOM!</Button>
           </div>
         {:else}
+          <div on:click={() => $goto("/game")} class="mt-6">
+            <Button>START THE GAME!</Button>
+          </div>
           <div on:click={startGame} class="mt-6">
             <Button>START THE GAME!</Button>
           </div>

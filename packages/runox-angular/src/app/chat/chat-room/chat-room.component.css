@@ -1,8 +1,13 @@
-#rnx-chat {
+.rnx-chat {
   background-color: rgba(0, 0, 0, 0.6);
+  display: block;
   height: 100%;
   max-width: 340px;
   width: 35vw;
+}
+
+.rnx-chat-hide {
+  display: none;
 }
 
 #rnx-chat-top {
@@ -10,6 +15,8 @@
   box-shadow: 0 10px 14px rgba(0, 0, 0, 0.23);
   color: #ffffff;
   display: flex;
+  justify-content: space-around;
+  align-items: center;
   flex: 1;
   font-size: 12px;
   font-weight: bold;
@@ -83,4 +90,17 @@
 
 .divider-chat::after {
   margin-left: .25em;
+}
+
+.rnx-button-close-message{
+  margin-left: 0;
+  margin-right: 0;
+  color: #ffffff;
+  text-align: center;
+  height: 3rem;
+  width: 20%;
+  background: #111;
+  font-size: 1rem;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }

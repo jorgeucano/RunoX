@@ -9,6 +9,7 @@ import { Room } from "../models/room";
 import { LoginStatus } from "../enums/login-status";
 import { IGameState } from "@runox-game/game-engine/lib/models/game-state.model";
 import { RoomPlayer } from "./components/login-modal/login-modal.component";
+import { ChatService } from '../chat/chat.service';
 
 @Component({
   selector: "app-login",
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     activeRouter: ActivatedRoute,
     private gameEngineService: GameEngineService,
-    private firebaseService: FirebaseEngineService
+    private firebaseService: FirebaseEngineService,
+    private chatService: ChatService,
   ) {
     activeRouter.params
       .pipe(
@@ -65,6 +67,7 @@ export class LoginComponent implements OnInit {
       .startGame()
       .pipe(first())
       .subscribe(() => {
+        this.chatService.showChat();
         const gameState = this.gameEngineService.gameStateAsJSON();
         console.error(gameState);
         this.firebaseService.updateFirebase(gameState, roomPlayer.roomName);
@@ -75,6 +78,7 @@ export class LoginComponent implements OnInit {
   }
 
   onCreateGame(roomName: string) {
+    this.chatService.showChat();
     this.gameEngineService.create();
     this.room.name = roomName;
     this.firebaseService.createRoom(roomName);

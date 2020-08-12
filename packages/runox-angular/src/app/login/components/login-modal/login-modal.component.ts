@@ -25,6 +25,7 @@ export class LoginModalComponent {
   @Input() players: Array<IPlayer> = [];
   @Input() status: number;
   @Output() joinRoom: EventEmitter<RoomPlayer> = new EventEmitter<RoomPlayer>();
+  @Output() userLogged: EventEmitter<Player> = new EventEmitter<Player>();
   @Output() createRoom: EventEmitter<string> = new EventEmitter<string>();
   @Output() startGame: EventEmitter<RoomPlayer> = new EventEmitter<
     RoomPlayer
@@ -40,16 +41,26 @@ export class LoginModalComponent {
       this._auth.user.pipe(
         take(1),
         map((user: any) => {
-          this.status === LoginStatus.ENTER;
-          console.log(user);
-          debugger;
+          this.user = <User>{
+            displayName:user.displayName,
+            email:user.email,
+            phoneNumber:user.phoneNumber,
+            photoURL:user.photoURL,
+            providerId:user.providerId,
+            uid:user.uid
+          }
+          this.status = LoginStatus.ENTER;
           const _user: IPlayer = new Player(
             user.email,
             user.displayName,
             user.photoURL
           );
-          this.joinRoom.emit({ player: _user, roomName: this._roomName,});
-
+          this.players.push(_user);
+          if (this._roomName !== '') {
+            this.joinRoom.emit({ player: _user, roomName: this._roomName});
+          } else {
+            this.status = LoginStatus.OWNER;
+          }
         })
       ).subscribe()
     } else {
@@ -62,7 +73,7 @@ export class LoginModalComponent {
       .signInWithPopup(new auth.GoogleAuthProvider())
       .then((u) => {
         this.user = u.user;
-        this.status === LoginStatus.ENTER;
+        this.status === LoginStatus.ENTER
       });
   }
 
@@ -77,6 +88,7 @@ export class LoginModalComponent {
         this.user.displayName,
         this.user.photoURL
       );
+      this.players.push(_user);
       this.joinRoom.emit(this.getRoomPlayer());
     });
   }
@@ -94,6 +106,7 @@ export class LoginModalComponent {
       if (this._roomName !== "") {
         this.hasRoom = true;
         this.createRoom.emit(this._roomName);
+        this.joinRoom.emit(this.getRoomPlayer());
         resolve();
       } else {
         alert("Necesitas darle un nombre a la sala");

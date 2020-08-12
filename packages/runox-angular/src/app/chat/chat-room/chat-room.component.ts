@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
 import { ChatService } from "src/app/chat/chat.service";
 import { Subscription, Observable } from "rxjs";
 import {
@@ -6,6 +13,7 @@ import {
   Player,
 } from "@runox-game/game-engine/lib/models/player.model";
 import { ChatMessage } from "../models/chat-message";
+import { tap } from "rxjs/operators";
 
 const ENTER_CODE = 13;
 const PUBLIC_ROOM = "runox";
@@ -17,7 +25,7 @@ const PUBLIC_ROOM = "runox";
 export class ChatRoomComponent implements OnInit, OnDestroy {
   @Input() player: IPlayer = new Player("", "Jugador", "");
   @Input() set roomName(roomName: string) {
-    if (roomName){
+    if (roomName) {
       this._roomName = roomName;
       this.fetchMessages();
     }
@@ -26,10 +34,10 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   newMessageText: string;
   messages$: Observable<ChatMessage[]>;
   subscriptions: Subscription[] = [];
+  chatVisible$ = this.service.chatVisible();
+  @ViewChild("chatContainer") private chatContainer: ElementRef;
 
-
-  constructor(private service: ChatService) {
-  }
+  constructor(private service: ChatService) {}
 
   ngOnInit(): void {
     this.fetchMessages();
@@ -42,7 +50,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   fetchMessages() {
-    this.messages$ = this.service.getMessages(this._roomName);
+    this.messages$ = this.service
+      .getMessages(this._roomName)
+      .pipe(tap(() => this.scrollToBottom()));
   }
 
   onKeyPress(e: any) {
@@ -52,7 +62,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    debugger;
     this.service
       .createMessage(this._roomName, this.player.name, this.newMessageText)
       .then(() => {
@@ -75,4 +84,14 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     }
     return true;
   }
+
+  hideChat() {
+    this.service.hideChat();
+  }
+
+  scrollToBottom(): void {
+    try {
+        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch(err) { }                 
+}
 }

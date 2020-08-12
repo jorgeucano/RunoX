@@ -4,8 +4,8 @@ import { getContext } from 'svelte';
 import { store } from '../store';
 import { AppStatus } from "../store/types";
 import { docStore } from "sveltefire";
-import {goto as _goto} from "@sveltech/routify";
-import {get} from "svelte/store";
+import { goto as _goto } from "@sveltech/routify";
+import { get } from "svelte/store";
 
 export const login = async () => {
   const app = getContext('firebase').getFirebase();
