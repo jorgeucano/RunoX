@@ -126,9 +126,6 @@
             <Button>CREATE ROOM!</Button>
           </div>
         {:else}
-          <div on:click={() => $goto("/game")} class="mt-6">
-            <Button>START THE GAME!</Button>
-          </div>
           <div on:click={startGame} class="mt-6">
             <Button>START THE GAME!</Button>
           </div>
