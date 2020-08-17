@@ -62,14 +62,18 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    this.service
-      .createMessage(this._roomName, this.player.name, this.newMessageText)
-      .then(() => {
-        this.newMessageText = "";
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
+    if (this._roomName && this.player.name && this.newMessageText) {
+      this.service
+        .createMessage(this._roomName, this.player.name, this.newMessageText)
+        .then(() => {
+          this.newMessageText = "";
+        })
+        .catch((error: any) => {
+          console.error(error);
+        });
+    } else {
+      console.log('error, tenes que estar logueado');
+    }
   }
 
   isSameDayChat(
@@ -92,6 +96,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   scrollToBottom(): void {
     try {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-    } catch(err) { }                 
+    } catch(err) { }
 }
 }

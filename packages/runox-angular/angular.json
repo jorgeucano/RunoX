@@ -108,10 +108,11 @@
           }
         },
         "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "runox-angular:serve"
+            "devServerTarget": "runox-angular:serve",
+            "watch": true,
+            "headless": false
           },
           "configurations": {
             "production": {
@@ -122,6 +123,30 @@
         "deploy": {
           "builder": "@angular/fire:deploy",
           "options": {}
+        },
+        "cypress-run": {
+          "builder": "@briebug/cypress-schematic:cypress",
+          "options": {
+            "devServerTarget": "runox-angular:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "runox-angular:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@briebug/cypress-schematic:cypress",
+          "options": {
+            "devServerTarget": "runox-angular:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "runox-angular:serve:production"
+            }
+          }
         }
       }
     }

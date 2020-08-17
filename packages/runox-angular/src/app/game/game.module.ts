@@ -14,6 +14,7 @@ import { RunoxButtonComponent } from './components/runox-button/runox-button.com
 import { SelectColorComponent } from './components/select-color/select-color.component';
 import { PlayerCardListComponent } from './components/player-card-list/player-card-list.component';
 import { DeckComponent } from './components/deck/deck.component';
+import { CurrentTurnComponent } from './components/current-turn/current-turn.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DeckComponent } from './components/deck/deck.component';
     RunoxButtonComponent,
     PlayerCardListComponent,
     StackComponent,
-    DeckComponent
+    DeckComponent,
+    CurrentTurnComponent
   ],
   imports: [CommonModule, GameRoutingModule, SharedModule, ChatModule],
 })

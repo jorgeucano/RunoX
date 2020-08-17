@@ -1,0 +1,24 @@
+<div class="current-turn">
+  <div class="current-turn__header">
+    <div class="current-turn__subtitle">CURRENT TURN</div>
+    <div class="current-turn__title current-turn__title--top">{{user.name}}</div>
+  </div>
+  <div class="current-turn__content">
+    <div class="current-turn__round">
+      <div class="current-turn__title">ROUND</div>
+      <div class="current-turn__number current-turn__number--left">10</div>
+    </div>
+    <div class="current-turn__avatar">
+      <img
+        src="https://images.unsplash.com/photo-1546820389-44d77e1f3b31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"
+        alt="PLAYER 1 AVATAR"
+        class="current-turn__image"
+      />
+      <div class="current-turn__cards">{{user.hand.card.length}}</div>
+    </div>
+    <div class="current-turn__score">
+      <div class="current-turn__title">SCORE</div>
+      <div class="current-turn__number current-turn__number--right">0</div>
+    </div>
+  </div>
+</div>

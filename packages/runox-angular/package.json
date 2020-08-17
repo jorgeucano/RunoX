@@ -7,7 +7,8 @@
     "ng:build": "ng build",
     "ng:test": "ng test",
     "ng:lint": "ng lint",
-    "ng:e2e": "ng e2e"
+    "ng:e2e": "ng e2e",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
+    "@briebug/cypress-schematic": "^3.0.2",
     "@runox-game/game-engine": "0.0.21",
     "firebase": "^7.14.5",
     "rxjs": "~6.5.4",
@@ -27,15 +29,22 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "~0.900",
     "@angular-devkit/build-angular": "~0.900.1",
     "@angular-devkit/build-ng-packagr": "~0.900.7",
     "@angular/cli": "~9.0.1",
     "@angular/compiler-cli": "~9.0.0",
     "@angular/language-service": "~9.0.0",
+    "@cypress/webpack-preprocessor": "5.4.4",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
+    "cypress": "^4.12.1",
+    "firebase-tools": "^8.0.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.3.0",
@@ -44,14 +53,9 @@
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
     "ng-packagr": "^9.0.0",
-    "protractor": "~5.4.3",
+    "ts-loader": "8.0.2",
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
-    "typescript": "~3.7.5",
-    "@angular-devkit/architect": "~0.900",
-    "firebase-tools": "^8.0.0",
-    "fuzzy": "^0.1.3",
-    "inquirer": "^6.2.2",
-    "inquirer-autocomplete-prompt": "^1.0.1"
+    "typescript": "~3.7.5"
   }
 }

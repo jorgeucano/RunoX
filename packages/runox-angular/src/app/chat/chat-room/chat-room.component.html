@@ -12,7 +12,7 @@
         </rnx-chat-burble>
       </div>
     </div>
-    <div id="chat-actions">
+    <div id="chat-actions" *ngIf="player">
         <input id="rnx-input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
         <button id="rnx-button-send-message" (click)="sendMessage()">Enviar</button>
     </div>
