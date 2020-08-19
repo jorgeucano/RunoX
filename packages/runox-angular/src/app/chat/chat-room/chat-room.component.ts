@@ -16,6 +16,7 @@ import { ChatMessage } from "../models/chat-message";
 import { tap } from "rxjs/operators";
 
 const ENTER_CODE = 13;
+const ANONYMOUS_USERNAME = 'Anonimo';
 const PUBLIC_ROOM = "runox";
 @Component({
   selector: "rnx-chat-room",
@@ -62,9 +63,10 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (this._roomName && this.player.name && this.newMessageText) {
+    if (this._roomName && this.newMessageText) {
+      const username = this.player ? this.player.name : ANONYMOUS_USERNAME;
       this.service
-        .createMessage(this._roomName, this.player.name, this.newMessageText)
+        .createMessage(this._roomName, username, this.newMessageText)
         .then(() => {
           this.newMessageText = "";
         })
