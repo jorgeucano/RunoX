@@ -1,6 +1,7 @@
-
-
 context('visitar home y revisar si tiene: ', () => {
+
+  const date = (new Date()).toString();
+
   it('sala', () => {
     cy.visit('/');
     cy.contains('SALA');
@@ -21,10 +22,18 @@ context('visitar home y revisar si tiene: ', () => {
 
   it('el chat esta funcionando como anónimo', () => {
     cy.visit('/');
-    cy.get('input#rnx-input-write-message').type('cypress test chat');
+    cy.get('input#rnx-input-write-message').type(date);
     cy.get('button#rnx-button-send-message')
       .click();
     cy.wait(3000);
-    cy.contains('cypress test chat');
+    cy.contains(date);
+  });
+
+  it('chequea la funcion de eliminar un mensaje del chat', () => {
+    cy.visit('/');
+    cy.get(`button#delete-${date}`)
+      .click();
+    cy.wait(3000);
+    cy.should('not.exist').contains(date);
   });
 });

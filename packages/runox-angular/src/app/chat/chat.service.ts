@@ -24,7 +24,7 @@ export class ChatService {
     return this.chatCollection
       .doc(`${roomName}-chat`)
       .collection('messages', (ref) =>
-        ref.orderBy('timestamp').limit(INITIAL_COUNT_OF_MESSAGES)
+        ref.orderBy('timestamp', 'desc').limit(INITIAL_COUNT_OF_MESSAGES)
       )
       .snapshotChanges()
       .pipe(
@@ -61,7 +61,7 @@ export class ChatService {
   chatVisible() {
     return this.chatVisibleSubject.asObservable().pipe(startWith(true));
   }
-  
+
   hideChat() {
     this.chatVisibleSubject.next(false);
   }

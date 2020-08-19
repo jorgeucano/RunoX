@@ -65,6 +65,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   sendMessage() {
     if (this._roomName && this.newMessageText) {
       const username = this.player ? this.player.name : ANONYMOUS_USERNAME;
+      debugger;
       this.service
         .createMessage(this._roomName, username, this.newMessageText)
         .then(() => {
