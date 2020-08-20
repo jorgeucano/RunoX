@@ -31,6 +31,8 @@ context('visitar home y revisar si tiene: ', () => {
 
   it('chequea la funcion de eliminar un mensaje del chat', () => {
     cy.visit('/');
+    // aquí una AYUDA
+    // el id del botón es 'rnx-chat-bubble-delete_{{ message.id}}' pero he ahí la cuestión: ¿cómo buscar ese id? ¯\_( ͡◡ ͜ʖ ͡◡)_/¯
     cy.get(`button#delete-${date}`)
       .click();
     cy.wait(3000);

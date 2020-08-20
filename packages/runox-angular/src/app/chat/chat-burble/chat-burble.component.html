@@ -2,6 +2,9 @@
     <div class="chat-bubble">
         <div class="rnx-chat-bubble-timestamp">
             {{ message.timestamp | date:'HH:mm'  }}
+            <button id="rnx-chat-bubble-delete_{{ message.id}}" class="rnx-chat-bubble-delete" *ngIf="showDeleleButton" (click)="deletePressed()">
+                x
+            </button>
         </div>
         <div class="rnx-chat-bubble-username">
             {{ message.name }}

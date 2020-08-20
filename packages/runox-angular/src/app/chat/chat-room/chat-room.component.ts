@@ -16,7 +16,7 @@ import { ChatMessage } from "../models/chat-message";
 import { tap } from "rxjs/operators";
 
 const ENTER_CODE = 13;
-const ANONYMOUS_USERNAME = 'Anonimo';
+const ANONYMOUS_USERNAME = "Anonimo";
 const PUBLIC_ROOM = "runox";
 @Component({
   selector: "rnx-chat-room",
@@ -50,6 +50,10 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     });
   }
 
+  get username() {
+    return this.player ? this.player.name : ANONYMOUS_USERNAME;
+  }
+
   fetchMessages() {
     this.messages$ = this.service
       .getMessages(this._roomName)
@@ -62,21 +66,23 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendMessage() {
+  checkAndSendMessage() {
     if (this._roomName && this.newMessageText) {
-      const username = this.player ? this.player.name : ANONYMOUS_USERNAME;
-      debugger;
-      this.service
-        .createMessage(this._roomName, username, this.newMessageText)
-        .then(() => {
-          this.newMessageText = "";
-        })
-        .catch((error: any) => {
-          console.error(error);
-        });
+      this.sendMessage();
     } else {
-      console.log('error, tenes que estar logueado');
+      console.log("error, tenes que estar logueado");
     }
+  }
+
+  sendMessage() {
+    this.service
+      .createMessage(this._roomName, this.username, this.newMessageText)
+      .then(() => {
+        this.newMessageText = "";
+      })
+      .catch((error: any) => {
+        console.error(error);
+      });
   }
 
   isSameDayChat(
@@ -98,7 +104,11 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   scrollToBottom(): void {
     try {
-        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-    } catch(err) { }
-}
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {}
+  }
+
+  onDelete(message: ChatMessage) {
+    this.service.deleteMessage(this._roomName, message);
+  }
 }

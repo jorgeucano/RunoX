@@ -1,19 +1,26 @@
 <div class="rnx-chat" [class.rnx-chat-hide]="!(chatVisible$ | async)">
-    <div id="rnx-chat-top">
-        <h1 class="rnx-chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
-        <button id="rnx-button-close-message" (click)="hideChat()">Ocultar</button>
-    </div>
-    <div #chatContainer id="rnx-chat-content" *ngIf="messages$ | async as messages">
-      <div *ngFor="let message of messages; let i = index">
-        <div *ngIf="isSameDayChat(messages[i-1], message)" class="divider-chat">
-          {{ message.timestamp | date:'yyyy-MM-dd'  }}
-        </div>
-        <rnx-chat-burble [message]="message">
-        </rnx-chat-burble>
+  <div id="rnx-chat-top">
+
+    <h1 class="rnx-chat-title"><img src="/assets/images/logo2x.png" alt="RunoX logo"></h1>
+    <button id="rnx-button-close-message" (click)="hideChat()">Ocultar</button>
+
+  </div>
+  <div #chatContainer id="rnx-chat-content" *ngIf="messages$ | async as messages">
+    
+    <div *ngFor="let message of messages; let i = index">
+    
+      <div *ngIf="isSameDayChat(messages[i-1], message)" class="divider-chat">
+        {{ message.timestamp | date:'yyyy-MM-dd'  }}
       </div>
+  
+      <rnx-chat-burble [message]="message" [showDeleleButton]="message.name == username" (deleted)="onDelete(message)"></rnx-chat-burble>
     </div>
-    <div id="chat-actions">
-        <input id="rnx-input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
-        <button id="rnx-button-send-message" (click)="sendMessage()">Enviar</button>
-    </div>
+  
+  </div>
+  <div id="chat-actions">
+
+    <input id="rnx-input-write-message" placeholder="Escribe tu mensaje" type="text" [(ngModel)]="newMessageText" (keypress)="onKeyPress($event)" />
+    <button id="rnx-button-send-message" (click)="sendMessage()">Enviar</button>
+
+  </div>
 </div>
