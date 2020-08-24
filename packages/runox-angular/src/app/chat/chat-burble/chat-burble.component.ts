@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { ChatMessage } from '../models/chat-message';
 
 @Component({
@@ -8,6 +8,8 @@ import { ChatMessage } from '../models/chat-message';
 })
 export class ChatBurbleComponent implements OnInit {
   @Input() message: ChatMessage = null;
+  @Input() showDeleleButton: boolean = false;
+  @Output() deleted: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor() {}
 
   ngOnInit(): void {}
@@ -32,5 +34,9 @@ export class ChatBurbleComponent implements OnInit {
       default:
         return text;
     }
+  }
+
+  deletePressed(){
+    this.deleted.emit(true);
   }
 }
