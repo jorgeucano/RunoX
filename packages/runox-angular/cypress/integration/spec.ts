@@ -14,6 +14,22 @@ context('visitar home y revisar si tiene: ', () => {
       .click();
   });
 
+  it('cerrar el chat', () => {
+    cy.visit('/');
+    cy.get('button#rnx-button-close-message')
+      .click();
+    cy.wait(1000);
+    cy.get('button.rnx-button')
+      .contains('Chat')
+      .should('exist');
+
+  });
+
+  it('abrir el chat', () => {
+    cy.get('button.rnx-button').contains('Chat').click();
+    cy.get('button#rnx-button-close-message').should('exist');
+  });
+
   it('el chat esta abierto', () => {
     cy.visit('/');
     cy.get('input#rnx-input-write-message');
