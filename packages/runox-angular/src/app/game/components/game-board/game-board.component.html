@@ -1,12 +1,14 @@
 
 
 <div>
-
   <rnx-deck></rnx-deck>
+  <rnx-current-turn [turn]="room.turn"></rnx-current-turn>
+
+  
 
   <rnx-player-list class="flex justify-around flex-wrap" [players]="room.playersGroup.players"></rnx-player-list>
-  <rnx-select-color></rnx-select-color>
-  <rnx-current-turn [currentData]="room"></rnx-current-turn>
+  <rnx-select-color *ngIf="hasToSelectColor | async"></rnx-select-color>
+  
   <!-- <rnx-deck-card-list [cards]="room.deck.cards"></rnx-deck-card-list> -->
   <rnx-stack [stack]="room.stack"></rnx-stack>
   <rnx-player-card-list [cards]="player.hand.cards"></rnx-player-card-list>
