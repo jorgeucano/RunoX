@@ -1,26 +1,26 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { auth, User } from "firebase";
-import { LoginStatus } from "src/app/enums/login-status";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth, User } from 'firebase';
+import { LoginStatus } from 'src/app/enums/login-status';
 import {
   IPlayer,
   Player,
-} from "@runox-game/game-engine/lib/models/player.model";
-import {map, take} from "rxjs/operators";
+} from '@runox-game/game-engine/lib/models/player.model';
+import {map, take} from 'rxjs/operators';
 
 export class RoomPlayer {
   player: IPlayer;
   roomName: string;
 }
 @Component({
-  selector: "rnx-login-modal",
-  templateUrl: "./login-modal.component.html",
-  styleUrls: ["./login-modal.component.css"],
+  selector: 'rnx-login-modal',
+  templateUrl: './login-modal.component.html',
+  styleUrls: ['./login-modal.component.css'],
 })
 export class LoginModalComponent {
-  @Input("roomName") set(roomName: string) {
+  @Input('roomName') set(roomName: string) {
     this._roomName = roomName;
-    this.hasRoom = this._roomName !== "";
+    this.hasRoom = this._roomName !== '';
   }
   @Input() players: Array<IPlayer> = [];
   @Input() status: number;
@@ -30,7 +30,7 @@ export class LoginModalComponent {
   @Output() startGame: EventEmitter<RoomPlayer> = new EventEmitter<
     RoomPlayer
   >();
-  _roomName = "";
+  _roomName = '';
   LoginStatus = LoginStatus;
   user: User = null;
   showRoomName = false;
@@ -50,14 +50,14 @@ export class LoginModalComponent {
             uid:user.uid
           }
           this.status = LoginStatus.ENTER;
-          const _user: IPlayer = new Player(
+          const _player: IPlayer = new Player(
             user.email,
             user.displayName,
             user.photoURL
           );
-          this.players.push(_user);
+          this.players.push(_player);
           if (this._roomName !== '') {
-            this.joinRoom.emit({ player: _user, roomName: this._roomName});
+            this.joinRoom.emit({ player: _player, roomName: this._roomName});
           } else {
             this.status = LoginStatus.OWNER;
           }
@@ -103,13 +103,13 @@ export class LoginModalComponent {
 
   create(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      if (this._roomName !== "") {
+      if (this._roomName !== '') {
         this.hasRoom = true;
         this.createRoom.emit(this._roomName);
         this.joinRoom.emit(this.getRoomPlayer());
         resolve();
       } else {
-        alert("Necesitas darle un nombre a la sala");
+        alert('Necesitas darle un nombre a la sala');
         reject();
       }
     });
@@ -117,11 +117,10 @@ export class LoginModalComponent {
 
   start(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      if (this._roomName !== "") {
+      if (this._roomName !== '') {
         this.startGame.emit(this.getRoomPlayer());
         resolve();
       } else {
-        // alert("Necesitas darle un nombre a la sala");
         reject();
       }
     });

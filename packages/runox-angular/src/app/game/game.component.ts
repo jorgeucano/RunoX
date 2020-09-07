@@ -1,26 +1,26 @@
-import { Component, OnInit } from "@angular/core";
-import { FirebaseEngineService } from "../firebase-engine.service";
-import { Observable } from "rxjs";
-import { IPlayer } from "@runox-game/game-engine/lib/models/player.model";
-import { Room } from "../models/room";
-import { GameEngineService } from "../game-engine.service";
-import { IGameState } from "@runox-game/game-engine/lib/models/game-state.model";
-import { ActivatedRoute, Router } from "@angular/router";
-import { first, filter } from "rxjs/operators";
+import { Component } from '@angular/core';
+import { FirebaseEngineService } from '../firebase-engine.service';
+import { Observable } from 'rxjs';
+import { GameEngineService } from '../game-engine.service';
+import { IGameState } from '@runox-game/game-engine/lib/models/game-state.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { ChatService } from '../chat/chat.service';
+import { ICard } from '@runox-game/game-engine/lib/models/card.model';
+import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
+import { Room } from '../models/room';
 
 @Component({
-  selector: "rnx-game",
-  templateUrl: "./game.component.html",
-  styleUrls: ["./game.component.css"],
+  selector: 'rnx-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.css'],
 })
-export class GameComponent implements OnInit {
+export class GameComponent {
   room$: Observable<IGameState>;
-  roomName: string = "";
-  // @ts-ignore
-  user = this.gameEngine.game.players.find(
-    (player) => player.id === this.gameEngine.playerId
-  );
+  currentCard$: Observable<ICard>;
+  logs$: Observable<ILog>;
+  roomName: string = '';
+  user = this.gameEngine.loggedUser();
 
   constructor(
     private router: Router,
@@ -32,29 +32,45 @@ export class GameComponent implements OnInit {
     activeRouter.params.pipe(first()).subscribe((params) => {
       if (!!params.id) {
         this.roomName = params.id;
-        this.firebaseEngineService.fetchRoom(this.roomName).then(
-          (exists: boolean) => {
-            if (exists) {
-              this.room$ = this.firebaseEngineService.game$;
-            } else {
-              this.redirectToLogin();
-            }
-          },
-          () => this.redirectToLogin()
-        );
+        this.fetchRoom();
       } else {
         this.redirectToLogin();
       }
     });
   }
 
-  redirectToLogin() {
-    this.router.navigate(["", ""]).catch(console.error);
+  fetchRoom() {
+    this.firebaseEngineService.fetchRoom(this.roomName).then(
+      (exists: boolean) => {
+        if (exists) {
+          this.setRoom();
+        } else {
+          this.redirectToLogin();
+        }
+      },
+      () => this.redirectToLogin()
+    );
   }
 
-  ngOnInit(): void {}
+  setRoom() {
+    this.room$ = this.firebaseEngineService.game$;
+    this.room$.subscribe((room: Room) => {
+      if (room){
+        this.logs$ = this.gameEngine.userMessages();
+        this.currentCard$ = room.onCardPlayed();
+      }
+    });
+  }
 
-  hideChat(){
+  redirectToLogin() {
+    this.router.navigate(['', '']).catch(console.error);
+  }
+
+  hideChat() {
     this.chat.hideChat();
+  }
+
+  playCard(card: ICard) {
+    this.gameEngine.playCard(card);
   }
 }

@@ -15,6 +15,7 @@ import { SelectColorComponent } from './components/select-color/select-color.com
 import { PlayerCardListComponent } from './components/player-card-list/player-card-list.component';
 import { DeckComponent } from './components/deck/deck.component';
 import { CurrentTurnComponent } from './components/current-turn/current-turn.component';
+import { InfoMessageComponent } from './components/info-message/info-message.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CurrentTurnComponent } from './components/current-turn/current-turn.com
     PlayerCardListComponent,
     StackComponent,
     DeckComponent,
-    CurrentTurnComponent
+    CurrentTurnComponent,
+    InfoMessageComponent
   ],
   imports: [CommonModule, GameRoutingModule, SharedModule, ChatModule],
 })
