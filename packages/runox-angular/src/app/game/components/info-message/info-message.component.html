@@ -1,0 +1,14 @@
+<div class="info-message">
+    <div class="info-message__header">
+        <div class="info-message__icon">
+            <svg width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.017 31.377h23.966a2.25 2.25 0 001.981-3.316L19.982 5.806c-.85-1.578-3.113-1.578-3.963 0L4.036 28.06a2.25 2.25 0 001.98 3.316v0z" stroke="#F2F2F2" stroke-opacity=".64" stroke-width="1.851" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M17.597 13.739L18 22.316l.403-8.575a.403.403 0 00-.407-.422v0a.403.403 0 00-.4.418v0z" stroke="#F2F2F2" stroke-opacity=".64" stroke-width="1.851" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M18 27.932a1.406 1.406 0 110-2.813 1.406 1.406 0 010 2.813z" fill="#F2F2F2" fill-opacity=".64" />
+            </svg>
+        </div>
+    </div>
+    <div class="info-message__content">
+        {{ message$ | async }}
+    </div>
+</div>

@@ -1,23 +1,18 @@
-
-
 <div *ngIf="room">
   <rnx-deck></rnx-deck>
   <rnx-current-turn [turn]="room?.turn"></rnx-current-turn>
+  <rnx-info-message [logs$]="logs$"></rnx-info-message>
 
   <rnx-player-list class="flex justify-around flex-wrap" [players]="room.playersGroup.players"></rnx-player-list>
-  <rnx-select-color *ngIf="hasToSelectColor$ | async"></rnx-select-color>
-  
+  <rnx-select-color *ngIf="hasToSelectColor$ && (hasToSelectColor$ | async)"></rnx-select-color>
+
   <rnx-stack [stack]="room.stack"></rnx-stack>
-  <rnx-player-card-list [cards]="player.hand.cards"></rnx-player-card-list>
+  
+  
+  <rnx-player-card-list 
+    [cards]="player.hand.cards"
+    (cardSelected)="playCard($event)"
+  ></rnx-player-card-list>
+
   <rnx-runox-button></rnx-runox-button>
 </div>
-
-
-<!--
-<rnx-deck-card-list [cards]="room.deck.cards"></rnx-deck-card-list> 
-<div class="container mx-auto h-screen flex justify-center items-center">
-  <rnx-card>
-    <span class="font-semibold">GAME BOARD</span>
-    WIP
-  </rnx-card>
-</div> -->

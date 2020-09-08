@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
     "@briebug/cypress-schematic": "^3.0.2",
-    "@runox-game/game-engine": "0.0.21",
+    "@runox-game/game-engine": "0.0.22",
     "firebase": "^7.14.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

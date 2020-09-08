@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ICard } from '@runox-game/game-engine/lib/models/card.model';
 
 @Component({
@@ -6,10 +6,11 @@ import { ICard } from '@runox-game/game-engine/lib/models/card.model';
   templateUrl: './player-card-list.component.html',
   styleUrls: ['./player-card-list.component.css'],
 })
-export class PlayerCardListComponent implements OnInit {
+export class PlayerCardListComponent {
   @Input() cards: ICard[] = [];
+  @Output() cardSelected = new EventEmitter<ICard>();
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  onCardSelected(card: ICard) {
+    this.cardSelected.emit(card);
+  }
 }

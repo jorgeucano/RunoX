@@ -1,5 +1,5 @@
 <ng-container *ngIf="card != null">
-    <div class="rnx-deck-card carta" [ngClass]="card.sprite" [style.transform]="'transform: rotate(24deg);'">
+    <div class="rnx-deck-card carta" [ngClass]="card.sprite" [style.transform]="'transform: rotate(24deg);'"  (click)="select()">
         <div class="overlay">
             <button [attr.data-card]="card.id" class="rnx-button-play-card">
                 <ng-content></ng-content>

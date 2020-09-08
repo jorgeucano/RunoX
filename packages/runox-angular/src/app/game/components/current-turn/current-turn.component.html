@@ -1,7 +1,7 @@
 <div class="current-turn">
   <div class="current-turn__header">
     <div class="current-turn__subtitle">CURRENT TURN</div>
-    <div class="current-turn__title current-turn__title--top">{{ turn.player.name }}</div>
+    <div class="current-turn__title current-turn__title--top">{{ turn.player?.name }}</div>
   </div>
   <div class="current-turn__content">
     <div class="current-turn__round">
@@ -9,12 +9,12 @@
       <div class="current-turn__number current-turn__number--left">{{ turn.round }}</div>
     </div>
     <div class="current-turn__avatar">
-      <img [src]="avatar" [alt]="turn.player.name" class="current-turn__image" />
-      <div class="current-turn__cards">{{ turn.player.hand?.cards.length }}</div>
+      <img [src]="avatar" [alt]="turn.player?.name" class="current-turn__image"/>
+      <div class="current-turn__cards">{{ turn.player?.hand?.cards.length }}</div>
     </div>
     <div class="current-turn__score">
       <div class="current-turn__title">SCORE</div>
-      <div class="current-turn__number current-turn__number--right">{{ turn.player.hand?.score }}</div>
+      <div class="current-turn__number current-turn__number--right">{{ turn.player?.hand?.score }}</div>
     </div>
   </div>
 </div>
