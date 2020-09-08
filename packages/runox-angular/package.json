@@ -24,7 +24,7 @@
     "@briebug/cypress-schematic": "^3.0.2",
     "@runox-game/game-engine": "0.0.22",
     "firebase": "^7.14.5",
-    "rxjs": "~6.5.4",
+    "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
