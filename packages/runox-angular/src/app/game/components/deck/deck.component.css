@@ -1,4 +1,40 @@
-#deck button {
+.rnx-deck-card {
+  align-items: center;
+  height: 160px;
+  position: relative;
+  width: 110px;
+  display: none;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 160px;
+}
+
+button {
   width: 120px;
   z-index: 100;
+  user-select: none !important;
+  outline: none !important;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif !important;
+  background-color: #983128;
+  border: 3px solid white;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: bold;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: 0.4rem;
+  letter-spacing: 1px;
+  transition: transform 0.12s ease-in-out;
+  text-transform: uppercase;
 }
