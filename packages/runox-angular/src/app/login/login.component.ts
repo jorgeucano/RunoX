@@ -74,7 +74,6 @@ export class LoginComponent implements OnDestroy {
         first()
       )
       .subscribe(() => {
-        this.chatService.showChat();
         const gameState = this.gameEngineService.gameStateAsJSON();
         this.firebaseService.updateFirebase(gameState, roomPlayer.roomName);
         this.router

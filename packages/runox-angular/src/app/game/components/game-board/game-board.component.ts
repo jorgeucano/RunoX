@@ -13,6 +13,7 @@ import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
 })
 export class GameBoardComponent {
   @Output() cardPlayed = new EventEmitter<ICard>();
+  @Output() unoYelled = new EventEmitter<boolean>();
   @Input() player: IPlayer;
   @Input() logs$: Observable<ILog>;
   @Input() set room$(room$: Observable<Room>) {
@@ -32,5 +33,9 @@ export class GameBoardComponent {
 
   playCard(card: ICard) {
     this.cardPlayed.emit(card);
+  }
+
+  yellUno(){
+    this.unoYelled.emit();
   }
 }
