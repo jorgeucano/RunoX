@@ -43,7 +43,9 @@ export class GameEngineService {
 
   joinUser(user: Player) {
     this.playerId = user.id;
-    this.game.join([user]).subscribe();
+    if(!this.game.players.find(x => x.id ===this.playerId)) {
+      this.game.join([user]).subscribe();
+    }
   }
 
   removeUser(user: Player) {
