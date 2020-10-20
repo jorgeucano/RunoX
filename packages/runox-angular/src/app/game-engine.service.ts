@@ -59,7 +59,7 @@ export class GameEngineService {
   }
 
   poneleeeeUno(userId: string) {
-    this.game.uno(userId);
+    this.game.uno(userId).subscribe();
   }
 
   overrideInternalState(data: any) {

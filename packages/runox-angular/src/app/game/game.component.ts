@@ -75,4 +75,8 @@ export class GameComponent {
   playCard(card: ICard) {
     this.gameEngine.playCard(card);
   }
+
+  yellUno(){
+    this.gameEngine.poneleeeeUno(this.gameEngine.playerId);
+  }
 }
