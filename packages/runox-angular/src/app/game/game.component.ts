@@ -55,9 +55,11 @@ export class GameComponent {
   setRoom() {
     this.room$ = this.firebaseEngineService.game$;
     this.room$.subscribe((room: Room) => {
-      if (room){
+      if (room) {
         this.logs$ = this.gameEngine.userMessages();
         this.currentCard$ = room.onCardPlayed();
+      }else{
+        this.redirectToLogin();
       }
     });
   }

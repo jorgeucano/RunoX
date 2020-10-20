@@ -1,4 +1,4 @@
-<div class="info-message">
+<div class="info-message" *ngIf="(message$ | async) as message" >
     <div class="info-message__header">
         <div class="info-message__icon">
             <svg width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,6 +9,6 @@
         </div>
     </div>
     <div class="info-message__content">
-        {{ message$ | async }}
+        {{ message }}
     </div>
 </div>
