@@ -1,17 +1,18 @@
 <!-- TODO sacar estos styles feos y hacerlo como se debe -->
-<div style="float: left;">
-    <rnx-chat-room [player]="user" [roomName]="roomName"></rnx-chat-room>
+<div class="flex h-full">
+  <div class="w-auto">
+      <rnx-chat-room [player]="user" [roomName]="roomName"></rnx-chat-room>
+  </div>
+  <div class="flex items-end w-full">
+    <rnx-open-chat-button></rnx-open-chat-button>
+    <rnx-game-board
+      class="w-full h-full"
+      [player]="user"
+      [room$]="room$"
+      [currentCard$]="currentCard$"
+      [logs$]="logs$"
+      (cardPlayed)="playCard($event)"
+      (unoYelled)="yellUno()"
+    ></rnx-game-board>
+  </div>
 </div>
-<div style="float: left;">
-  <rnx-game-board 
-    [player]="user" 
-    [room$]="room$"
-    [currentCard$]="currentCard$"
-    [logs$]="logs$"
-    (cardPlayed)="playCard($event)"
-    (unoYelled)="yellUno()"
-  ></rnx-game-board>
-</div>
-
-
-<rnx-open-chat-button></rnx-open-chat-button>

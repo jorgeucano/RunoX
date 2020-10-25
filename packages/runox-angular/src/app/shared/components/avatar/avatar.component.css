@@ -1,7 +1,9 @@
 .rnx-avatar {
   display: inline-flex;
   flex-direction: column;
-  width: 99px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
 }
 
 .rnx-avatar__container {
@@ -21,6 +23,7 @@
   align-items: center;
   background-color: #983128;
   border: 3px solid white;
+  color:#fff;
   border-radius: 50%;
   display: flex;
   font-size: 10px;
@@ -37,11 +40,11 @@
   font-size: 10px;
   font-weight: 400;
   text-transform: uppercase;
+  color:#fff;
   margin-bottom: 6px;
   letter-spacing: 0.16em;
   word-wrap: none;
   overflow: hidden;
-  height: 30px;
 }
 
 

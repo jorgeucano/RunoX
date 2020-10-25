@@ -1,22 +1,24 @@
-<div *ngIf="room">
-  
-  <div id="top">
-    <rnx-deck></rnx-deck>
-    <rnx-current-turn [turn]="room?.turn"></rnx-current-turn>
+<div  class="flex flex-col w-full h-full" *ngIf="room">
+
+  <div class="flex items-center header">
+    <rnx-deck class="absolute"></rnx-deck>
+    <rnx-current-turn class="flex justify-center w-full" [turn]="room?.turn"></rnx-current-turn>
   </div>
 
-  <rnx-info-message [logs$]="logs$"></rnx-info-message>
+  <div class="flex items-center justify-center flex-1">
+    <rnx-select-color *ngIf="hasToSelectColor$ && (hasToSelectColor$ | async)"></rnx-select-color>
+    <rnx-stack [stack]="room.stack"></rnx-stack>
+    <rnx-info-message [logs$]="logs$"></rnx-info-message>
+  </div>
 
-  <rnx-player-list class="flex justify-around flex-wrap" [players]="room.playersGroup.players"></rnx-player-list>
-  <rnx-select-color *ngIf="hasToSelectColor$ && (hasToSelectColor$ | async)"></rnx-select-color>
+  <rnx-player-list [isPlaying]="true" class="main_players" [players]="room.playersGroup.players"></rnx-player-list>
 
-  <rnx-stack [stack]="room.stack"></rnx-stack>
-  
-  
-  <rnx-player-card-list 
+  <div class="flex footer">
+    <rnx-player-card-list
     [cards]="player.hand.cards"
     (cardSelected)="playCard($event)"
-  ></rnx-player-card-list>
+      ></rnx-player-card-list>
+  </div>
 
   <rnx-runox-button (unoYelled)="yellUno()" ></rnx-runox-button>
 </div>
