@@ -1,7 +1,7 @@
 <div *ngIf="room">
-  
+
   <div id="top">
-    <rnx-deck></rnx-deck>
+    <rnx-deck (takenCard)="takeCard()" ></rnx-deck>
     <rnx-current-turn [turn]="room?.turn"></rnx-current-turn>
   </div>
 
@@ -11,9 +11,8 @@
   <rnx-select-color *ngIf="hasToSelectColor$ && (hasToSelectColor$ | async)"></rnx-select-color>
 
   <rnx-stack [stack]="room.stack"></rnx-stack>
-  
-  
-  <rnx-player-card-list 
+
+  <rnx-player-card-list
     [cards]="player.hand.cards"
     (cardSelected)="playCard($event)"
   ></rnx-player-card-list>

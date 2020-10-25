@@ -14,6 +14,7 @@ import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
 export class GameBoardComponent {
   @Output() cardPlayed = new EventEmitter<ICard>();
   @Output() unoYelled = new EventEmitter<boolean>();
+  @Output() takedCard = new EventEmitter<void>();
   @Input() player: IPlayer;
   @Input() logs$: Observable<ILog>;
   @Input() set room$(room$: Observable<Room>) {
@@ -37,5 +38,11 @@ export class GameBoardComponent {
 
   yellUno(){
     this.unoYelled.emit();
+  }
+
+  takeCard() {
+    if (this.room.turn.player.id === this.player.id) {
+      this.takedCard.emit();
+    }
   }
 }

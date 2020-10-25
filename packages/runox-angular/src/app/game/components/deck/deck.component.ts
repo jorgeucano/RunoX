@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { IPlayer } from '@runox-game/game-engine/lib/models/player.model';
 
 @Component({
   selector: 'rnx-deck',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./deck.component.css'],
 })
 export class DeckComponent {
+  @Output() takenCard = new EventEmitter<void>();
 
-  takeCard(): void {}
+  takeCard(): void {
+    this.takenCard.emit();
+  }
 }
