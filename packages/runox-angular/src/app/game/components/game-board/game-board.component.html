@@ -5,7 +5,7 @@
     <rnx-current-turn [turn]="room?.turn"></rnx-current-turn>
   </div>
 
-  <!-- <rnx-info-message [logs$]="logs$"></rnx-info-message> -->
+  <rnx-info-message [logs$]="logs$"></rnx-info-message>
 
   <rnx-player-list class="flex justify-around flex-wrap" [players]="room.playersGroup.players"></rnx-player-list>
   <rnx-select-color *ngIf="hasToSelectColor$ && (hasToSelectColor$ | async)"></rnx-select-color>
