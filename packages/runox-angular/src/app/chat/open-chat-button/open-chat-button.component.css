@@ -1,13 +1,12 @@
 .rnx-button {
-  position:fixed;
-	bottom:40px;
-	left:40px;
   background-color: #983128;
   border: 5px solid rgba(0, 0, 0, 0.42);
   border-radius: 26px;
   box-sizing: border-box;
   color: #FFCFCB;
-  padding: 0.5rem;
+  padding: 0.5rem 2rem;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
   transition: .12s ease-in-out all;
   outline: none;
 }

@@ -9,6 +9,7 @@ import { IPlayer } from '@runox-game/game-engine/lib/models/player.model';
 export class PlayerListComponent implements OnInit {
   @Input() players: IPlayer[] = [];
   @Input() activePlayer?: IPlayer = null;
+  @Input() isPlaying?: boolean = false;
 
   constructor() {}
 
