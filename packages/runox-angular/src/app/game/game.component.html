@@ -3,13 +3,14 @@
     <rnx-chat-room [player]="user" [roomName]="roomName"></rnx-chat-room>
 </div>
 <div style="float: left;">
-  <rnx-game-board 
-    [player]="user" 
+  <rnx-game-board
+    [player]="user"
     [room$]="room$"
     [currentCard$]="currentCard$"
     [logs$]="logs$"
     (cardPlayed)="playCard($event)"
     (unoYelled)="yellUno()"
+    (takedCard)="takeCard()"
   ></rnx-game-board>
 </div>
 

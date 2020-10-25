@@ -79,4 +79,8 @@ export class GameComponent {
   yellUno(){
     this.gameEngine.poneleeeeUno(this.gameEngine.playerId);
   }
+
+  takeCard() {
+    this.gameEngine.takeCard();
+  }
 }

@@ -10,7 +10,6 @@ import { ICard } from '@runox-game/game-engine/lib/models/card.model';
 import { ILog } from '@runox-game/game-engine/lib/log/log.factory';
 import { IGameState } from '@runox-game/game-engine/lib/models/game-state.model';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/internal/operators/tap';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
@@ -57,7 +56,7 @@ export class GameEngineService {
   }
 
   takeCard() {
-    this.game.takeCard();
+    this.game.takeCard().subscribe();
   }
 
   poneleeeeUno(userId: string) {
